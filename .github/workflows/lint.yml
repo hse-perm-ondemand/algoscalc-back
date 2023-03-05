@@ -18,8 +18,8 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: 3.9
-          only_warn: 1
       - uses: TrueBrain/actions-flake8@v2
         with:
+          only_warn: 1
           max_line_length: 79
           extra_arguments: "--max-complexity=10"
