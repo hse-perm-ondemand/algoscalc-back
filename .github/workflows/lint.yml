@@ -1,0 +1,26 @@
+
+name: Build
+on:
+  push:
+    branches:
+      - Prod
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Flake8 with annotations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+          only_warn: 1
+      - uses: TrueBrain/actions-flake8@v2
+        with:
+          max_line_length: 79
+          extra_arguments: "--max-complexity=10"
