@@ -1,5 +1,4 @@
-
-name: Build
+name: Lint
 on:
   push:
     branches:
