@@ -1,4 +1,4 @@
-name: "OMMAT CiCd Test"
+name: "OMMAT CiCd Test."
 on:
   push:
     branches: ["Test"]
