@@ -1,7 +1,7 @@
 name: "OMMAT CiCd Prod"
 on:
-  push:
-    branches: ["Test"]
+  pull_request:
+    branches: ["Prod"]
     
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
             cd ${{ secrets.PROJECT_FOLDER }};
-            echo ${{ secrets.SECRET_PHRASE }} | sudo -S git checkout Test;
+            echo ${{ secrets.SECRET_PHRASE }} | sudo -S git checkout Prod;
             echo ${{ secrets.SECRET_PHRASE }} | sudo -S git pull;
             echo ${{ secrets.SECRET_PHRASE }} | sudo -S docker-compose --file docker-compose.prod.yml down;
             echo ${{ secrets.SECRET_PHRASE }} | sudo -S docker-compose --file docker-compose.prod.yml up -d --build;
