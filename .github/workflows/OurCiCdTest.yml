@@ -1,6 +1,6 @@
-name: "OMMAT CiCd Test."
+name: "OMMAT CiCd Test"
 on:
-  push:
+  pull_request:
     branches: ["Test"]
     
 jobs:
