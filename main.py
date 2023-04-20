@@ -36,12 +36,12 @@ class Parameters(BaseModel):
         return {param.name: param.value for param in self.parameters}
 
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return algorithms.get_name_title_dict()
 
 
-@app.get("/{algorithm_name}")
+@app.get("/api/{algorithm_name}")
 async def get_algorithm(algorithm_name: str):
     answer = {RESULT: None, ERRORS: None}
     if not algorithms.has_algorithm(algorithm_name):
@@ -54,7 +54,7 @@ async def get_algorithm(algorithm_name: str):
     return answer
 
 
-@app.post("/{algorithm_name}")
+@app.post("/api/{algorithm_name}")
 async def get_algorithm_result(algorithm_name: str, parameters: Parameters):
     answer = {RESULT: None, ERRORS: None}
     if not algorithms.has_algorithm(algorithm_name):
