@@ -1,7 +1,11 @@
 name: "OMMAT CiCd Test"
 on:
+  push:
+    branches:
+      - Test
   pull_request:
-    branches: ["Test"]
+    branches:
+      - Test
     
 jobs:
   deploy:
