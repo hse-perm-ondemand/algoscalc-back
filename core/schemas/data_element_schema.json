@@ -1,0 +1,15 @@
+{
+  "$id": "file:core/schemas/data_element_schema.json",
+
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "data_type": { "enum" : ["INT", "FLOAT", "STRING", "BOOL"] },
+    "data_shape": { "enum" : ["SCALAR", "LIST", "MATRIX"] },
+    "default_value": { "type": ["number", "string", "boolean", "array"] }
+  },
+  "required": ["name", "title", "description", "data_type", "data_shape",
+    "default_value"]
+}

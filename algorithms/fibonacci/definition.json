@@ -1,0 +1,24 @@
+{
+  "title": "Числа Фибоначчи",
+  "description": "Вычисление n-го числа Фибоначчи",
+  "parameters": [
+    {
+      "name": "n",
+      "title": "Номер числа Фибоначчи",
+      "description": "Введите целое положительное число больше единицы",
+      "data_type": "INT",
+      "data_shape": "SCALAR",
+      "default_value": 1
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "title": "Число Фибоначчи",
+      "description": "Число Фибоначчи с номером n",
+      "data_type": "INT",
+      "data_shape": "SCALAR",
+      "default_value": 1
+    }
+  ]
+}

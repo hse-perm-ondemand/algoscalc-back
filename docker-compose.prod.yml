@@ -7,6 +7,6 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     ports:
       - '5556:8080'
