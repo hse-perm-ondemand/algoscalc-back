@@ -1,6 +1,4 @@
-import os
 from typing import Union
-
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
 from starlette.requests import Request
@@ -22,7 +20,7 @@ algorithm_config = config['algorithm_config']
 
 algorithms = AlgorithmCollection(path_config, algorithm_config)
 
-app = FastAPI(root_path=os.environ.get('ROOT_PATH'))
+app = FastAPI()
 
 
 class Parameter(BaseModel):
@@ -71,6 +69,7 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters):
     except RuntimeError as ex:
         answer[ERRORS] = str(ex)
     return answer
+
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html(req: Request):
