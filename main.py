@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 from fastapi import FastAPI
@@ -19,7 +20,7 @@ algorithm_config = config['algorithm_config']
 
 algorithms = AlgorithmCollection(path_config, algorithm_config)
 
-app = FastAPI()
+app = FastAPI(root_path=os.environ.get('ROOT_PATH'))
 
 
 class Parameter(BaseModel):
