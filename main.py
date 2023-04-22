@@ -1,7 +1,5 @@
 from typing import Union
 from fastapi import FastAPI
-from fastapi.openapi.docs import get_swagger_ui_html
-from starlette.requests import Request
 from pydantic import BaseModel
 import json
 
@@ -69,10 +67,3 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters):
     except RuntimeError as ex:
         answer[ERRORS] = str(ex)
     return answer
-
-
-@app.get("/docs", include_in_schema=False)
-async def custom_swagger_ui_html(req: Request):
-    root_path = req.scope.get("root_path", "").rstrip("/")
-    openapi_url = root_path + app.openapi_url
-    return get_swagger_ui_html(openapi_url=openapi_url, title="Swagger UI")
