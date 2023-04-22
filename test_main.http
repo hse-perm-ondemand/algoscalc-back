@@ -1,16 +1,16 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/api
+GET http://127.0.0.1:8080/api/algorithms
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/api/fibonacci
+GET http://127.0.0.1:8080/api/algorithms/fibonacci
 Accept: application/json
 
 ###
 
-POST http://127.0.0.1:8000/api/fibonacci
+POST http://127.0.0.1:8080/api/algorithms/fibonacci
 Accept: application/json
 Content-Type: application/json
 
