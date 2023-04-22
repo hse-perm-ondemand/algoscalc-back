@@ -1,13 +1,14 @@
 import os
 from typing import Any, Union
 
+from core.algorithm import Algorithm
 from core.algorithm_builder import AlgorithmBuilder
 
 
 class AlgorithmCollection:
     def __init__(self, path_config: dict[str, str],
                  algorithm_config: dict[str, Union[str, int]]):
-        self.__algorithms = {}
+        self.__algorithms: dict[str, Algorithm] = {}
         builder = AlgorithmBuilder(path_config['definition_file_name'],
                                    path_config['function_file_name'],
                                    path_config['test_file_name'],

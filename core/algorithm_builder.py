@@ -2,7 +2,7 @@ import os
 import json
 import importlib.util
 from io import StringIO
-from typing import Callable, Any, Optional, Union
+from typing import Callable, Any, Optional
 import jsonschema
 import unittest
 
@@ -23,24 +23,24 @@ class AlgorithmBuilder:
 
     def __init__(self, definition_file_name: str, function_file_name: str,
                  test_file_name: str, schema_file_path: str,
-                 algorithm_config: dict[str, Union[str, int]]):
+                 algorithm_config: dict[str, Any]):
         param_errors = AlgorithmBuilder.__check_params(definition_file_name,
                                                        function_file_name,
                                                        test_file_name,
                                                        schema_file_path)
         if param_errors is not None:
             raise ValueError(param_errors)
-        self.__definition_file_name = definition_file_name
-        self.__function_file_name = function_file_name
-        self.__test_file_name = test_file_name
-        self.__schema_file_path = schema_file_path
-        self.__algorithm_config = algorithm_config
+        self.__definition_file_name: str = definition_file_name
+        self.__function_file_name: str = function_file_name
+        self.__test_file_name: str = test_file_name
+        self.__schema_file_path: str = schema_file_path
+        self.__algorithm_config: dict[str, Any] = algorithm_config
 
     def build_algorithm(self, path: str) -> Algorithm:
         with open(path + '/' + self.__definition_file_name,
                   'r') as def_file:
             definition = json.load(def_file)
-        self.__validate_definition(definition)
+        self.__validate_definition_raises_ex(definition)
         name = os.path.split(path)[-1]
         alg = Algorithm(name, definition[self.TITLE],
                         definition[self.DESCRIPTION],
@@ -54,7 +54,8 @@ class AlgorithmBuilder:
         alg.add_execute_method(self.__get_function(path))
         return alg
 
-    def __validate_definition(self, definition: dict[str, Any]):
+    def __validate_definition_raises_ex(self, definition: dict[str, Any]) \
+            -> None:
         with open(self.__schema_file_path, 'r') as schema_file:
             schema = json.load(schema_file)
         jsonschema.validate(definition, schema)

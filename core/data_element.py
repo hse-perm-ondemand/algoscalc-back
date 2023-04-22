@@ -1,4 +1,4 @@
-from typing import Any, Union, Optional
+from typing import Any, Optional
 
 from strenum import UppercaseStrEnum
 from enum import auto
@@ -11,14 +11,14 @@ class DataType(UppercaseStrEnum):
     BOOL = auto()
 
     @property
-    def type(self):
+    def type(self) -> type:
         return DataType.__types_dict()[self]
 
     @staticmethod
-    def types():
+    def types() -> list[type]:
         return list(DataType.__types_dict().values())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name.lower()
 
     @staticmethod
@@ -32,7 +32,7 @@ class DataShape(UppercaseStrEnum):
     LIST = auto()
     MATRIX = auto()
 
-    def get_shape_errors(self, value_to_check: Any) -> Union[str, None]:
+    def get_shape_errors(self, value_to_check: Any) -> Optional[str]:
         if value_to_check is None:
             return 'The value is None!'
         if self.value == self.SCALAR and type(value_to_check) \
@@ -51,6 +51,9 @@ class DataShape(UppercaseStrEnum):
                            f'is not a list'
         return None
 
+    def __str__(self) -> str:
+        return self.name.lower()
+
 
 class DataElement(object):
     def __init__(self, name: str, title: str, description: str,
@@ -60,15 +63,15 @@ class DataElement(object):
                                                   data_type, data_shape)
         if param_errors is not None:
             raise ValueError(param_errors)
-        self.__name = name
-        self.__title = title
-        self.__description = description
-        self.__data_type = data_type
-        self.__data_shape = data_shape
+        self.__name: str = name
+        self.__title: str = title
+        self.__description: str = description
+        self.__data_type: DataType = data_type
+        self.__data_shape: DataShape = data_shape
         default_value_errors = self.get_check_value_errors(default_value)
         if default_value_errors is not None:
             raise ValueError(default_value_errors)
-        self.__default_value = default_value
+        self.__default_value: Any = default_value
 
     def __str__(self) -> str:
         return f'DataElement: {self.__name}, "{self.__title}", ' \

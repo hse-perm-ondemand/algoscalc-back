@@ -22,7 +22,7 @@ class Algorithm(object):
         self.__outputs: dict[str, DataElement] = {}
         self.__execute_method: Optional[Callable] = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Algorithm: {self.__name}, title: {self.__title}'
 
     @property

@@ -56,7 +56,7 @@ class AlgorithmCollectionTests(unittest.TestCase):
                     'description':
                         'Введите целое положительное число больше единицы',
                     'data_type': 'int',
-                    'data_shape': 'SCALAR',
+                    'data_shape': 'scalar',
                     'default_value': 1
                 }
             ],
@@ -66,7 +66,7 @@ class AlgorithmCollectionTests(unittest.TestCase):
                     'title': 'Число Фибоначчи',
                     'description': 'Число Фибоначчи с номером n',
                     'data_type': 'int',
-                    'data_shape': 'SCALAR',
+                    'data_shape': 'scalar',
                     'default_value': 1
                 }
             ]
