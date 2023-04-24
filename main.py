@@ -64,6 +64,6 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters):
         answer[RESULT] = algorithms.get_algorithm_result(algorithm_name, params)
     except TimeoutError:
         answer[ERRORS] = 'The time for algorithm execution is over'
-    except RuntimeError as ex:
+    except Exception as ex:
         answer[ERRORS] = str(ex)
     return answer
