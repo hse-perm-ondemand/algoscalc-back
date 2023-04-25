@@ -101,16 +101,6 @@ class DataElement(object):
     def default_value(self) -> Any:
         return self.__default_value
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            'name': self.__name,
-            'title': self.__title,
-            'description': self.__description,
-            'data_type': str(self.__data_type),
-            'data_shape': str(self.__data_shape),
-            'default_value': self.__default_value
-        }
-
     def get_check_value_errors(self, value: Any) -> Optional[str]:
         shape_errors = self.data_shape.get_shape_errors(value)
         if shape_errors is not None:
@@ -130,14 +120,14 @@ class DataElement(object):
 
     def __check_list_value(self, value: Any) -> Optional[str]:
         for idx, item in enumerate(value):
-            if type(item) != self.__data_type.type:
+            if item is not None and type(item) != self.__data_type.type:
                 return f'The type at {idx} position in the list is not ' \
                        f'{self.__data_type}!'
 
     def __check_matrix_value(self, value: Any) -> Optional[str]:
         for row_idx, row in enumerate(value):
             for item_idx, item in enumerate(row):
-                if type(item) != self.__data_type.type:
+                if item is not None and type(item) != self.__data_type.type:
                     return f'The type at {item_idx} position ' \
                            f'in {row_idx} row in the matrix is not ' \
                            f'{self.__data_type}!'

@@ -295,6 +295,11 @@ class DataElementTests(unittest.TestCase):
                          'The value is not a list!')
         self.assertIsNone(de.get_check_value_errors([1, 2, 3]))
 
+    def test_check_value_list_has_none(self):
+        de = DataElement('name', 'title', 'description', DataType.INT,
+                         DataShape.LIST, [1])
+        self.assertIsNone(de.get_check_value_errors([1, None, 3]))
+
     def test_check_value_shape_matrix_errors(self):
         de = DataElement('name', 'title', 'description', DataType.INT,
                          DataShape.MATRIX, [[1]])
@@ -306,6 +311,12 @@ class DataElementTests(unittest.TestCase):
         self.assertEqual(de.get_check_value_errors([[1., 2.], [1., 2.], 'row']),
                          'The type of 2 row in the matrix is not a list')
         self.assertIsNone(de.get_check_value_errors([[1, 2, 3], [1, 2, 3]]))
+
+    def test_check_value_matrix_has_none(self):
+        de = DataElement('name', 'title', 'description', DataType.INT,
+                         DataShape.MATRIX, [[1]])
+        self.assertIsNone(de.get_check_value_errors([[1, 2, 3],
+                                                     [1, None, 3]]))
 
     def test_check_value_type_scalar_errors(self):
         de = DataElement('name', 'title', 'description', DataType.INT,
@@ -366,23 +377,6 @@ class DataElementTests(unittest.TestCase):
         self.assertEqual(de.get_check_value_errors([[True, 123, True]]),
                          'The type at 1 position in 0 row'
                          ' in the matrix is not bool!')
-
-    def test_to_dict(self):
-        name = 'name'
-        title = 'title'
-        description = 'description'
-        default_value = 0
-        de = DataElement(name, title, description, DataType.INT,
-                         DataShape.SCALAR, default_value)
-        dct = {
-            'name': name,
-            'title': title,
-            'description': description,
-            'data_type': str(DataType.INT),
-            'data_shape': str(DataShape.SCALAR),
-            'default_value': default_value
-        }
-        self.assertEqual(de.to_dict(), dct)
 
 
 if __name__ == '__main__':

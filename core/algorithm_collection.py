@@ -29,11 +29,11 @@ class AlgorithmCollection:
     def get_name_title_dict(self) -> dict[str, str]:
         return {name: alg.title for name, alg in self.__algorithms.items()}
 
-    def get_algorithm_dict(self, algorithm_name: str) -> dict[str: Any]:
+    def get_algorithm(self, algorithm_name: str) -> Algorithm:
         if algorithm_name not in self.__algorithms:
             raise ValueError(f'Algorithm named "{algorithm_name}" '
                              'does not exists')
-        return self.__algorithms[algorithm_name].to_dict()
+        return self.__algorithms[algorithm_name]
 
     def get_algorithm_result(self, algorithm_name: str,
                              params: dict[str, Any]) -> dict[str, Any]:

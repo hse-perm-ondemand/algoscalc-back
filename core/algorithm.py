@@ -106,15 +106,6 @@ class Algorithm(object):
         self.__check_outputs_raises_ex(method_outputs)
         return method_outputs
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            'name': self.__name,
-            'title': self.__title,
-            'description': self.__description,
-            'parameters': [param.to_dict() for param in self.parameters],
-            'outputs': [out.to_dict() for out in self.outputs]
-        }
-
     def __get_default_parameters(self) -> dict[str, Any]:
         return {key: value.default_value
                 for key, value in self.__parameters.items()}

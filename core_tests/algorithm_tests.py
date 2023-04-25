@@ -293,46 +293,6 @@ class AlgorithmTests(unittest.TestCase):
         alg.add_execute_method(lambda a, b: {'sum': a + b})
         self.assertEqual(alg.execute({'a': 10, 'b': 20}), {'sum': 30})
 
-    def test_to_dict(self):
-        name = 'name'
-        title = 'title'
-        description = 'description'
-        default_value = 0
-        alg = Algorithm(name, title, description)
-        param = DataElement('param_val', 'param_title', 'param_descr',
-                            DataType.INT, DataShape.SCALAR, default_value)
-        alg.add_parameter(param)
-        output = DataElement('output', 'output_title', 'output_descr',
-                             DataType.INT, DataShape.SCALAR, default_value)
-        alg.add_output(output)
-        alg.add_execute_method(lambda param_val: {'output': param_val})
-        dct = {
-            'name': name,
-            'title': title,
-            'description': description,
-            'parameters': [
-                {
-                    'name': 'param_val',
-                    'title': 'param_title',
-                    'description': 'param_descr',
-                    'data_type': str(DataType.INT),
-                    'data_shape': str(DataShape.SCALAR),
-                    'default_value': default_value
-                }
-            ],
-            'outputs': [
-                {
-                    'name': 'output',
-                    'title': 'output_title',
-                    'description': 'output_descr',
-                    'data_type': str(DataType.INT),
-                    'data_shape': str(DataShape.SCALAR),
-                    'default_value': default_value
-                }
-            ]
-        }
-        self.assertEqual(alg.to_dict(), dct)
-
 
 if __name__ == '__main__':
     unittest.main()

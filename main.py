@@ -1,15 +1,12 @@
-from typing import Union
 from fastapi import FastAPI
-from pydantic import BaseModel
 import json
 
-
 from core.algorithm_collection import AlgorithmCollection
-
+from api_data_classes import AlgorithmTitle, Algorithms, DataDefinition, \
+    AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
+    AnswerAlgorithmDefinition
 
 CONFIG_FILE_PATH = "config.json"
-RESULT = 'result'
-ERRORS = 'errors'
 
 with open(CONFIG_FILE_PATH, 'r') as conf_file:
     config = json.load(conf_file)
@@ -21,49 +18,63 @@ algorithms = AlgorithmCollection(path_config, algorithm_config)
 app = FastAPI()
 
 
-class Parameter(BaseModel):
-    name: str
-    value: Union[int, float, str, bool,
-                 list[Union[int, float, str, bool,
-                            list[Union[int, float, str, bool]]]]]
-
-
-class Parameters(BaseModel):
-    parameters: list[Parameter]
-
-    def get_params_to_execute(self):
-        return {param.name: param.value for param in self.parameters}
-
-
 @app.get("/api/algorithms")
-async def get_algorithms():
-    return algorithms.get_name_title_dict()
+async def get_algorithms() -> Algorithms:
+    res = Algorithms(algorithms=[])
+    for name, title in algorithms.get_name_title_dict().items():
+        res.algorithms.append(AlgorithmTitle(name=name, title=title))
+    return res
 
 
 @app.get("/api/algorithms/{algorithm_name}")
-async def get_algorithm(algorithm_name: str):
-    answer = {RESULT: None, ERRORS: None}
+async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
+    answer = AnswerAlgorithmDefinition()
     if not algorithms.has_algorithm(algorithm_name):
-        answer[ERRORS] = f'Algorithm named "{algorithm_name}" does not exists'
+        answer.errors = f'Algorithm named "{algorithm_name}" does not exists'
         return answer
     try:
-        answer[RESULT] = algorithms.get_algorithm_dict(algorithm_name)
+        alg = algorithms.get_algorithm(algorithm_name)
+        params = []
+        outputs = []
+        for param in alg.parameters:
+            params.append(
+                DataDefinition(name=param.name, title=param.title,
+                               description=param.description,
+                               data_type=str(param.data_type),
+                               data_shape=str(param.data_shape),
+                               default_value=param.default_value))
+        for output in alg.outputs:
+            outputs.append(
+                DataDefinition(name=output.name, title=output.title,
+                               description=output.description,
+                               data_type=str(output.data_type),
+                               data_shape=str(output.data_shape),
+                               default_value=output.default_value))
+        alg_def = AlgorithmDefinition(name=alg.name, title=alg.title,
+                                      description=alg.description,
+                                      parameters=params, outputs=outputs)
+        answer.result = alg_def
     except Exception as ex:
-        answer[ERRORS] = str(ex)
+        answer.errors = str(ex)
     return answer
 
 
 @app.post("/api/algorithms/{algorithm_name}")
-async def get_algorithm_result(algorithm_name: str, parameters: Parameters):
-    answer = {RESULT: None, ERRORS: None}
+async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
+        -> AnswerOutputs:
+    answer = AnswerOutputs()
     if not algorithms.has_algorithm(algorithm_name):
-        answer[ERRORS] = f'Algorithm named "{algorithm_name}" does not exists'
+        answer.errors = f'Algorithm named "{algorithm_name}" does not exists'
         return answer
     params = parameters.get_params_to_execute()
     try:
-        answer[RESULT] = algorithms.get_algorithm_result(algorithm_name, params)
+        results = algorithms.get_algorithm_result(algorithm_name, params)
+        outputs = []
+        for name, value in results.items():
+            outputs.append(Data(name=name, value=value))
+        answer.result = Outputs(outputs=outputs)
     except TimeoutError:
-        answer[ERRORS] = 'The time for algorithm execution is over'
+        answer.errors = 'The time for algorithm execution is over'
     except Exception as ex:
-        answer[ERRORS] = str(ex)
+        answer.errors = str(ex)
     return answer

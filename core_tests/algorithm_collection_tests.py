@@ -7,6 +7,7 @@ from constants import COLLECTION_FOLDER_PATH, PATH_CONFIG, ALGORITHM_CONFIG,\
     DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME, FIB_DEF,\
     FIB_FUNC, FIB_TESTS
 from core.algorithm_collection import AlgorithmCollection
+from core.algorithm import Algorithm
 
 
 class AlgorithmCollectionTests(unittest.TestCase):
@@ -45,33 +46,9 @@ class AlgorithmCollectionTests(unittest.TestCase):
         algorithms = AlgorithmCollection(self.path_config, ALGORITHM_CONFIG)
         self.assertEqual(algorithms.get_name_title_dict(),
                          {'test_single': 'Числа Фибоначчи'})
-        dct = {
-            'name': name,
-            'title': 'Числа Фибоначчи',
-            'description': 'Вычисление n-го числа Фибоначчи',
-            'parameters': [
-                {
-                    'name': 'n',
-                    'title': 'Номер числа Фибоначчи',
-                    'description':
-                        'Введите целое положительное число больше единицы',
-                    'data_type': 'int',
-                    'data_shape': 'scalar',
-                    'default_value': 1
-                }
-            ],
-            'outputs': [
-                {
-                    'name': 'result',
-                    'title': 'Число Фибоначчи',
-                    'description': 'Число Фибоначчи с номером n',
-                    'data_type': 'int',
-                    'data_shape': 'scalar',
-                    'default_value': 1
-                }
-            ]
-        }
-        self.assertEqual(algorithms.get_algorithm_dict(name), dct)
+        alg = algorithms.get_algorithm(name)
+        self.assertIsInstance(alg, Algorithm)
+        self.assertEqual(alg.name, name)
         self.assertEqual(algorithms.get_algorithm_result(name, {'n': 20}),
                          {'result': 6765})
         self.assertTrue(algorithms.has_algorithm(name))
@@ -103,7 +80,7 @@ class AlgorithmCollectionTests(unittest.TestCase):
         self.assertFalse(algorithms.has_algorithm(wrong_name))
         self.assertRaisesRegex(ValueError, f'Algorithm named "{wrong_name}" '
                                            f'does not exists',
-                               algorithms.get_algorithm_dict, wrong_name)
+                               algorithms.get_algorithm, wrong_name)
         self.assertRaisesRegex(ValueError, f'Algorithm named "{wrong_name}" '
                                            f'does not exists',
                                algorithms.get_algorithm_result, wrong_name,
