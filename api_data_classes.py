@@ -23,6 +23,9 @@ class DataDefinition(BaseModel):
                                                  Union[int, float,
                                                        str, bool]]]]]]]
 
+    class Config:
+        smart_union = True
+
 
 class AlgorithmDefinition(BaseModel):
     name: str
@@ -38,6 +41,9 @@ class Data(BaseModel):
                  Optional[list[Union[int, float, str, bool,
                                      Optional[list[
                                          Union[int, float, str, bool]]]]]]]
+
+    class Config:
+        smart_union = True
 
 
 class Parameters(BaseModel):
