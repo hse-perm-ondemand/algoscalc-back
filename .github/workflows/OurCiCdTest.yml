@@ -18,7 +18,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Test with unittest module
-      run: python test_runner.py
+      run: python -m unittest -v
   deploy:
     name: Deploy Backend Test
     runs-on: ubuntu-latest
