@@ -3,13 +3,26 @@ on:
   push:
     branches:
       - Test
-  pull_request:
-    branches:
-      - Test
     
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Test with unittest module
+      run: |
+        python3 -m unittest
   deploy:
     name: Deploy Backend Test
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands
