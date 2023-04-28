@@ -46,15 +46,9 @@ class AlgorithmTests(unittest.TestCase):
                                Algorithm.__init__, None, 'name', 'title',
                                'description', 'str')
 
-    def test_zero_execute_timeout(self):
-        self.assertRaisesRegex(ValueError, 'The execute_timeout parameter '
-                                           'is equal or less than 0',
-                               Algorithm.__init__, None, 'name', 'title',
-                               'description', 0)
-
     def test_negative_execute_timeout(self):
         self.assertRaisesRegex(ValueError, 'The execute_timeout parameter '
-                                           'is equal or less than 0',
+                                           'is less than 0',
                                Algorithm.__init__, None, 'name', 'title',
                                'description', -1)
 
@@ -145,6 +139,22 @@ class AlgorithmTests(unittest.TestCase):
         with self.assertRaises(Exception) as error:
             alg.add_execute_method(method)
         self.assertEqual(str(error.exception), err)
+
+    def test_zero_execute_timeout(self):
+        alg = Algorithm('name', 'title', 'description', 0)
+        param = DataElement('param_val', 'param_title', 'param_descr',
+                            DataType.INT, DataShape.SCALAR, 0)
+        alg.add_parameter(param)
+        output = DataElement('output', 'output_title', 'output_descr',
+                             DataType.INT, DataShape.SCALAR, 0)
+        alg.add_output(output)
+
+        def method(param_val):
+            time.sleep(1)
+            return {'output': param_val}
+
+        alg.add_execute_method(method)
+        self.assertIsNone(alg.get_test_errors())
 
     def test_add_execute_method_without_parameters(self):
         alg = Algorithm('name', 'title', 'description')

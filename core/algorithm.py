@@ -93,11 +93,13 @@ class Algorithm(object):
         def timeout_handler(signum, frame):
             raise TimeoutError('The time for execution '
                                f'({self.__execute_timeout} s) is over')
-        signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(self.__execute_timeout)
+        if self.__execute_timeout > 0:
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(self.__execute_timeout)
         try:
             method_outputs = self.__execute_method(**params)
-            signal.alarm(0)
+            if self.__execute_timeout > 0:
+                signal.alarm(0)
         except TimeoutError as ex:
             raise TimeoutError(str(ex) + f' Parameters: {params}')
         except Exception as ex:
@@ -171,8 +173,8 @@ class Algorithm(object):
             return 'The description parameter is empty'
         if type(execute_timeout) != int:
             return 'The execute_timeout parameter is not an integer'
-        if execute_timeout <= 0:
-            return 'The execute_timeout parameter is equal or less than 0'
+        if execute_timeout < 0:
+            return 'The execute_timeout parameter is less than 0'
         return None
 
 

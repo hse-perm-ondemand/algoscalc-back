@@ -61,6 +61,14 @@ class Answer(BaseModel):
     result: Optional[Any]
     errors: Optional[str]
 
+    class Config:
+        @staticmethod
+        def schema_extra(schema, model):
+            for prop, value in schema.get('properties', {}).items():
+                field = [x for x in model.__fields__.values() if x.alias == prop][0]
+                if field.allow_none:
+                    value['nullable'] = True
+
 
 class AnswerOutputs(Answer):
     result: Optional[Outputs]
