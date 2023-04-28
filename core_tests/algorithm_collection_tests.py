@@ -3,9 +3,9 @@ import os
 import json
 from shutil import rmtree
 
-from constants import COLLECTION_FOLDER_PATH, PATH_CONFIG, ALGORITHM_CONFIG,\
-    DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME, FIB_DEF,\
-    FIB_FUNC, FIB_TESTS
+from core_tests.constants import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
+    ALGORITHM_CONFIG, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
+    FIB_DEF, FIB_FUNC, FIB_TESTS
 from core.algorithm_collection import AlgorithmCollection
 from core.algorithm import Algorithm
 
