@@ -65,9 +65,17 @@ class Answer(BaseModel):
         @staticmethod
         def schema_extra(schema, model):
             for prop, value in schema.get('properties', {}).items():
-                field = [x for x in model.__fields__.values() if x.alias == prop][0]
+                field = [x for x in model.__fields__.values()
+                         if x.alias == prop][0]
                 if field.allow_none:
-                    value['nullable'] = True
+                    if 'type' in value:
+                        value['anyOf'] = [{'type': value.pop('type')}]
+                    elif '$ref' in value:
+                        if issubclass(field.type_, BaseModel):
+                            value['title'] = field.type_.__config__.title \
+                                             or field.type_.__name__
+                        value['anyOf'] = [{'$ref': value.pop('$ref')}]
+                    value['anyOf'].append({'type': 'null'})
 
 
 class AnswerOutputs(Answer):
