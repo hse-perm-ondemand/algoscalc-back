@@ -2,8 +2,8 @@ import unittest
 import time
 
 
-from core.algorithm import Algorithm, DEFAULT_TIMEOUT
-from core.data_element import DataType, DataShape, DataElement
+from src.core.algorithm import Algorithm, DEFAULT_TIMEOUT
+from src.core.data_element import DataType, DataShape, DataElement
 
 
 class AlgorithmTests(unittest.TestCase):

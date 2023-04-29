@@ -3,9 +3,9 @@ import unittest
 import jsonschema
 from fastapi.testclient import TestClient
 
-from api_models import Algorithms, AnswerAlgorithmDefinition, Data, \
+from src.api_models import Algorithms, AnswerAlgorithmDefinition, Data, \
     Parameters, AnswerOutputs
-from constants import IS_TEST_APP
+from src.constants import IS_TEST_APP
 
 
 class AppTest(unittest.TestCase):
@@ -15,8 +15,8 @@ class AppTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         os.environ[IS_TEST_APP] = str(True)
         if os.path.exists(os.path.basename(__file__)):
-            os.chdir('..')
-        from main import app
+            os.chdir('../..')
+        from src.main import app
         AppTest.client = TestClient(app)
 
     @classmethod

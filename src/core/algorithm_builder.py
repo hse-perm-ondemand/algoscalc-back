@@ -6,8 +6,8 @@ from typing import Callable, Any, Optional
 import jsonschema
 import unittest
 
-from core.data_element import DataElement, DataType, DataShape
-from core.algorithm import Algorithm
+from src.core.data_element import DataElement, DataType, DataShape
+from src.core.algorithm import Algorithm
 
 
 class AlgorithmBuilder:

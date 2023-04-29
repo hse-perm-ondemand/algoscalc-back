@@ -1,7 +1,7 @@
 from typing import Callable, Optional, Any
 import signal
 
-from core.data_element import DataElement, DataType, DataShape
+from src.core.data_element import DataElement, DataType, DataShape
 
 
 DEFAULT_TIMEOUT = 5

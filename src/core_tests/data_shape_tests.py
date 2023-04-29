@@ -1,7 +1,7 @@
 import unittest
 
 
-from core.data_element import DataShape
+from src.core.data_element import DataShape
 
 
 class DataShapeTests(unittest.TestCase):

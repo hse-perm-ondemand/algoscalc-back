@@ -1,8 +1,8 @@
 import os
 from typing import Any, Union
 
-from core.algorithm import Algorithm
-from core.algorithm_builder import AlgorithmBuilder
+from src.core.algorithm import Algorithm
+from src.core.algorithm_builder import AlgorithmBuilder
 
 
 class AlgorithmCollection:

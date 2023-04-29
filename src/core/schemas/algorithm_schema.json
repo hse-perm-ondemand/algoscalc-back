@@ -6,13 +6,13 @@
     "parameters": {
       "type": "array",
       "items": {
-        "$ref": "file:core/schemas/data_element_schema.json"
+        "$ref": "file:src/core/schemas/data_element_schema.json"
       }
     },
     "outputs": {
       "type": "array",
       "items": {
-        "$ref": "file:core/schemas/data_element_schema.json"
+        "$ref": "file:src/core/schemas/data_element_schema.json"
       }
     }
   },

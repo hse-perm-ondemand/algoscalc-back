@@ -3,11 +3,11 @@ import os
 import json
 from shutil import rmtree
 
-from core_tests.constants import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
+from src.core_tests.constants import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
     ALGORITHM_CONFIG, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
     FIB_DEF, FIB_FUNC, FIB_TESTS
-from core.algorithm_collection import AlgorithmCollection
-from core.algorithm import Algorithm
+from src.core.algorithm_collection import AlgorithmCollection
+from src.core.algorithm import Algorithm
 
 
 class AlgorithmCollectionTests(unittest.TestCase):
@@ -17,7 +17,7 @@ class AlgorithmCollectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         if os.path.exists(os.path.basename(__file__)):
-            os.chdir('..')
+            os.chdir('../..')
         if not os.path.exists(COLLECTION_FOLDER_PATH):
             os.mkdir(COLLECTION_FOLDER_PATH)
 

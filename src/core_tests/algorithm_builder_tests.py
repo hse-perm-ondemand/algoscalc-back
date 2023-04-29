@@ -4,10 +4,10 @@ import json
 from shutil import rmtree
 from jsonschema.exceptions import ValidationError
 
-from core_tests.constants import FOLDER_PATH, FIB_DEF, FIB_FUNC, FIB_TESTS,\
+from src.core_tests.constants import FOLDER_PATH, FIB_DEF, FIB_FUNC, FIB_TESTS,\
     DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME, SCHEMA_FILE_PATH,\
     ALGORITHM_CONFIG
-from core.algorithm_builder import AlgorithmBuilder
+from src.core.algorithm_builder import AlgorithmBuilder
 
 
 class AlgorithmBuilderTest(unittest.TestCase):
@@ -18,7 +18,7 @@ class AlgorithmBuilderTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         if os.path.exists(os.path.basename(__file__)):
-            os.chdir('..')
+            os.chdir('../..')
         if not os.path.exists(FOLDER_PATH):
             os.mkdir(FOLDER_PATH)
 

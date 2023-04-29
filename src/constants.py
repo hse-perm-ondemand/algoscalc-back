@@ -1,4 +1,4 @@
-APP_CONFIG_FILE_PATH = 'config.json'
+APP_CONFIG_FILE_PATH = 'config/app_config.json'
 PATH_CONFIG = 'path_config'
 ALGORITHM_CONFIG = 'algorithm_config'
 IS_TEST_APP = 'IS_TEST_APP'

@@ -2,11 +2,11 @@ import os
 import json
 from fastapi import FastAPI
 
-from core.algorithm_collection import AlgorithmCollection
-from api_models import AlgorithmTitle, Algorithms, DataDefinition, \
+from src.core.algorithm_collection import AlgorithmCollection
+from src.api_models import AlgorithmTitle, Algorithms, DataDefinition, \
     AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
     AnswerAlgorithmDefinition
-from constants import APP_CONFIG_FILE_PATH, PATH_CONFIG, ALGORITHM_CONFIG, \
+from src.constants import APP_CONFIG_FILE_PATH, PATH_CONFIG, ALGORITHM_CONFIG, \
     IS_TEST_APP, EXECUTE_TIMEOUT
 
 

@@ -1,7 +1,7 @@
 import unittest
 
 
-from core.data_element import DataType
+from src.core.data_element import DataType
 
 
 class DataTypeTests(unittest.TestCase):

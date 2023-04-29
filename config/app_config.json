@@ -3,8 +3,8 @@
     "definition_file_name": "definition.json",
     "function_file_name": "function.py",
     "test_file_name": "tests.py",
-    "json_schema_file_path": "core/schemas/algorithm_schema.json",
-    "algorithms_catalog_path": "algorithms"
+    "json_schema_file_path": "src/core/schemas/algorithm_schema.json",
+    "algorithms_catalog_path": "src/algorithms"
   },
   "algorithm_config": {
     "execute_timeout": 5

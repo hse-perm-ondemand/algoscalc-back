@@ -6,13 +6,13 @@ COLLECTION_FOLDER_PATH = os.getcwd() + '/algorithm_collection'
 DEFINITION_FILE_NAME = 'definition.json'
 FUNCTION_FILE_NAME = 'function.py'
 TEST_FILE_NAME = 'tests.py'
-SCHEMA_FILE_PATH = 'core/schemas/algorithm_schema.json'
+SCHEMA_FILE_PATH = 'src/core/schemas/algorithm_schema.json'
 PATH_CONFIG = {
     'definition_file_name': 'definition.json',
     'function_file_name': 'function.py',
     'test_file_name': 'tests.py',
-    'json_schema_file_path': 'core/schemas/algorithm_schema.json',
-    'algorithms_catalog_path': 'algorithms'
+    'json_schema_file_path': 'src/core/schemas/algorithm_schema.json',
+    'algorithms_catalog_path': 'src/algorithms'
   }
 ALGORITHM_CONFIG = {'execute_timeout': 5}
 FIB_DEF = {
