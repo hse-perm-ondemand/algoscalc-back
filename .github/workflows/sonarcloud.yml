@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - Prod
+      - Test
   pull_request:
     types: [opened, synchronize, reopened]
 
