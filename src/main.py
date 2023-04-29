@@ -7,7 +7,7 @@ from src.api_models import AlgorithmTitle, Algorithms, DataDefinition, \
     AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
     AnswerAlgorithmDefinition
 from src.constants import APP_CONFIG_FILE_PATH, PATH_CONFIG, ALGORITHM_CONFIG, \
-    IS_TEST_APP, EXECUTE_TIMEOUT
+    IS_TEST_APP, EXECUTE_TIMEOUT, ALGORITHMS_ENDPOINT
 
 
 with open(APP_CONFIG_FILE_PATH, 'r') as conf_file:
@@ -21,7 +21,7 @@ algorithms = AlgorithmCollection(path_config, algorithm_config)
 app = FastAPI()
 
 
-@app.get("/api/algorithms")
+@app.get(ALGORITHMS_ENDPOINT)
 async def get_algorithms() -> Algorithms:
     res = Algorithms(algorithms=[])
     for name, title in algorithms.get_name_title_dict().items():
@@ -29,7 +29,7 @@ async def get_algorithms() -> Algorithms:
     return res
 
 
-@app.get("/api/algorithms/{algorithm_name}")
+@app.get(ALGORITHMS_ENDPOINT + '/{algorithm_name}')
 async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
     answer = AnswerAlgorithmDefinition()
     if not algorithms.has_algorithm(algorithm_name):
@@ -62,7 +62,7 @@ async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
     return answer
 
 
-@app.post("/api/algorithms/{algorithm_name}")
+@app.post(ALGORITHMS_ENDPOINT + '/{algorithm_name}')
 async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
         -> AnswerOutputs:
     answer = AnswerOutputs()

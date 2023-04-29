@@ -70,7 +70,7 @@ class Algorithm(object):
         errors = self.get_test_errors()
         if errors is not None:
             self.__execute_method = None
-            raise Exception(f'Adding the method failed. Error: {errors}')
+            raise RuntimeError(f'Adding the method failed. Error: {errors}')
 
     def get_test_errors(self) -> Optional[str]:
         try:
@@ -111,10 +111,6 @@ class Algorithm(object):
     def __get_default_parameters(self) -> dict[str, Any]:
         return {key: value.default_value
                 for key, value in self.__parameters.items()}
-
-    def __get_default_outputs(self) -> dict[str, Any]:
-        return {key: value.default_value
-                for key, value in self.__outputs.items()}
 
     def __check_method_raises_ex(self) -> None:
         if not callable(self.__execute_method):

@@ -6,6 +6,9 @@ COLLECTION_FOLDER_PATH = os.getcwd() + '/algorithm_collection'
 DEFINITION_FILE_NAME = 'definition.json'
 FUNCTION_FILE_NAME = 'function.py'
 TEST_FILE_NAME = 'tests.py'
+NONE_VALUE_MSG = 'The value is None!'
+NOT_MATRIX_VALUE_MSG = 'The value is not a matrix!'
+NOT_LIST_VALUE_MSG = 'The value is not a list!'
 SCHEMA_FILE_PATH = 'src/core/schemas/algorithm_schema.json'
 PATH_CONFIG = {
     'definition_file_name': 'definition.json',
@@ -15,8 +18,9 @@ PATH_CONFIG = {
     'algorithms_catalog_path': 'src/algorithms'
   }
 ALGORITHM_CONFIG = {'execute_timeout': 5}
+FIB_TITLE = 'Числа Фибоначчи'
 FIB_DEF = {
-  "title": "Числа Фибоначчи",
+  "title": FIB_TITLE,
   "description": "Вычисление n-го числа Фибоначчи",
   "parameters": [
     {

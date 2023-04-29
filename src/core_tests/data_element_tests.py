@@ -2,6 +2,8 @@ import unittest
 
 
 from src.core.data_element import DataType, DataShape, DataElement
+from src.core_tests.constants import NONE_VALUE_MSG, NOT_MATRIX_VALUE_MSG,\
+    NOT_LIST_VALUE_MSG
 
 
 class DataElementTests(unittest.TestCase):
@@ -65,25 +67,25 @@ class DataElementTests(unittest.TestCase):
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.LIST, None)
-        self.assertEqual(str(error.exception), 'The value is None!')
+        self.assertEqual(str(error.exception), NONE_VALUE_MSG)
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.LIST, 'str')
-        self.assertEqual(str(error.exception), 'The value is not a list!')
+        self.assertEqual(str(error.exception), NOT_LIST_VALUE_MSG)
 
     def test_default_value_shape_matrix_errors(self):
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.MATRIX, None)
-        self.assertEqual(str(error.exception), 'The value is None!')
+        self.assertEqual(str(error.exception), NONE_VALUE_MSG)
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.MATRIX, 'str')
-        self.assertEqual(str(error.exception), 'The value is not a matrix!')
+        self.assertEqual(str(error.exception), NOT_MATRIX_VALUE_MSG)
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.MATRIX, [])
-        self.assertEqual(str(error.exception), 'The value is not a matrix!')
+        self.assertEqual(str(error.exception), NOT_MATRIX_VALUE_MSG)
         with self.assertRaises(ValueError) as error:
             DataElement('name', 'title', 'description', DataType.INT,
                         DataShape.MATRIX, [[1., 2.], [1., 2.], 'row'])
@@ -282,7 +284,7 @@ class DataElementTests(unittest.TestCase):
     def test_check_value_shape_scalar_errors(self):
         de = DataElement('name', 'title', 'description', DataType.INT,
                          DataShape.SCALAR, 1)
-        self.assertEqual(de.get_check_value_errors(None), 'The value is None!')
+        self.assertEqual(de.get_check_value_errors(None), NONE_VALUE_MSG)
         self.assertEqual(de.get_check_value_errors([1]),
                          'The value is not a scalar!')
         self.assertIsNone(de.get_check_value_errors(1))
@@ -290,9 +292,8 @@ class DataElementTests(unittest.TestCase):
     def test_check_value_shape_list_errors(self):
         de = DataElement('name', 'title', 'description', DataType.INT,
                          DataShape.LIST, [1])
-        self.assertEqual(de.get_check_value_errors(None), 'The value is None!')
-        self.assertEqual(de.get_check_value_errors(1),
-                         'The value is not a list!')
+        self.assertEqual(de.get_check_value_errors(None), NONE_VALUE_MSG)
+        self.assertEqual(de.get_check_value_errors(1), NOT_LIST_VALUE_MSG)
         self.assertIsNone(de.get_check_value_errors([1, 2, 3]))
 
     def test_check_value_list_has_none(self):
@@ -303,11 +304,9 @@ class DataElementTests(unittest.TestCase):
     def test_check_value_shape_matrix_errors(self):
         de = DataElement('name', 'title', 'description', DataType.INT,
                          DataShape.MATRIX, [[1]])
-        self.assertEqual(de.get_check_value_errors(None), 'The value is None!')
-        self.assertEqual(de.get_check_value_errors(1),
-                         'The value is not a matrix!')
-        self.assertEqual(de.get_check_value_errors([]),
-                         'The value is not a matrix!')
+        self.assertEqual(de.get_check_value_errors(None), NONE_VALUE_MSG)
+        self.assertEqual(de.get_check_value_errors(1), NOT_MATRIX_VALUE_MSG)
+        self.assertEqual(de.get_check_value_errors([]), NOT_MATRIX_VALUE_MSG)
         self.assertEqual(de.get_check_value_errors([[1., 2.], [1., 2.], 'row']),
                          'The type of 2 row in the matrix is not a list')
         self.assertIsNone(de.get_check_value_errors([[1, 2, 3], [1, 2, 3]]))

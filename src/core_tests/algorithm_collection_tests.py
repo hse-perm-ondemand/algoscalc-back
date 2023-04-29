@@ -5,7 +5,7 @@ from shutil import rmtree
 
 from src.core_tests.constants import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
     ALGORITHM_CONFIG, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
-    FIB_DEF, FIB_FUNC, FIB_TESTS
+    FIB_DEF, FIB_FUNC, FIB_TESTS, FIB_TITLE
 from src.core.algorithm_collection import AlgorithmCollection
 from src.core.algorithm import Algorithm
 
@@ -45,7 +45,7 @@ class AlgorithmCollectionTests(unittest.TestCase):
         self.create_files(name)
         algorithms = AlgorithmCollection(self.path_config, ALGORITHM_CONFIG)
         self.assertEqual(algorithms.get_name_title_dict(),
-                         {'test_single': 'Числа Фибоначчи'})
+                         {'test_single': FIB_TITLE})
         alg = algorithms.get_algorithm(name)
         self.assertIsInstance(alg, Algorithm)
         self.assertEqual(alg.name, name)
@@ -59,8 +59,8 @@ class AlgorithmCollectionTests(unittest.TestCase):
             self.create_files(name)
         algorithms = AlgorithmCollection(self.path_config, ALGORITHM_CONFIG)
         self.assertEqual(algorithms.get_name_title_dict(),
-                         {'test1': 'Числа Фибоначчи',
-                          'test2': 'Числа Фибоначчи'})
+                         {'test1': FIB_TITLE,
+                          'test2': FIB_TITLE})
 
     def test_triple_algorithms(self):
         names = ['test1', 'test2', 'test3']
@@ -68,9 +68,9 @@ class AlgorithmCollectionTests(unittest.TestCase):
             self.create_files(name)
         algorithms = AlgorithmCollection(self.path_config, ALGORITHM_CONFIG)
         self.assertEqual(algorithms.get_name_title_dict(),
-                         {'test1': 'Числа Фибоначчи',
-                          'test2': 'Числа Фибоначчи',
-                          'test3': 'Числа Фибоначчи'})
+                         {'test1': FIB_TITLE,
+                          'test2': FIB_TITLE,
+                          'test3': FIB_TITLE})
 
     def test_algorithm_not_exists(self):
         name = 'test_single'

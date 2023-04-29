@@ -2,6 +2,8 @@ import unittest
 
 
 from src.core.data_element import DataShape
+from src.core_tests.constants import NONE_VALUE_MSG, NOT_MATRIX_VALUE_MSG,\
+    NOT_LIST_VALUE_MSG
 
 
 class DataShapeTests(unittest.TestCase):
@@ -26,7 +28,7 @@ class DataShapeTests(unittest.TestCase):
         self.assertIsNone(ds.get_shape_errors('1'))
         self.assertIsNone(ds.get_shape_errors(1.))
         self.assertIsNone(ds.get_shape_errors(True))
-        self.assertEqual(ds.get_shape_errors(None), 'The value is None!')
+        self.assertEqual(ds.get_shape_errors(None), NONE_VALUE_MSG)
         self.assertEqual(ds.get_shape_errors([]), 'The value is not a scalar!')
 
     def test_list_errors(self):
@@ -34,16 +36,16 @@ class DataShapeTests(unittest.TestCase):
         self.assertIsNone(ds.get_shape_errors([]))
         self.assertIsNone(ds.get_shape_errors(['1']))
         self.assertIsNone(ds.get_shape_errors([1., 2.]))
-        self.assertEqual(ds.get_shape_errors(None), 'The value is None!')
-        self.assertEqual(ds.get_shape_errors(1), 'The value is not a list!')
+        self.assertEqual(ds.get_shape_errors(None), NONE_VALUE_MSG)
+        self.assertEqual(ds.get_shape_errors(1), NOT_LIST_VALUE_MSG)
 
     def test_matrix_errors(self):
         ds = DataShape.MATRIX
         self.assertIsNone(ds.get_shape_errors([[]]))
         self.assertIsNone(ds.get_shape_errors([['1']]))
         self.assertIsNone(ds.get_shape_errors([[1., 2.], [1., 2.]]))
-        self.assertEqual(ds.get_shape_errors(None), 'The value is None!')
-        self.assertEqual(ds.get_shape_errors(1), 'The value is not a matrix!')
+        self.assertEqual(ds.get_shape_errors(None), NONE_VALUE_MSG)
+        self.assertEqual(ds.get_shape_errors(1), NOT_MATRIX_VALUE_MSG)
         self.assertEqual(ds.get_shape_errors([[1., 2.], [1., 2.], 'row']),
                          'The type of 2 row in the matrix is not a list')
 

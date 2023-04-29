@@ -73,9 +73,9 @@ class AlgorithmBuilder:
         file_name = self.__function_file_name
         spec = importlib.util.spec_from_file_location(file_name,
                                                       path + '/' + file_name)
-        function = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(function)
-        return function.main
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.main
 
     def __test_function(self, path: str) -> bool:
         file_name = self.__test_file_name
