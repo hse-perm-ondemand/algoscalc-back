@@ -1,21 +1,21 @@
 import os
-
-from fastapi import FastAPI
 import json
+from fastapi import FastAPI
 
 from core.algorithm_collection import AlgorithmCollection
 from api_models import AlgorithmTitle, Algorithms, DataDefinition, \
     AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
     AnswerAlgorithmDefinition
+from constants import APP_CONFIG_FILE_PATH, PATH_CONFIG, ALGORITHM_CONFIG, \
+    IS_TEST_APP, EXECUTE_TIMEOUT
 
-CONFIG_FILE_PATH = "config.json"
 
-with open(CONFIG_FILE_PATH, 'r') as conf_file:
+with open(APP_CONFIG_FILE_PATH, 'r') as conf_file:
     config = json.load(conf_file)
-path_config = config['path_config']
-algorithm_config = config['algorithm_config']
-if bool(os.environ.get('IS_TEST_APP')):
-    algorithm_config['execute_timeout'] = 0
+path_config = config[PATH_CONFIG]
+algorithm_config = config[ALGORITHM_CONFIG]
+if bool(os.environ.get(IS_TEST_APP)):
+    algorithm_config[EXECUTE_TIMEOUT] = 0
 algorithms = AlgorithmCollection(path_config, algorithm_config)
 
 app = FastAPI()

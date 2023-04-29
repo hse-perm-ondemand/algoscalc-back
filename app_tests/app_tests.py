@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from api_models import Algorithms, AnswerAlgorithmDefinition, Data, \
     Parameters, AnswerOutputs
+from constants import IS_TEST_APP
 
 
 class AppTest(unittest.TestCase):
@@ -12,7 +13,7 @@ class AppTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        os.environ['IS_TEST_APP'] = str(True)
+        os.environ[IS_TEST_APP] = str(True)
         if os.path.exists(os.path.basename(__file__)):
             os.chdir('..')
         from main import app
@@ -20,7 +21,7 @@ class AppTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.environ['IS_TEST_APP'] = str(False)
+        os.environ[IS_TEST_APP] = str(False)
 
     def test_get_algorithms(self):
         response = AppTest.client.get('/api/algorithms')
