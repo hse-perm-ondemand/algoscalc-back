@@ -56,6 +56,7 @@ class AlgorithmBuilderTest(unittest.TestCase):
                                AlgorithmBuilder.__init__, None,
                                DEFINITION_FILE_NAME, 123, TEST_FILE_NAME,
                                SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+
     def test_empty_function(self):
         self.assertRaisesRegex(ValueError, 'The function_file_name '
                                            'parameter is empty',
@@ -63,6 +64,7 @@ class AlgorithmBuilderTest(unittest.TestCase):
                                AlgorithmBuilder.__init__, None,
                                DEFINITION_FILE_NAME, '', TEST_FILE_NAME,
                                SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+
     def test_non_string_test(self):
         self.assertRaisesRegex(ValueError, 'The test_file_name '
                                            'parameter is not a string',
@@ -76,6 +78,7 @@ class AlgorithmBuilderTest(unittest.TestCase):
                                AlgorithmBuilder.__init__, None,
                                DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, '',
                                SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+
     def test_non_string_schema(self):
         self.assertRaisesRegex(ValueError, 'The schema_file_path '
                                            'parameter is not a string',
