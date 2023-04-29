@@ -43,7 +43,8 @@ class AppTest(unittest.TestCase):
         algs = Algorithms().parse_obj(response.json())
         algorithm_name = algs.algorithms[0].name
 
-        response = AppTest.client.get(ALGORITHMS_ENDPOINT + '/' + algorithm_name)
+        response = AppTest.client.get(ALGORITHMS_ENDPOINT + '/' +
+                                      algorithm_name)
         answer = AnswerAlgorithmDefinition().parse_obj(response.json())
         alg_def = answer.result
         params = [Data(name=data_def.name, value=data_def.default_value)

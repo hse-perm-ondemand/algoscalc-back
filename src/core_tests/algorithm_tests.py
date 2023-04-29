@@ -199,7 +199,7 @@ class AlgorithmTests(unittest.TestCase):
                             DataType.INT, DataShape.SCALAR, 0)
         alg.add_parameter(param)
         param2 = DataElement('missing_param', 'param_title', 'param_descr',
-                            DataType.INT, DataShape.SCALAR, 0)
+                             DataType.INT, DataShape.SCALAR, 0)
         alg.add_parameter(param2)
         output = DataElement('output', 'output_title', 'output_descr',
                              DataType.INT, DataShape.SCALAR, 0)
@@ -221,7 +221,7 @@ class AlgorithmTests(unittest.TestCase):
                              DataType.INT, DataShape.SCALAR, 0)
         alg.add_output(output)
         output2 = DataElement('missing_output', 'output_title', 'output_descr',
-                             DataType.INT, DataShape.SCALAR, 0)
+                              DataType.INT, DataShape.SCALAR, 0)
         alg.add_output(output2)
         err = "Adding the method failed. Error: 'The defined output key " \
               "\"missing_output\" is missing in the method outputs'"
@@ -268,7 +268,7 @@ class AlgorithmTests(unittest.TestCase):
             return {'output': param_val}
         alg.add_execute_method(method)
         err = (f'The time for execution ({DEFAULT_TIMEOUT} s) is over'
-              " Parameters: {'param_val': ") + \
+               " Parameters: {'param_val': ") + \
               (str(DEFAULT_TIMEOUT + 1) + '}')
         with self.assertRaises(TimeoutError) as error:
             alg.execute({'param_val': DEFAULT_TIMEOUT + 1})
