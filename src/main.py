@@ -1,14 +1,31 @@
 import os
 import json
+import logging
+import logging.config
 from fastapi import FastAPI
 
 from src.core.algorithm_collection import AlgorithmCollection
 from src.api_models import AlgorithmTitle, Algorithms, DataDefinition, \
     AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
     AnswerAlgorithmDefinition
-from src.constants import APP_CONFIG_FILE_PATH, PATH_CONFIG, ALGORITHM_CONFIG, \
-    IS_TEST_APP, EXECUTE_TIMEOUT, ALGORITHMS_ENDPOINT
+from src.constants import APP_CONFIG_FILE_PATH, LOG_CONFIG_FILE_PATH, \
+    PATH_CONFIG, ALGORITHM_CONFIG, IS_TEST_APP, EXECUTE_TIMEOUT, \
+    ALGORITHMS_ENDPOINT
 
+with open(LOG_CONFIG_FILE_PATH, 'r') as log_conf_file:
+    log_config = json.load(log_conf_file)
+file_path = None
+try:
+    file_path = log_config["handlers"]["file_handler"]["filename"]
+except KeyError as ex:
+    pass
+if file_path:
+    folder = os.path.split(file_path)[0]
+    if not os.path.isdir(folder):
+        os.mkdir(folder)
+logging.config.dictConfig(log_config)
+logger = logging.getLogger(__name__)
+logger.info('Start app')
 
 with open(APP_CONFIG_FILE_PATH, 'r') as conf_file:
     config = json.load(conf_file)
@@ -16,13 +33,15 @@ path_config = config[PATH_CONFIG]
 algorithm_config = config[ALGORITHM_CONFIG]
 if bool(os.environ.get(IS_TEST_APP)):
     algorithm_config[EXECUTE_TIMEOUT] = 0
-algorithms = AlgorithmCollection(path_config, algorithm_config)
+
+algorithms = AlgorithmCollection(path_config, algorithm_config, log_config)
 
 app = FastAPI()
 
 
 @app.get(ALGORITHMS_ENDPOINT)
 async def get_algorithms() -> Algorithms:
+    logger.info('Request received')
     res = Algorithms(algorithms=[])
     for name, title in algorithms.get_name_title_dict().items():
         res.algorithms.append(AlgorithmTitle(name=name, title=title))
@@ -31,9 +50,12 @@ async def get_algorithms() -> Algorithms:
 
 @app.get(ALGORITHMS_ENDPOINT + '/{algorithm_name}')
 async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
+    logger.info(f'Request received. algorithm_name: {algorithm_name}')
     answer = AnswerAlgorithmDefinition()
     if not algorithms.has_algorithm(algorithm_name):
-        answer.errors = f'Algorithm named "{algorithm_name}" does not exists'
+        msg = f'Algorithm named "{algorithm_name}" does not exists'
+        logger.warning(msg)
+        answer.errors = msg
         return answer
     try:
         alg = algorithms.get_algorithm(algorithm_name)
@@ -57,17 +79,22 @@ async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
                                       description=alg.description,
                                       parameters=params, outputs=outputs)
         answer.result = alg_def
-    except Exception as ex:
-        answer.errors = str(ex)
+    except Exception as error:
+        logger.warning(str(error))
+        answer.errors = str(error)
     return answer
 
 
 @app.post(ALGORITHMS_ENDPOINT + '/{algorithm_name}')
 async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
         -> AnswerOutputs:
+    logger.info(f'Request received. algorithm_name: {algorithm_name}, '
+                f'parameters: {parameters}')
     answer = AnswerOutputs()
     if not algorithms.has_algorithm(algorithm_name):
-        answer.errors = f'Algorithm named "{algorithm_name}" does not exists'
+        msg = f'Algorithm named "{algorithm_name}" does not exists'
+        logger.warning(msg)
+        answer.errors = msg
         return answer
     params = parameters.get_params_to_execute()
     try:
@@ -77,7 +104,10 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
             outputs.append(Data(name=name, value=value))
         answer.result = Outputs(outputs=outputs)
     except TimeoutError:
-        answer.errors = 'The time for algorithm execution is over'
-    except Exception as ex:
-        answer.errors = str(ex)
+        msg = 'The time for algorithm execution is over'
+        logger.warning(msg)
+        answer.errors = msg
+    except Exception as error:
+        logger.warning(str(error))
+        answer.errors = str(error)
     return answer

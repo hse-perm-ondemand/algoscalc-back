@@ -5,15 +5,16 @@ from shutil import rmtree
 from jsonschema.exceptions import ValidationError
 
 from src.core_tests.constants import FOLDER_PATH, FIB_DEF, FIB_FUNC, FIB_TESTS,\
-    DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME, SCHEMA_FILE_PATH,\
-    ALGORITHM_CONFIG
-from src.core.algorithm_builder import AlgorithmBuilder
+    WRONG_FIB_TESTS, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
+    SCHEMA_FILE_PATH, ALGORITHM_CONFIG, LOG_CONFIG_STUB
+from src.core.algorithm_builder import AlgorithmBuilder, UNIT_TEST_FAILED_MSG,\
+    NON_STRING_PARAM_TEMPL, EMPTY_STRING_PARAM_TEMPL
 
 
 class AlgorithmBuilderTest(unittest.TestCase):
     builder = AlgorithmBuilder(DEFINITION_FILE_NAME, FUNCTION_FILE_NAME,
                                TEST_FILE_NAME, SCHEMA_FILE_PATH,
-                               ALGORITHM_CONFIG)
+                               ALGORITHM_CONFIG, LOG_CONFIG_STUB)
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -36,106 +37,116 @@ class AlgorithmBuilderTest(unittest.TestCase):
                 else:
                     rmtree(path)
 
+    def write_file(self, file_name, text):
+        with open(FOLDER_PATH + '/' + file_name, 'w') as file:
+            file.write(text)
+
+    def write_json(self, file_name, json_text):
+        with open(FOLDER_PATH + '/' + file_name, 'w') as file:
+            json.dump(json_text, file)
+
     def test_non_string_definition(self):
-        self.assertRaisesRegex(ValueError, 'The definition_file_name '
-                                           'parameter is not a string',
-                               AlgorithmBuilder.__init__, None, 100500,
-                               FUNCTION_FILE_NAME, TEST_FILE_NAME,
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(100500, FUNCTION_FILE_NAME, TEST_FILE_NAME,
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(NON_STRING_PARAM_TEMPL.format('definition_file_name'),
+                         str(error.exception))
 
     def test_empty_definition(self):
-        self.assertRaisesRegex(ValueError, 'The definition_file_name '
-                                           'parameter is empty',
-                               AlgorithmBuilder.__init__, None, '',
-                               FUNCTION_FILE_NAME, TEST_FILE_NAME,
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder('', FUNCTION_FILE_NAME, TEST_FILE_NAME,
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(EMPTY_STRING_PARAM_TEMPL.format('definition_file_name'),
+                         str(error.exception))
 
     def test_non_string_function(self):
-        self.assertRaisesRegex(ValueError, 'The function_file_name '
-                                           'parameter is not a string',
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, 123, TEST_FILE_NAME,
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, 123, TEST_FILE_NAME,
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(NON_STRING_PARAM_TEMPL.format('function_file_name'),
+                         str(error.exception))
 
     def test_empty_function(self):
-        self.assertRaisesRegex(ValueError, 'The function_file_name '
-                                           'parameter is empty',
-
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, '', TEST_FILE_NAME,
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, '', TEST_FILE_NAME,
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(EMPTY_STRING_PARAM_TEMPL.format('function_file_name'),
+                         str(error.exception))
 
     def test_non_string_test(self):
-        self.assertRaisesRegex(ValueError, 'The test_file_name '
-                                           'parameter is not a string',
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, 1.,
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, 1.,
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(NON_STRING_PARAM_TEMPL.format('test_file_name'),
+                         str(error.exception))
 
     def test_empty_test(self):
-        self.assertRaisesRegex(ValueError, 'The test_file_name '
-                                           'parameter is empty',
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, '',
-                               SCHEMA_FILE_PATH, ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, '',
+                             SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(EMPTY_STRING_PARAM_TEMPL.format('test_file_name'),
+                         str(error.exception))
 
     def test_non_string_schema(self):
-        self.assertRaisesRegex(ValueError, 'The schema_file_path '
-                                           'parameter is not a string',
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, FUNCTION_FILE_NAME,
-                               TEST_FILE_NAME, [], ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, FUNCTION_FILE_NAME,
+                             TEST_FILE_NAME, [], ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(NON_STRING_PARAM_TEMPL.format('schema_file_path'),
+                         str(error.exception))
 
     def test_empty_schema(self):
-        self.assertRaisesRegex(ValueError, 'The schema_file_path '
-                                           'parameter is empty',
-                               AlgorithmBuilder.__init__, None,
-                               DEFINITION_FILE_NAME, FUNCTION_FILE_NAME,
-                               TEST_FILE_NAME, '', ALGORITHM_CONFIG)
+        with self.assertRaises(ValueError) as error:
+            AlgorithmBuilder(DEFINITION_FILE_NAME, FUNCTION_FILE_NAME,
+                             TEST_FILE_NAME, '', ALGORITHM_CONFIG,
+                             LOG_CONFIG_STUB)
+        self.assertEqual(EMPTY_STRING_PARAM_TEMPL.format('schema_file_path'),
+                         str(error.exception))
 
     def test_build(self):
-        with open(FOLDER_PATH + '/' + DEFINITION_FILE_NAME, 'w') as def_file:
-            json.dump(FIB_DEF, def_file)
-        with open(FOLDER_PATH + '/' + FUNCTION_FILE_NAME, 'w') as func_file:
-            func_file.write(FIB_FUNC)
-        with open(FOLDER_PATH + '/' + TEST_FILE_NAME, 'w') as test_file:
-            test_file.write(FIB_TESTS)
+        self.write_json(DEFINITION_FILE_NAME, FIB_DEF)
+        self.write_file(FUNCTION_FILE_NAME, FIB_FUNC)
+        self.write_file(TEST_FILE_NAME, FIB_TESTS)
         alg = self.builder.build_algorithm(FOLDER_PATH)
         self.assertIsNone(alg.get_test_errors())
 
     def test_build_wrong_def(self):
         fib_def = FIB_DEF.copy()
         fib_def['title'] = None
-        with open(FOLDER_PATH + '/' + DEFINITION_FILE_NAME, 'w') as def_file:
-            json.dump(fib_def, def_file)
-        with open(FOLDER_PATH + '/' + FUNCTION_FILE_NAME, 'w') as func_file:
-            func_file.write(FIB_FUNC)
-        with open(FOLDER_PATH + '/' + TEST_FILE_NAME, 'w') as test_file:
-            test_file.write(FIB_TESTS)
-        self.assertRaisesRegex(ValidationError, "None is not of type 'string'",
+        self.write_json(DEFINITION_FILE_NAME, fib_def)
+        self.write_file(FUNCTION_FILE_NAME, FIB_FUNC)
+        self.write_file(TEST_FILE_NAME, FIB_TESTS)
+        self.assertRaises(ValidationError, self.builder.build_algorithm,
+                          FOLDER_PATH)
+
+    def test_build_failed_test(self):
+        self.write_json(DEFINITION_FILE_NAME, FIB_DEF)
+        self.write_file(FUNCTION_FILE_NAME, FIB_FUNC)
+        self.write_file(TEST_FILE_NAME, WRONG_FIB_TESTS)
+        self.assertRaisesRegex(RuntimeError, UNIT_TEST_FAILED_MSG,
                                self.builder.build_algorithm, FOLDER_PATH)
 
     def test_build_missing_def(self):
-        with open(FOLDER_PATH + '/' + FUNCTION_FILE_NAME, 'w') as func_file:
-            func_file.write(FIB_FUNC)
-        with open(FOLDER_PATH + '/' + TEST_FILE_NAME, 'w') as test_file:
-            test_file.write(FIB_TESTS)
+        self.write_file(FUNCTION_FILE_NAME, FIB_FUNC)
+        self.write_file(TEST_FILE_NAME, FIB_TESTS)
         self.assertRaises(FileNotFoundError, self.builder.build_algorithm,
                           FOLDER_PATH)
 
     def test_build_missing_func(self):
-        with open(FOLDER_PATH + '/' + DEFINITION_FILE_NAME, 'w') as def_file:
-            json.dump(FIB_DEF, def_file)
-        with open(FOLDER_PATH + '/' + TEST_FILE_NAME, 'w') as test_file:
-            test_file.write(FIB_TESTS)
+        self.write_json(DEFINITION_FILE_NAME, FIB_DEF)
+        self.write_file(TEST_FILE_NAME, FIB_TESTS)
         self.assertRaises(FileNotFoundError, self.builder.build_algorithm,
                           FOLDER_PATH)
 
     def test_build_missing_tests(self):
-        with open(FOLDER_PATH + '/' + DEFINITION_FILE_NAME, 'w') as def_file:
-            json.dump(FIB_DEF, def_file)
-        with open(FOLDER_PATH + '/' + FUNCTION_FILE_NAME, 'w') as func_file:
-            func_file.write(FIB_FUNC)
+        self.write_json(DEFINITION_FILE_NAME, FIB_DEF)
+        self.write_file(FUNCTION_FILE_NAME, FIB_FUNC)
         self.assertRaises(FileNotFoundError, self.builder.build_algorithm,
                           FOLDER_PATH)
 

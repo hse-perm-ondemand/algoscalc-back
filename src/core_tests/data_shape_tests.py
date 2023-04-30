@@ -1,9 +1,9 @@
 import unittest
 
 
-from src.core.data_element import DataShape
-from src.core_tests.constants import NONE_VALUE_MSG, NOT_MATRIX_VALUE_MSG,\
-    NOT_LIST_VALUE_MSG
+from src.core.data_element import DataShape, NONE_VALUE_MSG,\
+    NOT_MATRIX_VALUE_MSG, NOT_LIST_VALUE_MSG, NOT_SCALAR_VALUE_MSG, \
+    NOT_LIST_ROW_TEMPL
 
 
 class DataShapeTests(unittest.TestCase):
@@ -29,7 +29,7 @@ class DataShapeTests(unittest.TestCase):
         self.assertIsNone(ds.get_shape_errors(1.))
         self.assertIsNone(ds.get_shape_errors(True))
         self.assertEqual(ds.get_shape_errors(None), NONE_VALUE_MSG)
-        self.assertEqual(ds.get_shape_errors([]), 'The value is not a scalar!')
+        self.assertEqual(ds.get_shape_errors([]), NOT_SCALAR_VALUE_MSG)
 
     def test_list_errors(self):
         ds = DataShape.LIST
@@ -47,7 +47,7 @@ class DataShapeTests(unittest.TestCase):
         self.assertEqual(ds.get_shape_errors(None), NONE_VALUE_MSG)
         self.assertEqual(ds.get_shape_errors(1), NOT_MATRIX_VALUE_MSG)
         self.assertEqual(ds.get_shape_errors([[1., 2.], [1., 2.], 'row']),
-                         'The type of 2 row in the matrix is not a list')
+                         NOT_LIST_ROW_TEMPL.format(2))
 
 
 if __name__ == '__main__':
