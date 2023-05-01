@@ -2,30 +2,18 @@ from typing import Any, Optional
 
 from strenum import UppercaseStrEnum
 from enum import auto
-
-
-NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
-EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
-NOT_DATA_TYPE_MSG = 'Параметр data_type не является экземпляром DataType'
-NOT_DATA_SHAPE_MSG = 'Параметр data_shape не является экземпляром DataShape'
-NONE_VALUE_MSG = 'Значение отсутствует (тип None)'
-NOT_SCALAR_VALUE_MSG = 'Значение не является скалярным'
-NOT_MATRIX_VALUE_MSG = 'Значение не является матрицей'
-NOT_LIST_VALUE_MSG = 'Значение не является списком'
-NOT_LIST_ROW_TEMPL = 'Строка {0} в матрице не является списком'
-MISMATCH_VALUE_TYPE_TEMPL = 'Тип данных для значения не соответствует типу {0}'
-MISMATCH_LIST_VALUE_TYPE_TEMPL = 'Тип данных элемента списка с индексом {0}' \
-                                 ' не соответствует типу {1}'
-MISMATCH_MATRIX_VALUE_TYPE_TEMPL = 'Тип данных элемента с индексом {0} ' \
-                                   'в строке матрицы с индексом {1} ' \
-                                   'не соответствует типу {2}'
+from src.core.constants import NON_STRING_PARAM_TEMPL, \
+    EMPTY_STRING_PARAM_TEMPL, NOT_DATA_TYPE_MSG, NOT_DATA_SHAPE_MSG, \
+    NONE_VALUE_MSG, NOT_SCALAR_VALUE_MSG, NOT_MATRIX_VALUE_MSG, \
+    NOT_LIST_VALUE_MSG, NOT_LIST_ROW_TEMPL, MISMATCH_VALUE_TYPE_TEMPL, \
+    MISMATCH_LIST_VALUE_TYPE_TEMPL, MISMATCH_MATRIX_VALUE_TYPE_TEMPL
 
 
 class DataType(UppercaseStrEnum):
     """Класс является перечислением, представляет допустимые типы данных
-        для входных и выходных данных. Возможными значениями класса являются
-        INT, FLOAT, STRING, BOOL, соответствующие типам данных
-        int, float, str, bool.
+    для входных и выходных данных. Возможными значениями класса являются
+    INT, FLOAT, STRING, BOOL, соответствующие типам данных
+    int, float, str, bool.
 
     """
     INT = auto()
@@ -64,10 +52,9 @@ class DataType(UppercaseStrEnum):
 
 class DataShape(UppercaseStrEnum):
     """Класс DataShape является перечислением, представляет допустимые
-        размерности для входных и выходных данных. Возможными значениями
-        класса являются SCALAR, LIST, MATRIX, соответствующие
-        скалярному значению, списку скалярных значений и двумерную
-        матрицу соответственно.
+    размерности для входных и выходных данных. Возможными значениями
+    класса являются SCALAR, LIST, MATRIX, соответствующие скалярному значению,
+    списку скалярных значений и двумерную матрицу соответственно.
 
     """
     SCALAR = auto()
@@ -201,7 +188,7 @@ class DataElement(object):
 
     def get_check_value_errors(self, value: Any) -> Optional[str]:
         """Проверяет соответствие проверяемого значения типу данных
-            и размерности.
+        и размерности.
 
         :param value: значение для проверки;
         :type value: Any
@@ -244,7 +231,7 @@ class DataElement(object):
                        data_type: DataType,
                        data_shape: DataShape) -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
-            об ошибке"""
+        об ошибке"""
         str_params = [['name', name], ['title', title],
                       ['description', description]]
         for name, value in str_params:

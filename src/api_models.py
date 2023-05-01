@@ -1,3 +1,7 @@
+"""Классы модуля реализуют структуры данных для API онлайн-калькулятора
+
+"""
+
 from typing import Union, Optional, Any
 from pydantic import BaseModel
 
@@ -99,7 +103,7 @@ class Data(BaseModel):
 
 class Parameters(BaseModel):
     """Класс представляет список фактических значений входных данных
-        для алгоритма.
+    для алгоритма.
 
     :param parameters: список фактических значений входных данных алгоритма;
     :type parameters: list[Data]
@@ -119,7 +123,7 @@ class Parameters(BaseModel):
 
 class Outputs(BaseModel):
     """Класс представляет список фактических значений выходных данных
-        для алгоритма.
+    для алгоритма.
 
     :param outputs: список фактических значений выходных данных алгоритма;
     :type outputs: list[Data]
@@ -129,7 +133,7 @@ class Outputs(BaseModel):
 
 class Answer(BaseModel):
     """Базовый класс для ответа, включающего результат выполнения запроса или
-        текст ошибки выполнения запроса.
+    текст ошибки выполнения запроса.
 
     :param result: результат выполнения запроса;
     :type result: Any or None
@@ -143,7 +147,7 @@ class Answer(BaseModel):
         @staticmethod
         def schema_extra(schema, model):
             """Корректирует JSON Schema класса для корректной валидации
-                nullable значений."""
+            nullable значений."""
             for prop, value in schema.get('properties', {}).items():
                 field = [x for x in model.__fields__.values()
                          if x.alias == prop][0]
@@ -160,8 +164,7 @@ class Answer(BaseModel):
 
 class AnswerAlgorithmDefinition(Answer):
     """Класс ответа, включающего результат выполнения запроса описания
-        алгоритма или текст ошибки выполнения запроса. Наследует от класса
-        Answer.
+    алгоритма или текст ошибки выполнения запроса. Наследует от класса Answer.
 
     :param result: описание алгоритма;
     :type result: AlgorithmDefinition or None
@@ -171,7 +174,7 @@ class AnswerAlgorithmDefinition(Answer):
 
 class AnswerOutputs(Answer):
     """Класс ответа, включающего результат выполнения алгоритма или
-        текст ошибки выполнения алгоритма. Наследует от класса Answer.
+    текст ошибки выполнения алгоритма. Наследует от класса Answer.
 
     :param result: список фактических значений выходных данных алгоритма;
     :type result: Outputs or None

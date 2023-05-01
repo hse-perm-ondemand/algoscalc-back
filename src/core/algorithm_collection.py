@@ -3,15 +3,12 @@ from typing import Any, Union
 
 from src.core.algorithm import Algorithm
 from src.core.algorithm_builder import AlgorithmBuilder
-
-
-NO_ALGORITHMS_MSG = 'Алгоритмов не найдено'
-ALGORITHM_NOT_EXISTS_TEMPL = 'Алгоритм с именем "{0}" не существует'
+from src.core.constants import NO_ALGORITHMS_MSG, ALGORITHM_NOT_EXISTS_TEMPL
 
 
 class AlgorithmCollection:
     """Класс представляет собой набор объектов класса Algorithm,
-        созданных объектом класса AlgorithmBuilder.
+    созданных объектом класса AlgorithmBuilder.
 
     """
     def __init__(self, path_config: dict[str, str],
@@ -53,7 +50,7 @@ class AlgorithmCollection:
 
     def get_name_title_dict(self) -> dict[str, str]:
         """Возвращает словарь с уникальными именами алгоритмов в качестве
-            ключей и названиями алгоритмов в качестве значений.
+        ключей и названиями алгоритмов в качестве значений.
 
         :return: словарь с именами и названиями алгоритмов.
         :rtype: dict[str, Any]

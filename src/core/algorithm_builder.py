@@ -10,11 +10,8 @@ from typing import Callable, Any, Optional
 
 from src.core.data_element import DataElement, DataType, DataShape
 from src.core.algorithm import Algorithm
-
-
-UNIT_TEST_FAILED_MSG = 'Модульные тесты для алгоритма завершились с ошибкой'
-NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
-EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
+from src.core.constants import UNIT_TEST_FAILED_MSG, NON_STRING_PARAM_TEMPL, \
+    EMPTY_STRING_PARAM_TEMPL
 
 
 class AlgorithmBuilder:
@@ -76,7 +73,7 @@ class AlgorithmBuilder:
 
     def build_algorithm(self, path: str) -> Algorithm:
         """Создает экземпляр класса Algorithm на основе файлов с исходным
-            кодом, расположенных в указанном каталоге.
+        кодом, расположенных в указанном каталоге.
 
         :param path: путь к каталогу с файлами исходного кода для алгоритма;
         :type path: str
@@ -109,7 +106,7 @@ class AlgorithmBuilder:
     def __validate_definition_raises_ex(self, definition: dict[str, Any]) \
             -> None:
         """Проверяет соответствие описания алгоритма JSON Schema. При наличии
-            ошибок вызывает исключение ValidationError"""
+        ошибок вызывает исключение ValidationError"""
         with open(self.__schema_file_path, 'r') as schema_file:
             schema = json.load(schema_file)
         jsonschema.validate(definition, schema)
@@ -152,7 +149,7 @@ class AlgorithmBuilder:
                        test_file_name: str, schema_file_path: str) \
             -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
-            об ошибке"""
+        об ошибке"""
         str_params = [['definition_file_name', definition_file_name],
                       ['function_file_name', function_file_name],
                       ['test_file_name', test_file_name],

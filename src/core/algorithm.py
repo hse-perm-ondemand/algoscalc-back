@@ -5,42 +5,14 @@ from typing import Callable, Optional, Any
 
 
 from src.core.data_element import DataElement
-
-
-DEFAULT_TIMEOUT = 5
-PARAM_NOT_DATAELEMENT_MSG = 'Элемент входных данных не является экземпляром ' \
-                            'класса DataElement'
-PARAM_EXISTS_TMPL = 'Элемент входных данных с именем "{0}" уже существует'
-OUTPUT_NOT_DATAELEMENT_MSG = 'Элемент выходных данных не является ' \
-                             'экземпляром класса DataElement'
-OUTPUT_EXISTS_TMPL = 'Элемент выходных данных с именем "{0}" уже существует'
-METHOD_NOT_CALL_MSG = 'Объект, переданный в качестве метода, ' \
-                      'не является вызываемым'
-ADDING_METHOD_FAILED_TEMPL = 'В процессе добавления метода произошла ' \
-                             'ошибка: {0}'
-UNEXPECTED_OUTPUT_TEMPL = 'фактический результат "{0}" для элемента ' \
-                          'выходных данных "{1}" не соответствует ожидаемому ' \
-                          'значению "{2}"'
-TIME_OVER_TEMPL = 'Время для выполнения алгоритма ({0} с) истекло. ' \
-                  'Входные данные: {1}'
-UNEXPECTED_PARAM_MSG = 'В метод передан недопустимый параметр'
-EXECUTION_FAILED_TEMPL = 'Во время выполнения алгоритма произошла ' \
-                         'ошибка: {0}. Входные данные: {1}'
-UNSET_PARAMS_MSG = 'Для алгоритма не заданы входные данные'
-UNSET_OUTPUTS_MSG = 'Для алгоритма не заданы выходные данные'
-NOT_DICT_PARAMS_MSG = 'Входные данные переданы не в формате словаря'
-REDUNDANT_PARAMETER_TEMPL = 'Переданный элемент "{0}" отсутствует ' \
-                            'в структуре входных данных алгоритма'
-MISSED_PARAMETER_TEMPL = 'Не указано значение для элемента входных данных "{0}"'
-NOT_DICT_OUTPUTS_MSG = 'Выходные данные алгоритма не формате словаря'
-REDUNDANT_OUTPUT_TEMPL = 'Алгоритм вернул элемент "{0}", не указанный ' \
-                         'в структуре выходных данных'
-MISSED_OUTPUT_TEMPL = 'Алгоритм не вернул значение для элемента выходных ' \
-                      'данных "{0}'
-NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
-EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
-NON_INT_TIMEOUT_MSG = 'Параметр execute_timeout не является целым числом'
-NEG_INT_TIMEOUT_MSG = 'Значение параметра execute_timeout меньше нуля'
+from src.core.constants import PARAM_NOT_DATAELEMENT_MSG, PARAM_EXISTS_TMPL, \
+    OUTPUT_NOT_DATAELEMENT_MSG, OUTPUT_EXISTS_TMPL, METHOD_NOT_CALL_MSG,\
+    ADDING_METHOD_FAILED_TEMPL, UNEXPECTED_OUTPUT_TEMPL, TIME_OVER_TEMPL,\
+    UNEXPECTED_PARAM_MSG, EXECUTION_FAILED_TEMPL, UNSET_PARAMS_MSG,\
+    UNSET_OUTPUTS_MSG, NOT_DICT_PARAMS_MSG, REDUNDANT_PARAMETER_TEMPL, \
+    MISSED_PARAMETER_TEMPL, NOT_DICT_OUTPUTS_MSG, REDUNDANT_OUTPUT_TEMPL, \
+    MISSED_OUTPUT_TEMPL, NON_STRING_PARAM_TEMPL, EMPTY_STRING_PARAM_TEMPL, \
+    NON_INT_TIMEOUT_MSG, NEG_INT_TIMEOUT_MSG, DEFAULT_TIMEOUT
 
 
 class Algorithm(object):
@@ -145,7 +117,7 @@ class Algorithm(object):
         return self.__execute_timeout
 
     def add_parameter(self, parameter: DataElement) -> None:
-        """Добавляет в описание входных данных алгоритма,  элемент
+        """Добавляет в описание входных данных алгоритма, элемент
         переданный в параметре parameter
 
         :param parameter: элемент входных данных.
@@ -270,7 +242,7 @@ class Algorithm(object):
 
     def __check_method_raises_ex(self) -> None:
         """Проверяет возможность выполнения метода. При наличии ошибок
-            вызывает исключения TypeError, AttributeError."""
+        вызывает исключения TypeError, AttributeError."""
         if not callable(self.__execute_method):
             self.__log_and_raise_error(METHOD_NOT_CALL_MSG, TypeError)
         if not self.__parameters:
@@ -280,7 +252,7 @@ class Algorithm(object):
 
     def __check_parameters_raises_ex(self, fact_params: dict[str, Any]) -> None:
         """"Проверяет входные данные для выполнения алгоритма. При наличии
-            ошибок вызывает исключения TypeError, KeyError."""
+        ошибок вызывает исключения TypeError, KeyError."""
         if type(fact_params) != dict:
             self.__log_and_raise_error(NOT_DICT_PARAMS_MSG, TypeError)
         for key in fact_params.keys():
@@ -298,7 +270,7 @@ class Algorithm(object):
 
     def __check_outputs_raises_ex(self, method_outputs: dict[str, Any]) -> None:
         """"Проверяет выходные данные для выполнения алгоритма. При наличии
-            ошибок вызывает исключения TypeError, KeyError."""
+        ошибок вызывает исключения TypeError, KeyError."""
         if type(method_outputs) != dict:
             self.__log_and_raise_error(NOT_DICT_OUTPUTS_MSG, TypeError)
         for key in method_outputs.keys():
@@ -318,7 +290,7 @@ class Algorithm(object):
     def __check_params(name: str, title: str, description: str,
                        execute_timeout: int) -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
-            об ошибке"""
+        об ошибке"""
         str_params = [['name', name], ['title', title],
                       ['description', description]]
         for name, value in str_params:
