@@ -1,4 +1,4 @@
-name: "Test branch actions."
+name: "Test branch actions"
 on:
   push:
     branches:
