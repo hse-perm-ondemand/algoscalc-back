@@ -105,11 +105,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r src/requirements.txt
           pip install -r docs/requirements.txt
-      - id: deployment
-        uses: sphinx-notes/pages@v3
-        with:
-          publish: true
-          page_url: ${{ secrets.DOCS_PAGES_DOMAIN }}
       - name: Running the Sphinx to gh-pages Action
         uses: uibcdf/action-sphinx-docs-to-gh-pages@v1.1.0
         with:
