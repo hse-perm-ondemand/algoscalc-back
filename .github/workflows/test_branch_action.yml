@@ -110,6 +110,8 @@ jobs:
         with:
           branch: Test
           dir_docs: docs
+          publish: true
+          page_url: ${{ secrets.DOCS_PAGES_DOMAIN }}
           sphinxapiopts: '--separate -o . ../'
           sphinxapiexclude: '../*setup* ../*.ipynb  **/test_runner.py'
           sphinxopts: ''
