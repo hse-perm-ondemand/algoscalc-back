@@ -8,40 +8,64 @@ from src.core.data_element import DataElement
 
 
 DEFAULT_TIMEOUT = 5
-PARAM_NOT_DATAELEMENT_MSG = 'Parameter is not an DataElement instance'
-PARAM_EXISTS_TMPL = 'Parameter "{0}" already exists'
-OUTPUT_NOT_DATAELEMENT_MSG = 'Output is not an DataElement instance'
-OUTPUT_EXISTS_TMPL = 'Output "{0}" already exists'
-METHOD_NOT_CALL_MSG = 'Method object is not callable'
-ADDING_METHOD_FAILED_TEMPL = 'Adding the method failed. Error: {0}'
-UNEXPECTED_OUTPUT_TEMPL = 'Fact output "{0}" value "{1}" is not ' \
-                                     'equal to expected value "{2}"'
-TIME_OVER_TEMPL = 'The time for execution ({0} s) is over. Parameters: {1}'
-UNEXPECTED_PARAM_MSG = 'The method got an unexpected parameter'
-EXECUTION_FAILED_TEMPL = 'Method execution is failed! Error: {0}. ' \
-                         'Parameters: {1}'
-UNSET_PARAMS_MSG = 'Parameters for the algorithm are not set'
-UNSET_OUTPUTS_MSG = 'Outputs for the algorithm are not set'
-NOT_DICT_PARAMS_MSG = 'Specified parameters is not a dictionary'
-REDUNDANT_PARAMETER_TEMPL = 'The specified parameter "{0}" is missing ' \
-                            'in the algorithms parameters'
-MISSED_PARAMETER_TEMPL = 'The defined parameter "{0}" is missing ' \
-                         'in the specified parameters'
-NOT_DICT_OUTPUTS_MSG = 'The outputs returned is not a dictionary'
-REDUNDANT_OUTPUT_TEMPL = 'The returned output key "{0}" is missing ' \
-                         'in the algorithms outputs'
-MISSED_OUTPUT_TEMPL = 'The defined output key "{0}" is missing ' \
-                      'in the method outputs'
-NON_STRING_PARAM_TEMPL = 'The "{0}" parameter is not a string'
-EMPTY_STRING_PARAM_TEMPL = 'The "{0}" parameter is empty'
-NON_INT_TIMEOUT_MSG = 'The execute_timeout parameter is not an integer'
-NEG_INT_TIMEOUT_MSG = 'The execute_timeout parameter is less than 0'
+PARAM_NOT_DATAELEMENT_MSG = 'Элемент входных данных не является экземпляром ' \
+                            'класса DataElement'
+PARAM_EXISTS_TMPL = 'Элемент входных данных с именем "{0}" уже существует'
+OUTPUT_NOT_DATAELEMENT_MSG = 'Элемент выходных данных не является ' \
+                             'экземпляром класса DataElement'
+OUTPUT_EXISTS_TMPL = 'Элемент выходных данных с именем "{0}" уже существует'
+METHOD_NOT_CALL_MSG = 'Объект, переданный в качестве метода, ' \
+                      'не является вызываемым'
+ADDING_METHOD_FAILED_TEMPL = 'В процессе добавления метода произошла ' \
+                             'ошибка: {0}'
+UNEXPECTED_OUTPUT_TEMPL = 'фактический результат "{0}" для элемента ' \
+                          'выходных данных "{1}" не соответствует ожидаемому ' \
+                          'значению "{2}"'
+TIME_OVER_TEMPL = 'Время для выполнения алгоритма ({0} с) истекло. ' \
+                  'Входные данные: {1}'
+UNEXPECTED_PARAM_MSG = 'В метод передан недопустимый параметр'
+EXECUTION_FAILED_TEMPL = 'Во время выполнения алгоритма произошла ' \
+                         'ошибка: {0}. Входные данные: {1}'
+UNSET_PARAMS_MSG = 'Для алгоритма не заданы входные данные'
+UNSET_OUTPUTS_MSG = 'Для алгоритма не заданы выходные данные'
+NOT_DICT_PARAMS_MSG = 'Входные данные переданы не в формате словаря'
+REDUNDANT_PARAMETER_TEMPL = 'Переданный элемент "{0}" отсутствует ' \
+                            'в структуре входных данных алгоритма'
+MISSED_PARAMETER_TEMPL = 'Не указано значение для элемента входных данных "{0}"'
+NOT_DICT_OUTPUTS_MSG = 'Выходные данные алгоритма не формате словаря'
+REDUNDANT_OUTPUT_TEMPL = 'Алгоритм вернул элемент "{0}", не указанный ' \
+                         'в структуре выходных данных'
+MISSED_OUTPUT_TEMPL = 'Алгоритм не вернул значение для элемента выходных ' \
+                      'данных "{0}'
+NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
+EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
+NON_INT_TIMEOUT_MSG = 'Параметр execute_timeout не является целым числом'
+NEG_INT_TIMEOUT_MSG = 'Значение параметра execute_timeout меньше нуля'
 
 
 class Algorithm(object):
+    """Класс представляет описание алгоритма, структуры входных и
+    выходных данных, предоставляет возможность выполнения алгоритма согласно
+    заданным параметрам.
+    """
     def __init__(self, name: str, title: str, description: str,
                  log_config: dict[str, Any],
                  execute_timeout: int = DEFAULT_TIMEOUT):
+        """Конструктор класса
+
+        :param name: уникальное имя алгоритма;
+        :type name: str
+        :param title: название алгоритма;
+        :type title: str
+        :param description: описание алгоритма;
+        :type description: str
+        :param log_config: конфигурация логирования;
+        :type log_config: dict[str, Any]
+        :param execute_timeout: время отведенное для выполнения алгоритма;
+        :type execute_timeout: int
+        :raises ValueError: при несоответствии типов данных для параметров,
+            при отрицательных значениях параметра execute_timeout.
+        """
         self.__name: str = ''
         param_errors = Algorithm.__check_params(name, title, description,
                                                 execute_timeout)
@@ -63,33 +87,74 @@ class Algorithm(object):
         self.__execute_method: Optional[Callable] = None
 
     def __str__(self) -> str:
+        """Возвращает строковое представление экземпляра класса."""
         return f'Algorithm: {self.__name}, title: {self.__title}'
 
     @property
     def name(self) -> str:
+        """Возвращает уникальное имя алгоритма.
+
+        :return: уникальное имя алгоритма.
+        :rtype: str
+        """
         return self.__name
 
     @property
     def title(self) -> str:
+        """Возвращает название алгоритма.
+
+        :return: название алгоритма.
+        :rtype: str
+        """
         return self.__title
 
     @property
     def description(self) -> str:
+        """Возвращает описание алгоритма.
+
+        :return: описание алгоритма.
+        :rtype: str
+        """
         return self.__description
 
     @property
     def parameters(self) -> tuple[DataElement]:
+        """Возвращает описание входных данных алгоритма.
+
+        :return: описание входных данных алгоритма.
+        :rtype: tuple[DataElement]
+        """
         return tuple(param for param in self.__parameters.values())
 
     @property
     def outputs(self) -> tuple[DataElement]:
+        """Возвращает описание выходных данных алгоритма.
+
+        :return: описание выходных данных алгоритма.
+        :rtype: tuple[DataElement]
+        """
         return tuple(output for output in self.__outputs.values())
 
     @property
     def execute_timeout(self) -> int:
+        """Возвращает время отведенное для выполнения алгоритма.
+
+        :return: время отведенное для выполнения алгоритма.
+        :rtype: int
+        """
         return self.__execute_timeout
 
     def add_parameter(self, parameter: DataElement) -> None:
+        """Добавляет в описание входных данных алгоритма,  элемент
+        переданный в параметре parameter
+
+        :param parameter: элемент входных данных.
+        :type parameter: DataElement
+        :return: None
+        :raises TypeError: если параметр не является экземпляром DataElement;
+        :raises ValueError: если элемент входных данных с указанным именем
+            уже имеется в описании структуры входных данных.
+        """
         if not isinstance(parameter, DataElement):
             self.__log_and_raise_error(PARAM_NOT_DATAELEMENT_MSG, TypeError)
         if parameter.name in self.__parameters.keys():
@@ -98,6 +163,16 @@ class Algorithm(object):
         self.__parameters[parameter.name] = parameter
 
     def add_output(self, output: DataElement) -> None:
+        """Добавляет в описание выходных данных алгоритма,  элемент
+        переданный в параметре output
+
+        :param output: элемент выходных данных.
+        :type output: DataElement
+        :return: None
+        :raises TypeError: если параметр не является экземпляром DataElement;
+        :raises ValueError: если элемент выходных данных с указанным именем
+            уже имеется в описании структуры выходных данных.
+        """
         if not isinstance(output, DataElement):
             self.__log_and_raise_error(OUTPUT_NOT_DATAELEMENT_MSG, TypeError)
         if output.name in self.__outputs.keys():
@@ -106,6 +181,15 @@ class Algorithm(object):
         self.__outputs[output.name] = output
 
     def add_execute_method(self, method: Callable) -> None:
+        """Добавляет метод, реализующий выполнение алгоритма.
+
+        :param method: метод, реализующий выполнение алгоритма;
+        :type method: Callable
+        :return: None
+        :raises TypeError: если параметр не является методом;
+        :raises RuntimeError: если тестовое выполнение алгоритма
+            завершилось с ошибкой.
+        """
         if not callable(method):
             self.__log_and_raise_error(METHOD_NOT_CALL_MSG, TypeError)
         self.__execute_method = method
@@ -116,6 +200,12 @@ class Algorithm(object):
                 ADDING_METHOD_FAILED_TEMPL.format(errors), RuntimeError)
 
     def get_test_errors(self) -> Optional[str]:
+        """Выполняет тестовое выполнение алгоритма, с параметрами заданными
+        по умолчанию.
+
+        :return: текст сообщения об ошибке выполнения алгоритма.
+        :rtype: str or None
+        """
         try:
             params = self.__get_default_parameters()
             outputs = self.execute(params)
@@ -130,6 +220,24 @@ class Algorithm(object):
             return str(ex).strip("'")
 
     def execute(self, params: dict[str, Any]) -> dict[str, Any]:
+        """Выполняет алгоритм с заданными входными данными.
+
+        :param params: значения входных данных для выполнения алгоритма.
+            Словарь, где ключи - имена входных данных, значения - фактические
+            значения входных данных.
+        :type params: dict[str, Any]
+        :return: результат выполнения алгоритма. Словарь, где ключи - имена
+            выходных данных, значения - рассчитанные значения выходных данных.
+        :rtype: dict[str, Any]
+        :raises TypeError: если не установлен метод для выполнения, если
+            параметры переданы не словарем, если метод вернул результаты
+            не в виде словаря;
+        :raises KeyError: если во входных или выходных данных отсутствует
+            необходимый или имеется лишний элемент;
+        :raises TimeoutError: если закончилось время, отведенное для
+            выполнения алгоритма;
+        :raises RuntimeError: при возникновении ошибки при выполнении.
+        """
         self.__check_method_raises_ex()
         self.__check_parameters_raises_ex(params)
 
@@ -156,10 +264,13 @@ class Algorithm(object):
         return method_outputs
 
     def __get_default_parameters(self) -> dict[str, Any]:
+        """Возвращает значения по умолчанию для входных данных алгоритма."""
         return {key: value.default_value
                 for key, value in self.__parameters.items()}
 
     def __check_method_raises_ex(self) -> None:
+        """Проверяет возможность выполнения метода. При наличии ошибок
+            вызывает исключения TypeError, AttributeError."""
         if not callable(self.__execute_method):
             self.__log_and_raise_error(METHOD_NOT_CALL_MSG, TypeError)
         if not self.__parameters:
@@ -168,6 +279,8 @@ class Algorithm(object):
             self.__log_and_raise_error(UNSET_OUTPUTS_MSG, AttributeError)
 
     def __check_parameters_raises_ex(self, fact_params: dict[str, Any]) -> None:
+        """"Проверяет входные данные для выполнения алгоритма. При наличии
+            ошибок вызывает исключения TypeError, KeyError."""
         if type(fact_params) != dict:
             self.__log_and_raise_error(NOT_DICT_PARAMS_MSG, TypeError)
         for key in fact_params.keys():
@@ -184,6 +297,8 @@ class Algorithm(object):
                 self.__log_and_raise_error(errors, TypeError)
 
     def __check_outputs_raises_ex(self, method_outputs: dict[str, Any]) -> None:
+        """"Проверяет выходные данные для выполнения алгоритма. При наличии
+            ошибок вызывает исключения TypeError, KeyError."""
         if type(method_outputs) != dict:
             self.__log_and_raise_error(NOT_DICT_OUTPUTS_MSG, TypeError)
         for key in method_outputs.keys():
@@ -202,6 +317,8 @@ class Algorithm(object):
     @staticmethod
     def __check_params(name: str, title: str, description: str,
                        execute_timeout: int) -> Optional[str]:
+        """Проверяет параметры для конструктора класса. Возвращает сообщение
+            об ошибке"""
         str_params = [['name', name], ['title', title],
                       ['description', description]]
         for name, value in str_params:
@@ -216,5 +333,6 @@ class Algorithm(object):
         return None
 
     def __log_and_raise_error(self, msg: str, error_type: Callable) -> None:
+        """Логирует сообщение об ошибке и вызывает требуемое исключение."""
         self.__logger.error(f'{self.__name}. {msg}')
         raise error_type(msg)

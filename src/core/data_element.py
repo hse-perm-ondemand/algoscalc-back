@@ -4,23 +4,30 @@ from strenum import UppercaseStrEnum
 from enum import auto
 
 
-NON_STRING_PARAM_TEMPL = 'The "{0}" parameter is not a string'
-EMPTY_STRING_PARAM_TEMPL = 'The "{0}" parameter is empty'
-NOT_DATA_TYPE_MSG = 'The data_type parameter is not a DataType instance'
-NOT_DATA_SHAPE_MSG = 'The data_shape parameter is not a DataShape instance'
-NONE_VALUE_MSG = 'The value is None'
-NOT_SCALAR_VALUE_MSG = 'The value is not a scalar'
-NOT_MATRIX_VALUE_MSG = 'The value is not a matrix'
-NOT_LIST_VALUE_MSG = 'The value is not a list'
-NOT_LIST_ROW_TEMPL = 'The type of {0} row in the matrix is not a list'
-MISMATCH_VALUE_TYPE_TEMPL = 'The type of value is not {0}'
-MISMATCH_LIST_VALUE_TYPE_TEMPL = 'The type at {0} position in the list ' \
-                                 'is not {1}'
-MISMATCH_MATRIX_VALUE_TYPE_TEMPL = 'The type at {0} position in {1} row ' \
-                                   'in the matrix is not {2}'
+NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
+EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
+NOT_DATA_TYPE_MSG = 'Параметр data_type не является экземпляром DataType'
+NOT_DATA_SHAPE_MSG = 'Параметр data_shape не является экземпляром DataShape'
+NONE_VALUE_MSG = 'Значение отсутствует (тип None)'
+NOT_SCALAR_VALUE_MSG = 'Значение не является скалярным'
+NOT_MATRIX_VALUE_MSG = 'Значение не является матрицей'
+NOT_LIST_VALUE_MSG = 'Значение не является списком'
+NOT_LIST_ROW_TEMPL = 'Строка {0} в матрице не является списком'
+MISMATCH_VALUE_TYPE_TEMPL = 'Тип данных для значения не соответствует типу {0}'
+MISMATCH_LIST_VALUE_TYPE_TEMPL = 'Тип данных элемента списка с индексом {0}' \
+                                 ' не соответствует типу {1}'
+MISMATCH_MATRIX_VALUE_TYPE_TEMPL = 'Тип данных элемента с индексом {0} ' \
+                                   'в строке матрицы с индексом {1} ' \
+                                   'не соответствует типу {2}'
 
 
 class DataType(UppercaseStrEnum):
+    """Класс является перечислением, представляет допустимые типы данных
+        для входных и выходных данных. Возможными значениями класса являются
+        INT, FLOAT, STRING, BOOL, соответствующие типам данных
+        int, float, str, bool.
+
+    """
     INT = auto()
     FLOAT = auto()
     STRING = auto()
@@ -28,27 +35,53 @@ class DataType(UppercaseStrEnum):
 
     @property
     def type(self) -> type:
+        """Возвращает соответствующий тип данных.
+
+        :return: тип данных.
+        :rtype: type
+        """
         return DataType.__types_dict()[self]
 
     @staticmethod
     def types() -> list[type]:
+        """Возвращает список допустимых типов данных.
+
+        :return: список допустимых типов данных.
+        :rtype: list[type]
+        """
         return list(DataType.__types_dict().values())
 
     def __str__(self) -> str:
+        """Возвращает строковое представление экземпляра класса."""
         return self.name.lower()
 
     @staticmethod
     def __types_dict():
+        """Возвращает словарь соответствия типам данных."""
         return {DataType.INT: int, DataType.FLOAT: float, DataType.STRING: str,
                 DataType.BOOL: bool}
 
 
 class DataShape(UppercaseStrEnum):
+    """Класс DataShape является перечислением, представляет допустимые
+        размерности для входных и выходных данных. Возможными значениями
+        класса являются SCALAR, LIST, MATRIX, соответствующие
+        скалярному значению, списку скалярных значений и двумерную
+        матрицу соответственно.
+
+    """
     SCALAR = auto()
     LIST = auto()
     MATRIX = auto()
 
     def get_shape_errors(self, value_to_check: Any) -> Optional[str]:
+        """Проверяет соответствие проверяемого значения размерности.
+
+        :param value_to_check: значение для проверки;
+        :type value_to_check: Any
+        :return: текст сообщения об ошибке проверки размерности.
+        :rtype: str or None
+        """
         if value_to_check is None:
             return NONE_VALUE_MSG
         if self.value == self.SCALAR and type(value_to_check) \
@@ -71,9 +104,28 @@ class DataShape(UppercaseStrEnum):
 
 
 class DataElement(object):
+    """Класс представляет элемент входных или выходных данных для алгоритма.
+
+    """
     def __init__(self, name: str, title: str, description: str,
                  data_type: DataType, data_shape: DataShape,
                  default_value: Any):
+        """Конструктор класса
+
+        :param name: уникальное имя элемента входных/выходных данных;
+        :type name: str
+        :param title: название элемента входных/выходных данных;
+        :type title: str
+        :param description: описание элемента входных/выходных данных;
+        :type description: str
+        :param data_type: тип данных;
+        :type data_type: DataType
+        :param data_shape: размерность данных;
+        :type data_shape: DataShape
+        :param default_value: значение по умолчанию.
+        :type default_value: Any
+        :raises ValueError: при несоответствии типов данных для параметров.
+        """
         param_errors = DataElement.__check_params(name, title, description,
                                                   data_type, data_shape)
         if param_errors is not None:
@@ -89,34 +141,73 @@ class DataElement(object):
         self.__default_value: Any = default_value
 
     def __str__(self) -> str:
+        """Возвращает строковое представление экземпляра класса."""
         return f'DataElement: {self.__name}, "{self.__title}", ' \
                f'value: {self.__default_value}'
 
     @property
     def name(self) -> str:
+        """Возвращает уникальное имя элемента.
+
+        :return: уникальное имя элемента.
+        :rtype: str
+        """
         return self.__name
 
     @property
     def title(self) -> str:
+        """Возвращает название элемента.
+
+        :return: название элемента.
+        :rtype: str
+        """
         return self.__title
 
     @property
     def description(self) -> str:
+        """Возвращает описание элемента.
+
+        :return: описание элемента.
+        :rtype: str
+        """
         return self.__description
 
     @property
     def data_type(self) -> DataType:
+        """Возвращает тип данных элемента.
+
+        :return: тип данных элемента.
+        :rtype: DataType
+        """
         return self.__data_type
 
     @property
     def data_shape(self) -> DataShape:
+        """Возвращает размерность данных элемента.
+
+        :return: размерность данных элемента.
+        :rtype: DataShape
+        """
         return self.__data_shape
 
     @property
     def default_value(self) -> Any:
+        """Возвращает значение по умолчанию элемента.
+
+        :return: значение по умолчанию элемента.
+        :rtype: Any
+        """
         return self.__default_value
 
     def get_check_value_errors(self, value: Any) -> Optional[str]:
+        """Проверяет соответствие проверяемого значения типу данных
+            и размерности.
+
+        :param value: значение для проверки;
+        :type value: Any
+        :return: текст сообщения об ошибке проверки типа и размерности.
+        :rtype: str or None
+        """
         shape_errors = self.data_shape.get_shape_errors(value)
         if shape_errors is not None:
             return shape_errors
@@ -129,16 +220,19 @@ class DataElement(object):
         return None
 
     def __check_scalar_value(self, value: Any) -> Optional[str]:
+        """Проверяет тип данных для скалярного значения."""
         if type(value) != self.__data_type.type:
             return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
 
     def __check_list_value(self, value: Any) -> Optional[str]:
+        """Проверяет тип данных для элементов списка."""
         for idx, item in enumerate(value):
             if item is not None and type(item) != self.__data_type.type:
                 return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(idx,
                                                              self.__data_type)
 
     def __check_matrix_value(self, value: Any) -> Optional[str]:
+        """Проверяет тип данных для элементов матрицы."""
         for row_idx, row in enumerate(value):
             for item_idx, item in enumerate(row):
                 if item is not None and type(item) != self.__data_type.type:
@@ -149,6 +243,8 @@ class DataElement(object):
     def __check_params(name: str, title: str, description: str,
                        data_type: DataType,
                        data_shape: DataShape) -> Optional[str]:
+        """Проверяет параметры для конструктора класса. Возвращает сообщение
+            об ошибке"""
         str_params = [['name', name], ['title', title],
                       ['description', description]]
         for name, value in str_params:

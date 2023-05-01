@@ -12,12 +12,16 @@ from src.core.data_element import DataElement, DataType, DataShape
 from src.core.algorithm import Algorithm
 
 
-UNIT_TEST_FAILED_MSG = 'Unit test for the algorithm method was failed'
-NON_STRING_PARAM_TEMPL = 'The "{0}" parameter is not a string'
-EMPTY_STRING_PARAM_TEMPL = 'The "{0}" parameter is empty'
+UNIT_TEST_FAILED_MSG = 'Модульные тесты для алгоритма завершились с ошибкой'
+NON_STRING_PARAM_TEMPL = 'Параметр "{0}" не является строкой'
+EMPTY_STRING_PARAM_TEMPL = 'Параметр "{0}" пуст'
 
 
 class AlgorithmBuilder:
+    """Класс создает экземпляры класса Algorithm из файлов с исходным кодом.
+
+    """
+
     NAME = 'name'
     TITLE = 'title'
     DESCRIPTION = 'description'
@@ -31,6 +35,24 @@ class AlgorithmBuilder:
     def __init__(self, definition_file_name: str, function_file_name: str,
                  test_file_name: str, schema_file_path: str,
                  algorithm_config: dict[str, Any], log_config: dict[str, Any]):
+        """Конструктор класса
+
+        :param definition_file_name: название файла с описанием алгоритма;
+        :type definition_file_name: str
+        :param function_file_name: название файла с методом для алгоритма;
+        :type function_file_name: str
+        :param test_file_name: название файла с авто тестами для метода
+            алгоритма;
+        :type test_file_name: str
+        :param schema_file_path: путь к файлу JSON Schema для валидации
+            описания алгоритма;
+        :type schema_file_path: str
+        :param algorithm_config: парамеры для создаваемых алгоритмов;
+        :type algorithm_config: dict[str, Any]
+        :param log_config: конфигурация логирования;
+        :type log_config: dict[str, Any]
+        :raises ValueError: при несоответствии типов данных для параметров.
+        """
         self.__log_config: dict[str: Any] = log_config
         logging.config.dictConfig(log_config)
         self.__logger: Logger = logging.getLogger(__name__)
@@ -53,6 +75,18 @@ class AlgorithmBuilder:
         self.__algorithm_config: dict[str, Any] = algorithm_config
 
     def build_algorithm(self, path: str) -> Algorithm:
+        """Создает экземпляр класса Algorithm на основе файлов с исходным
+            кодом, расположенных в указанном каталоге.
+
+        :param path: путь к каталогу с файлами исходного кода для алгоритма;
+        :type path: str
+        :return: экземпляр класса Algorithm;
+        :rtype: Algorithm
+        :raises ValidationError: при несоответствии описания алгоритма
+            JSON Schema;
+        :raises RuntimeError: при ошибке выполнения авто тестов для алгоритма;
+        :raises FileNotFoundError: при отсутствии файлов с исходным кодом;
+        """
         self.__logger.info(path)
         with open(path + '/' + self.__definition_file_name,
                   'r') as def_file:
@@ -74,12 +108,15 @@ class AlgorithmBuilder:
 
     def __validate_definition_raises_ex(self, definition: dict[str, Any]) \
             -> None:
+        """Проверяет соответствие описания алгоритма JSON Schema. При наличии
+            ошибок вызывает исключение ValidationError"""
         with open(self.__schema_file_path, 'r') as schema_file:
             schema = json.load(schema_file)
         jsonschema.validate(definition, schema)
 
     def __get_data_element(self,
                            data_element_def: dict[str, Any]) -> DataElement:
+        """Создает экземпляр DataElement из описания элемента данных."""
         return DataElement(data_element_def[self.NAME],
                            data_element_def[self.TITLE],
                            data_element_def[self.DESCRIPTION],
@@ -88,6 +125,7 @@ class AlgorithmBuilder:
                            data_element_def[self.DEFAULT_VALUE])
 
     def __get_function(self, path: str) -> Callable:
+        """Импортирует метод алгоритма из файла с исходным кодом."""
         file_name = self.__function_file_name
         spec = importlib.util.spec_from_file_location(file_name,
                                                       path + '/' + file_name)
@@ -96,6 +134,7 @@ class AlgorithmBuilder:
         return module.main
 
     def __test_function(self, path: str) -> bool:
+        """Выполняет авто тесты для алгоритма"""
         file_name = self.__test_file_name
         spec = importlib.util.spec_from_file_location(file_name,
                                                       path + '/' + file_name)
@@ -112,6 +151,8 @@ class AlgorithmBuilder:
     def __check_params(definition_file_name: str, function_file_name: str,
                        test_file_name: str, schema_file_path: str) \
             -> Optional[str]:
+        """Проверяет параметры для конструктора класса. Возвращает сообщение
+            об ошибке"""
         str_params = [['definition_file_name', definition_file_name],
                       ['function_file_name', function_file_name],
                       ['test_file_name', test_file_name],
