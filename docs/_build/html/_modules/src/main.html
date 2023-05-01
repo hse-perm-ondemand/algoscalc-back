@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.main &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.main</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Реализация API для онлайн-калькулятора с использованием фреймворка FastAPI.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging.config</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
+
+<span class="kn">from</span> <span class="nn">src.core.algorithm_collection</span> <span class="kn">import</span> <span class="n">AlgorithmCollection</span><span class="p">,</span> \
+    <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span>
+<span class="kn">from</span> <span class="nn">src.api_models</span> <span class="kn">import</span> <span class="n">AlgorithmTitle</span><span class="p">,</span> <span class="n">Algorithms</span><span class="p">,</span> <span class="n">DataDefinition</span><span class="p">,</span> \
+    <span class="n">AlgorithmDefinition</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">Outputs</span><span class="p">,</span> <span class="n">AnswerOutputs</span><span class="p">,</span> \
+    <span class="n">AnswerAlgorithmDefinition</span>
+<span class="kn">from</span> <span class="nn">src.constants</span> <span class="kn">import</span> <span class="n">APP_CONFIG_FILE_PATH</span><span class="p">,</span> <span class="n">LOG_CONFIG_FILE_PATH</span><span class="p">,</span> \
+    <span class="n">PATH_CONFIG</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span> <span class="n">IS_TEST_APP</span><span class="p">,</span> <span class="n">EXECUTE_TIMEOUT</span><span class="p">,</span> \
+    <span class="n">ALGORITHMS_ENDPOINT</span><span class="p">,</span> <span class="n">TIME_OVER_MSG</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;../&#39;</span> <span class="o">+</span> <span class="n">LOG_CONFIG_FILE_PATH</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOG_CONFIG_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_conf_file</span><span class="p">:</span>
+    <span class="n">log_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">log_conf_file</span><span class="p">)</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">log_config</span><span class="p">[</span><span class="s2">&quot;handlers&quot;</span><span class="p">][</span><span class="s2">&quot;file_handler&quot;</span><span class="p">][</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span>
+<span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">if</span> <span class="n">file_path</span><span class="p">:</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">log_config</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Start app&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">APP_CONFIG_FILE_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">conf_file</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">conf_file</span><span class="p">)</span>
+<span class="n">path_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">PATH_CONFIG</span><span class="p">]</span>
+<span class="n">algorithm_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">ALGORITHM_CONFIG</span><span class="p">]</span>
+<span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IS_TEST_APP</span><span class="p">)):</span>
+    <span class="n">algorithm_config</span><span class="p">[</span><span class="n">EXECUTE_TIMEOUT</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="n">path_config</span><span class="p">,</span> <span class="n">algorithm_config</span><span class="p">,</span> <span class="n">log_config</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_algorithms"><a class="viewcode-back" href="../../src.html#src.main.get_algorithms">[документация]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ALGORITHMS_ENDPOINT</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">get_algorithms</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Algorithms</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Возвращает список имеющихся алгоритмов.</span>
+
+<span class="sd">    :return: список имеющихся алгоритмов.</span>
+<span class="sd">    :rtype: Algorithms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Request received&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">Algorithms</span><span class="p">(</span><span class="n">algorithms</span><span class="o">=</span><span class="p">[])</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">get_name_title_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AlgorithmTitle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="get_algorithm"><a class="viewcode-back" href="../../src.html#src.main.get_algorithm">[документация]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ALGORITHMS_ENDPOINT</span> <span class="o">+</span> <span class="s1">&#39;/</span><span class="si">{algorithm_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">get_algorithm</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnswerAlgorithmDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Возвращает описание выбранного алгоритма.</span>
+
+<span class="sd">    :param algorithm_name: имя алгоритма;</span>
+<span class="sd">    :type algorithm_name: str</span>
+<span class="sd">    :return: Описание алгоритма.</span>
+<span class="sd">    :rtype: AnswerAlgorithmDefinition</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Request received. algorithm_name: </span><span class="si">{</span><span class="n">algorithm_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">AnswerAlgorithmDefinition</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">answer</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">alg</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DataDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                               <span class="n">data_type</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data_type</span><span class="p">),</span>
+                               <span class="n">data_shape</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data_shape</span><span class="p">),</span>
+                               <span class="n">default_value</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">default_value</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">alg</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DataDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                               <span class="n">description</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                               <span class="n">data_type</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">data_type</span><span class="p">),</span>
+                               <span class="n">data_shape</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">data_shape</span><span class="p">),</span>
+                               <span class="n">default_value</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">default_value</span><span class="p">))</span>
+        <span class="n">alg_def</span> <span class="o">=</span> <span class="n">AlgorithmDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">alg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">alg</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                                      <span class="n">description</span><span class="o">=</span><span class="n">alg</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                                      <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">alg_def</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">answer</span></div>
+
+
+<div class="viewcode-block" id="get_algorithm_result"><a class="viewcode-back" href="../../src.html#src.main.get_algorithm_result">[документация]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">ALGORITHMS_ENDPOINT</span> <span class="o">+</span> <span class="s1">&#39;/</span><span class="si">{algorithm_name}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">get_algorithm_result</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Parameters</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">AnswerOutputs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Возвращает результат выполнения выбранного алгоритма.</span>
+
+<span class="sd">    :param algorithm_name: имя алгоритма;</span>
+<span class="sd">    :type algorithm_name: str</span>
+<span class="sd">    :param parameters: значения входных данных для выполнения алгоритма.</span>
+<span class="sd">    :type parameters: Parameters</span>
+<span class="sd">    :return: результат выполнения выбранного алгоритма</span>
+<span class="sd">    :rtype: AnswerOutputs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Request received. algorithm_name: </span><span class="si">{</span><span class="n">algorithm_name</span><span class="si">}</span><span class="s1">, &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;parameters: </span><span class="si">{</span><span class="n">parameters</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">AnswerOutputs</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">answer</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">get_params_to_execute</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm_result</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Data</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">TIME_OVER_MSG</span><span class="p">)</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">TIME_OVER_MSG</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">answer</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MikhailovAlexander.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

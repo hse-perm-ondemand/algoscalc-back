@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core.algorithm_collection &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core.algorithm_collection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core.algorithm_collection</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">src.core.algorithm</span> <span class="kn">import</span> <span class="n">Algorithm</span>
+<span class="kn">from</span> <span class="nn">src.core.algorithm_builder</span> <span class="kn">import</span> <span class="n">AlgorithmBuilder</span>
+<span class="kn">from</span> <span class="nn">src.core.constants</span> <span class="kn">import</span> <span class="n">NO_ALGORITHMS_MSG</span><span class="p">,</span> <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span>
+
+
+<div class="viewcode-block" id="AlgorithmCollection"><a class="viewcode-back" href="../../../src.core.html#src.core.algorithm_collection.AlgorithmCollection">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmCollection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет собой набор объектов класса Algorithm,</span>
+<span class="sd">    созданных объектом класса AlgorithmBuilder.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">algorithm_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                 <span class="n">log_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Конструктор класса</span>
+
+<span class="sd">        :param path_config: путь к каталогу с исходным кодом алгоритмов;</span>
+<span class="sd">        :type path_config: str</span>
+<span class="sd">        :param algorithm_config: парамеры для создаваемых алгоритмов;</span>
+<span class="sd">        :type algorithm_config: dict[str, Any]</span>
+<span class="sd">        :param log_config: конфигурация логирования;</span>
+<span class="sd">        :type log_config: dict[str, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Algorithm</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;definition_file_name&#39;</span><span class="p">],</span>
+                                   <span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;function_file_name&#39;</span><span class="p">],</span>
+                                   <span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;test_file_name&#39;</span><span class="p">],</span>
+                                   <span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;json_schema_file_path&#39;</span><span class="p">],</span>
+                                   <span class="n">algorithm_config</span><span class="p">,</span> <span class="n">log_config</span><span class="p">)</span>
+        <span class="n">catalog_path</span> <span class="o">=</span> <span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;algorithms_catalog_path&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">catalog_path</span><span class="p">):</span>
+            <span class="n">alg_path</span> <span class="o">=</span> <span class="n">catalog_path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">obj</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">alg_path</span><span class="p">):</span>
+                <span class="n">alg</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">(</span><span class="n">alg_path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">[</span><span class="n">alg</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">alg</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">NO_ALGORITHMS_MSG</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AlgorithmCollection.has_algorithm"><a class="viewcode-back" href="../../../src.core.html#src.core.algorithm_collection.AlgorithmCollection.has_algorithm">[документация]</a>    <span class="k">def</span> <span class="nf">has_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет наличие алгоритма с указанным именем.</span>
+
+<span class="sd">        :param algorithm_name: имя алгоритма;</span>
+<span class="sd">        :type algorithm_name: str</span>
+<span class="sd">        :return: True при наличии алгоритма, иначе False.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">algorithm_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollection.get_name_title_dict"><a class="viewcode-back" href="../../../src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_name_title_dict">[документация]</a>    <span class="k">def</span> <span class="nf">get_name_title_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает словарь с уникальными именами алгоритмов в качестве</span>
+<span class="sd">        ключей и названиями алгоритмов в качестве значений.</span>
+
+<span class="sd">        :return: словарь с именами и названиями алгоритмов.</span>
+<span class="sd">        :rtype: dict[str, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">alg</span><span class="o">.</span><span class="n">title</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">alg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollection.get_algorithm"><a class="viewcode-back" href="../../../src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_algorithm">[документация]</a>    <span class="k">def</span> <span class="nf">get_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Algorithm</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает объект класса Algorithm с указанным именем.</span>
+
+<span class="sd">        :param algorithm_name: имя алгоритма;</span>
+<span class="sd">        :type algorithm_name: str</span>
+<span class="sd">        :return: объект класса Algorithm</span>
+<span class="sd">        :rtype: Algorithm</span>
+<span class="sd">        :raises ValueError: если алгоритм с указанным именем отсутствует;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">algorithm_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">[</span><span class="n">algorithm_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollection.get_algorithm_result"><a class="viewcode-back" href="../../../src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_algorithm_result">[документация]</a>    <span class="k">def</span> <span class="nf">get_algorithm_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                             <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает результат выполнения алгоритма с указанным именем.</span>
+
+<span class="sd">        :param algorithm_name: имя алгоритма;</span>
+<span class="sd">        :type algorithm_name: str</span>
+<span class="sd">        :param params: значения входных данных для выполнения алгоритма.</span>
+<span class="sd">            Словарь, где ключи - имена входных данных, значения - фактические</span>
+<span class="sd">            значения входных данных.</span>
+<span class="sd">        :type params: dict[str, Any]</span>
+<span class="sd">        :return: результат выполнения алгоритма. Словарь, где ключи - имена</span>
+<span class="sd">            выходных данных, значения - рассчитанные значения выходных данных.</span>
+<span class="sd">        :rtype: Algorithm</span>
+<span class="sd">        :raises ValueError: если алгоритм с указанным именем отсутствует;</span>
+<span class="sd">        :raises KeyError: если во входных или выходных данных отсутствует</span>
+<span class="sd">            необходимый или имеется лишний элемент;</span>
+<span class="sd">        :raises TimeoutError: если закончилось время, отведенное для</span>
+<span class="sd">            выполнения алгоритма;</span>
+<span class="sd">        :raises RuntimeError: при возникновении ошибки при выполнении.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">algorithm_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">algorithm_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__algorithms</span><span class="p">[</span><span class="n">algorithm_name</span><span class="p">]</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MikhailovAlexander.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

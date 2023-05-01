@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core.data_element &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core.data_element</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core.data_element</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">strenum</span> <span class="kn">import</span> <span class="n">UppercaseStrEnum</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">auto</span>
+<span class="kn">from</span> <span class="nn">src.core.constants</span> <span class="kn">import</span> <span class="n">NON_STRING_PARAM_TEMPL</span><span class="p">,</span> \
+    <span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="p">,</span> <span class="n">NOT_DATA_TYPE_MSG</span><span class="p">,</span> <span class="n">NOT_DATA_SHAPE_MSG</span><span class="p">,</span> \
+    <span class="n">NONE_VALUE_MSG</span><span class="p">,</span> <span class="n">NOT_SCALAR_VALUE_MSG</span><span class="p">,</span> <span class="n">NOT_MATRIX_VALUE_MSG</span><span class="p">,</span> \
+    <span class="n">NOT_LIST_VALUE_MSG</span><span class="p">,</span> <span class="n">NOT_LIST_ROW_TEMPL</span><span class="p">,</span> <span class="n">MISMATCH_VALUE_TYPE_TEMPL</span><span class="p">,</span> \
+    <span class="n">MISMATCH_LIST_VALUE_TYPE_TEMPL</span><span class="p">,</span> <span class="n">MISMATCH_MATRIX_VALUE_TYPE_TEMPL</span>
+
+
+<div class="viewcode-block" id="DataType"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataType">[документация]</a><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">UppercaseStrEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс является перечислением, представляет допустимые типы данных</span>
+<span class="sd">    для входных и выходных данных. Возможными значениями класса являются</span>
+<span class="sd">    INT, FLOAT, STRING, BOOL, соответствующие типам данных</span>
+<span class="sd">    int, float, str, bool.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">INT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">FLOAT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">STRING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">BOOL</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает соответствующий тип данных.</span>
+
+<span class="sd">        :return: тип данных.</span>
+<span class="sd">        :rtype: type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DataType</span><span class="o">.</span><span class="n">__types_dict</span><span class="p">()[</span><span class="bp">self</span><span class="p">]</span>
+
+<div class="viewcode-block" id="DataType.types"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataType.types">[документация]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">type</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает список допустимых типов данных.</span>
+
+<span class="sd">        :return: список допустимых типов данных.</span>
+<span class="sd">        :rtype: list[type]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">__types_dict</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает строковое представление экземпляра класса.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__types_dict</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает словарь соответствия типам данных.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">DataType</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span> <span class="nb">bool</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="DataShape"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataShape">[документация]</a><span class="k">class</span> <span class="nc">DataShape</span><span class="p">(</span><span class="n">UppercaseStrEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс DataShape является перечислением, представляет допустимые</span>
+<span class="sd">    размерности для входных и выходных данных. Возможными значениями</span>
+<span class="sd">    класса являются SCALAR, LIST, MATRIX, соответствующие скалярному значению,</span>
+<span class="sd">    списку скалярных значений и двумерную матрицу соответственно.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SCALAR</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">LIST</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">MATRIX</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DataShape.get_shape_errors"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataShape.get_shape_errors">[документация]</a>    <span class="k">def</span> <span class="nf">get_shape_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_to_check</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет соответствие проверяемого значения размерности.</span>
+
+<span class="sd">        :param value_to_check: значение для проверки;</span>
+<span class="sd">        :type value_to_check: Any</span>
+<span class="sd">        :return: текст сообщения об ошибке проверки размерности.</span>
+<span class="sd">        :rtype: str or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value_to_check</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NONE_VALUE_MSG</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCALAR</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_to_check</span><span class="p">)</span> \
+                <span class="ow">not</span> <span class="ow">in</span> <span class="n">DataType</span><span class="o">.</span><span class="n">types</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">NOT_SCALAR_VALUE_MSG</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">LIST</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_to_check</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NOT_LIST_VALUE_MSG</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">MATRIX</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value_to_check</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NOT_MATRIX_VALUE_MSG</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_to_check</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NOT_MATRIX_VALUE_MSG</span>
+            <span class="k">for</span> <span class="n">row_idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value_to_check</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">NOT_LIST_ROW_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row_idx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DataElement"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataElement">[документация]</a><span class="k">class</span> <span class="nc">DataElement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет элемент входных или выходных данных для алгоритма.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">data_type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
+                 <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Конструктор класса</span>
+
+<span class="sd">        :param name: уникальное имя элемента входных/выходных данных;</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param title: название элемента входных/выходных данных;</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        :param description: описание элемента входных/выходных данных;</span>
+<span class="sd">        :type description: str</span>
+<span class="sd">        :param data_type: тип данных;</span>
+<span class="sd">        :type data_type: DataType</span>
+<span class="sd">        :param data_shape: размерность данных;</span>
+<span class="sd">        :type data_shape: DataShape</span>
+<span class="sd">        :param default_value: значение по умолчанию.</span>
+<span class="sd">        :type default_value: Any</span>
+<span class="sd">        :raises ValueError: при несоответствии типов данных для параметров.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">param_errors</span> <span class="o">=</span> <span class="n">DataElement</span><span class="o">.</span><span class="n">__check_params</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
+                                                  <span class="n">data_type</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">param_errors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="p">:</span> <span class="n">DataType</span> <span class="o">=</span> <span class="n">data_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data_shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">=</span> <span class="n">data_shape</span>
+        <span class="n">default_value_errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_check_value_errors</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default_value_errors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">default_value_errors</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__default_value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">default_value</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает строковое представление экземпляра класса.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;DataElement: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1">, &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__title</span><span class="si">}</span><span class="s1">&quot;, &#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__default_value</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает уникальное имя элемента.</span>
+
+<span class="sd">        :return: уникальное имя элемента.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает название элемента.</span>
+
+<span class="sd">        :return: название элемента.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__title</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает описание элемента.</span>
+
+<span class="sd">        :return: описание элемента.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__description</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает тип данных элемента.</span>
+
+<span class="sd">        :return: тип данных элемента.</span>
+<span class="sd">        :rtype: DataType</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает размерность данных элемента.</span>
+
+<span class="sd">        :return: размерность данных элемента.</span>
+<span class="sd">        :rtype: DataShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_shape</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает значение по умолчанию элемента.</span>
+
+<span class="sd">        :return: значение по умолчанию элемента.</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__default_value</span>
+
+<div class="viewcode-block" id="DataElement.get_check_value_errors"><a class="viewcode-back" href="../../../src.core.html#src.core.data_element.DataElement.get_check_value_errors">[документация]</a>    <span class="k">def</span> <span class="nf">get_check_value_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет соответствие проверяемого значения типу данных</span>
+<span class="sd">        и размерности.</span>
+
+<span class="sd">        :param value: значение для проверки;</span>
+<span class="sd">        :type value: Any</span>
+<span class="sd">        :return: текст сообщения об ошибке проверки типа и размерности.</span>
+<span class="sd">        :rtype: str or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape_errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_shape</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">shape_errors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">shape_errors</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_shape</span> <span class="o">==</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_scalar_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_shape</span> <span class="o">==</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">LIST</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_list_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_shape</span> <span class="o">==</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">MATRIX</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_matrix_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">__check_scalar_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет тип данных для скалярного значения.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MISMATCH_VALUE_TYPE_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__check_list_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет тип данных для элементов списка.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">MISMATCH_LIST_VALUE_TYPE_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span>
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__check_matrix_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет тип данных для элементов матрицы.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row_idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">item_idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">MISMATCH_MATRIX_VALUE_TYPE_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">item_idx</span><span class="p">,</span> <span class="n">row_idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data_type</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__check_params</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                       <span class="n">data_type</span><span class="p">:</span> <span class="n">DataType</span><span class="p">,</span>
+                       <span class="n">data_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Проверяет параметры для конструктора класса. Возвращает сообщение</span>
+<span class="sd">        об ошибке&quot;&quot;&quot;</span>
+        <span class="n">str_params</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">],</span>
+                      <span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">description</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">str_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_type</span><span class="p">,</span> <span class="n">DataType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">NOT_DATA_TYPE_MSG</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_shape</span><span class="p">,</span> <span class="n">DataShape</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">NOT_DATA_SHAPE_MSG</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MikhailovAlexander.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

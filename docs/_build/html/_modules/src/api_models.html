@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.api_models &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.api_models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.api_models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Классы модуля реализуют структуры данных для API онлайн-калькулятора</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+
+<div class="viewcode-block" id="AlgorithmTitle"><a class="viewcode-back" href="../../src.html#src.api_models.AlgorithmTitle">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmTitle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет краткую информацию об алгоритме.</span>
+
+<span class="sd">    :param name: уникальное имя алгоритма;</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param title: название алгоритма.</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="Algorithms"><a class="viewcode-back" href="../../src.html#src.api_models.Algorithms">[документация]</a><span class="k">class</span> <span class="nc">Algorithms</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет список имеющихся алгоритмов.</span>
+
+<span class="sd">    :param algorithms: список имеющихся алгоритмов.</span>
+<span class="sd">    :type algorithms: list[AlgorithmTitle]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">algorithms</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">AlgorithmTitle</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="DataDefinition"><a class="viewcode-back" href="../../src.html#src.api_models.DataDefinition">[документация]</a><span class="k">class</span> <span class="nc">DataDefinition</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет описание элемента входных/выходных данных.</span>
+
+<span class="sd">    :param name: уникальное имя элемента входных/выходных данных;</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param title: название элемента входных/выходных данных;</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param description: описание элемента входных/выходных данных;</span>
+<span class="sd">    :type description: str</span>
+<span class="sd">    :param data_type: тип данных;</span>
+<span class="sd">    :type data_type: str</span>
+<span class="sd">    :param data_shape: размерность данных;</span>
+<span class="sd">    :type data_shape: str</span>
+<span class="sd">    :param default_value: значение по умолчанию.</span>
+<span class="sd">    :type default_value: int, float, str, bool либо список или двумерная</span>
+<span class="sd">        матрица с элементами указанных типов.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">data_shape</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">default_value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span>
+                         <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span>
+                                             <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span>
+                                                 <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span>
+                                                       <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]]]]]]</span>
+
+<div class="viewcode-block" id="DataDefinition.Config"><a class="viewcode-back" href="../../src.html#src.api_models.DataDefinition.Config">[документация]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">smart_union</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="AlgorithmDefinition"><a class="viewcode-back" href="../../src.html#src.api_models.AlgorithmDefinition">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmDefinition</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет описание алгоритма.</span>
+
+<span class="sd">    :param name: уникальное имя алгоритма;</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param title: название алгоритма;</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param description: описание алгоритма;</span>
+<span class="sd">    :type description: str</span>
+<span class="sd">    :param parameters: список описаний входных данных алгоритма;</span>
+<span class="sd">    :type parameters: list[DataDefinition]</span>
+<span class="sd">    :param outputs: список описаний выходных данных алгоритма.</span>
+<span class="sd">    :type outputs: list[DataDefinition]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataDefinition</span><span class="p">]</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataDefinition</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Data"><a class="viewcode-back" href="../../src.html#src.api_models.Data">[документация]</a><span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет фактическое значение элемента входных/выходных данных.</span>
+
+<span class="sd">    :param name: уникальное имя элемента входных/выходных данных;</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param value: фактическое значение.</span>
+<span class="sd">    :type value: int, float, str, bool либо список или двумерная</span>
+<span class="sd">        матрица с элементами указанных типов.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span>
+                                     <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span>
+                                         <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]]]]]]</span>
+
+<div class="viewcode-block" id="Data.Config"><a class="viewcode-back" href="../../src.html#src.api_models.Data.Config">[документация]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">smart_union</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="Parameters"><a class="viewcode-back" href="../../src.html#src.api_models.Parameters">[документация]</a><span class="k">class</span> <span class="nc">Parameters</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет список фактических значений входных данных</span>
+<span class="sd">    для алгоритма.</span>
+
+<span class="sd">    :param parameters: список фактических значений входных данных алгоритма;</span>
+<span class="sd">    :type parameters: list[Data]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Data</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Parameters.get_params_to_execute"><a class="viewcode-back" href="../../src.html#src.api_models.Parameters.get_params_to_execute">[документация]</a>    <span class="k">def</span> <span class="nf">get_params_to_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Возвращает значения входных данных для выполнения алгоритма в</span>
+<span class="sd">        виде словаря, где ключи - имена входных данных, значения - фактические</span>
+<span class="sd">        значения входных данных.</span>
+
+<span class="sd">        :return: словарь с именами и значениями входных данных.</span>
+<span class="sd">        :rtype: dict[str, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">param</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="Outputs"><a class="viewcode-back" href="../../src.html#src.api_models.Outputs">[документация]</a><span class="k">class</span> <span class="nc">Outputs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс представляет список фактических значений выходных данных</span>
+<span class="sd">    для алгоритма.</span>
+
+<span class="sd">    :param outputs: список фактических значений выходных данных алгоритма;</span>
+<span class="sd">    :type outputs: list[Data]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Data</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Answer"><a class="viewcode-back" href="../../src.html#src.api_models.Answer">[документация]</a><span class="k">class</span> <span class="nc">Answer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Базовый класс для ответа, включающего результат выполнения запроса или</span>
+<span class="sd">    текст ошибки выполнения запроса.</span>
+
+<span class="sd">    :param result: результат выполнения запроса;</span>
+<span class="sd">    :type result: Any or None</span>
+<span class="sd">    :param errors: текст ошибки выполнения запроса;</span>
+<span class="sd">    :type errors: str or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Answer.Config"><a class="viewcode-back" href="../../src.html#src.api_models.Answer.Config">[документация]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<div class="viewcode-block" id="Answer.Config.schema_extra"><a class="viewcode-back" href="../../src.html#src.api_models.Answer.Config.schema_extra">[документация]</a>        <span class="nd">@staticmethod</span>
+        <span class="k">def</span> <span class="nf">schema_extra</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Корректирует JSON Schema класса для корректной валидации</span>
+<span class="sd">            nullable значений.&quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">__fields__</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">alias</span> <span class="o">==</span> <span class="n">prop</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">allow_none</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                        <span class="n">value</span><span class="p">[</span><span class="s1">&#39;anyOf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)}]</span>
+                    <span class="k">elif</span> <span class="s1">&#39;$ref&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">type_</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">):</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">title</span> \
+                                             <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">type_</span><span class="o">.</span><span class="vm">__name__</span>
+                        <span class="n">value</span><span class="p">[</span><span class="s1">&#39;anyOf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;$ref&#39;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;$ref&#39;</span><span class="p">)}]</span>
+                    <span class="n">value</span><span class="p">[</span><span class="s1">&#39;anyOf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;null&#39;</span><span class="p">})</span></div></div></div>
+
+
+<div class="viewcode-block" id="AnswerAlgorithmDefinition"><a class="viewcode-back" href="../../src.html#src.api_models.AnswerAlgorithmDefinition">[документация]</a><span class="k">class</span> <span class="nc">AnswerAlgorithmDefinition</span><span class="p">(</span><span class="n">Answer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс ответа, включающего результат выполнения запроса описания</span>
+<span class="sd">    алгоритма или текст ошибки выполнения запроса. Наследует от класса Answer.</span>
+
+<span class="sd">    :param result: описание алгоритма;</span>
+<span class="sd">    :type result: AlgorithmDefinition or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AlgorithmDefinition</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AnswerOutputs"><a class="viewcode-back" href="../../src.html#src.api_models.AnswerOutputs">[документация]</a><span class="k">class</span> <span class="nc">AnswerOutputs</span><span class="p">(</span><span class="n">Answer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Класс ответа, включающего результат выполнения алгоритма или</span>
+<span class="sd">    текст ошибки выполнения алгоритма. Наследует от класса Answer.</span>
+
+<span class="sd">    :param result: список фактических значений выходных данных алгоритма;</span>
+<span class="sd">    :type result: Outputs or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Outputs</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MikhailovAlexander.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
