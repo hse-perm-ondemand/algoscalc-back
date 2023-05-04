@@ -16,7 +16,7 @@
       "description": "Введите любое вещественное число",
       "data_type": "FLOAT",
       "data_shape": "SCALAR",
-      "default_value": 1
+      "default_value": 0
     },
     {
       "name": "c",
@@ -24,17 +24,17 @@
       "description": "Введите любое вещественное число",
       "data_type": "FLOAT",
       "data_shape": "SCALAR",
-      "default_value": 1
+      "default_value": 0
     }
   ],
   "outputs": [
     {
-      "name": "result",
+      "name": "roots",
       "title": "Корни уравнения",
       "description": "Значения корней или сообщение, что корней нет",
       "data_type": "STRING",
       "data_shape": "SCALAR",
-      "default_value": "x1 = ?, x2 = ?"
+      "default_value": "Корень только один: x = 0.0"
     }
   ]
 }

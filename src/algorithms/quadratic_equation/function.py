@@ -1,7 +1,10 @@
 from math import sqrt
 def quadratic_equation(a: float, b: float, c: float) -> str:
-    if a == 0:
-        return 'Коэффицент при х^2 в квадратном уравнении не может быть равен 0!'
+
+    if not(isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float))):
+        raise TypeError('Коэффициенты должны быть числами')
+    elif a == 0:
+        raise ValueError('Коэффицент при х^2 в квадратном уравнении не может быть равен 0!')
     else:
         discriminant = b ** 2 - 4 * a * c
         if discriminant < 0:
@@ -21,7 +24,7 @@ def main(a: float, b: float, c: float):
 
 if __name__ == '__main__':
     a = 1
-    b = 1
-    c = 1
+    b = 0
+    c = 0
     print(quadratic_equation(a, b, c))
 
