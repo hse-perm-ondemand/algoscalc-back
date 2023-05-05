@@ -1,10 +1,11 @@
 from math import sqrt
 
 
-def quadratic_equation (a: float, b: float,
+def quadratic_equation(a: float, b: float,
                         c: float) -> str:
 
-    if not(isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float))):
+    if not (isinstance(a, (int, float)) and
+            isinstance(b, (int, float)) and isinstance(c, (int, float))):
         raise TypeError('Коэффициенты должны быть числами')
     elif a == 0:
         raise ValueError('Коэффициент при х^2 в квадратном уравнении '
