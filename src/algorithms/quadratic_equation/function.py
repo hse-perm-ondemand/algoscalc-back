@@ -1,12 +1,14 @@
 from math import sqrt
 
 
-def quadratic_equation(a: float, b: float, c: float) -> str:
+def quadratic_equation (a: float, b: float,
+                        c: float) -> str:
 
     if not(isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float))):
         raise TypeError('Коэффициенты должны быть числами')
     elif a == 0:
-        raise ValueError('Коэффициент при х^2 в квадратном уравнении не может быть равен 0!')
+        raise ValueError('Коэффициент при х^2 в квадратном уравнении '
+                         'не может быть равен 0!')
     else:
         discriminant = b ** 2 - 4 * a * c
         if discriminant < 0:
@@ -19,7 +21,8 @@ def quadratic_equation(a: float, b: float, c: float) -> str:
         else:
             x1 = (-b + sqrt(discriminant)) / (2 * a)
             x2 = (-b - sqrt(discriminant)) / (2 * a)
-            return 'x1 = ' + (str(round(x1, 8))) + ',' + ' x2 = ' + str((round(x2, 8)))
+            return 'x1 = ' + (str(round(x1, 8))) \
+                   + ',' + ' x2 = ' + str((round(x2, 8)))
 
 
 def main(a: float, b: float, c: float):
@@ -31,4 +34,3 @@ if __name__ == '__main__':
     b = 0.0
     c = 0.0
     print(quadratic_equation(a, b, c))
-
