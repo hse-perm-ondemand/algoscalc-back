@@ -1,4 +1,6 @@
 from math import sqrt
+
+
 def quadratic_equation(a: float, b: float, c: float) -> str:
 
     if not(isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float))):
