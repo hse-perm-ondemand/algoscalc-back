@@ -1,0 +1,40 @@
+{
+  "title": "Корни квадратного уравнения",
+  "description": "Нахождение корней квадратного уравнения",
+  "parameters": [
+    {
+      "name": "a",
+      "title": "Коэффициент a",
+      "description": "Введите любое вещественное число кроме 0",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 1.0
+    },
+    {
+      "name": "b",
+      "title": "Коэффициент b",
+      "description": "Введите любое вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 0.0
+    },
+    {
+      "name": "c",
+      "title": "Свободный коэффициент с",
+      "description": "Введите любое вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 0.0
+    }
+  ],
+  "outputs": [
+    {
+      "name": "roots",
+      "title": "Корни уравнения",
+      "description": "Значения корней или сообщение, что корней нет",
+      "data_type": "STRING",
+      "data_shape": "SCALAR",
+      "default_value": "Корень только один: x = 0.0"
+    }
+  ]
+}
