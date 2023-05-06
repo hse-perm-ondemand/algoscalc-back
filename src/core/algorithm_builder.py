@@ -85,8 +85,8 @@ class AlgorithmBuilder:
         :raises FileNotFoundError: при отсутствии файлов с исходным кодом;
         """
         self.__logger.info(path)
-        with open(path + '/' + self.__definition_file_name,
-                  'r') as def_file:
+        with open(path + '/' + self.__definition_file_name, 'r',
+                  encoding='utf-8') as def_file:
             definition = json.load(def_file)
         self.__validate_definition_raises_ex(definition)
         name = os.path.split(path)[-1]
