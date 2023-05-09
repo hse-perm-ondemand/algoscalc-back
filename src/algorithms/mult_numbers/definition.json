@@ -1,0 +1,32 @@
+{
+  "title": "Перемножение чисел",
+  "description": "Нахождение произведения двух чисел",
+  "parameters": [
+    {
+      "name": "a",
+      "title": "Число a",
+      "description": "Введите любое вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 1.0
+    },
+    {
+      "name": "b",
+      "title": "Число b",
+      "description": "Введите любое вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 0.0
+    }
+  ],
+  "outputs": [
+    {
+      "name": "mult",
+      "title": "Произведние чисел",
+      "description": "Произведние двух чисел",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 0.0
+    }
+  ]
+}
