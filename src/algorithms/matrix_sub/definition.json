@@ -1,0 +1,32 @@
+{
+  "title": "Вычитание матриц",
+  "description": "Вычитание матриц",
+  "parameters": [
+    {
+      "name": "n",
+      "title": "Матрица",
+      "description": "Введите значения в матрицу",
+      "data_type": "FLOAT",
+      "data_shape": "MATRIX",
+      "default_value": [[1.0]]
+    },
+    {
+      "name": "m",
+      "title": "Матрица",
+      "description": "Введите значения в матрицу",
+      "data_type": "FLOAT",
+      "data_shape": "MATRIX",
+      "default_value": [[1.0]]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "title": "Матрица",
+      "description": "Матрица, полученная в процессе вычитания",
+      "data_type": "FLOAT",
+      "data_shape": "MATRIX",
+      "default_value": [[0.0]]
+    }
+  ]
+}
