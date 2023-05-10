@@ -1,7 +1,7 @@
 import copy
 
 
-def sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
+def __sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
     res: list[list[float]] = copy.deepcopy(n)
     for i in range(len(res)):
         for j in range(len(res[0])):
@@ -9,24 +9,23 @@ def sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
     return res
 
 
+def __check_matrix(matrix: list[list[float]], name: str, row_len: int) -> None:
+    for row in matrix:
+        if row_len != len(row):
+            raise ValueError(f'Введено неверное количество столбцов для {name}')
+        for item in row:
+            if item is None:
+                raise ValueError(f'Не введено значение в матрице {name}')
+
+
 def main(n: list[list[float]], m: list[list[float]]) -> \
         dict[str, list[list[float]]]:
     if len(n) != len(m):
         raise ValueError('Длины матриц не совпадают!')
     dl_row = len(n[0])
-    for row in n:
-        if dl_row != len(row):
-            raise ValueError('Введено неверное количество столбовцов для n')
-        for item in row:
-            if item is None:
-                raise ValueError('Не введено значение в матрице n')
-    for row in m:
-        if dl_row != len(row):
-            raise ValueError('Введено неверное количество столбовцов для m')
-        for item in row:
-            if item is None:
-                raise ValueError('Не введено значение в матрице m')
-    return {'result': sub(n, m)}
+    __check_matrix(n, 'n', dl_row)
+    __check_matrix(m, 'm', dl_row)
+    return {'result': __sub(n, m)}
 
 
 if __name__ == '__main__':
@@ -34,4 +33,4 @@ if __name__ == '__main__':
          [2., 3., 4.]]
     m = [[0., 2., 2.],
          [2., 1., 4.]]
-    print(sub(n, m))
+    print(__sub(n, m))
