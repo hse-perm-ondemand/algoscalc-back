@@ -25,7 +25,7 @@ def findcountstring(text: str, findtext: str) -> int:
 
 
 def main(text,findtext):
-    return {f"Num_count = {findcountstring(text, findtext)}"}
+    return {"num_count": findcountstring(text,findtext)}
 
 
 if __name__ == '__main__':
