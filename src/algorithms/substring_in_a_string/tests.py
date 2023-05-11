@@ -8,17 +8,17 @@ class TestCase(unittest.TestCase):
     def test_type_of_coefficient(self):
         self.assertRaisesRegex(ValueError,
                                "Значения не строковые",
-                               findcountstring("one",0))
+                               findcountstring,"one",0)
 
     def test_zero_a_coefficient(self):
         self.assertRaisesRegex(ValueError,
                                "Значения не строковые",
-                               findcountstring(0,0))
+                               findcountstring,0,0)
 
     def test_zero_b_coefficient(self):
         self.assertRaisesRegex(ValueError,
                                "Значения не строковые",
-                               findcountstring(0,"ищу"))
+                               findcountstring,0,"ищу")
 
     def test_zero_c_coefficient(self):
         self.assertEqual(findcountstring("Hello world world hello hello hello world","hello world"),
