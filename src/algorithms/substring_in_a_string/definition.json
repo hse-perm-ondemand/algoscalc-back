@@ -21,7 +21,7 @@
   ],
   "outputs": [
     {
-      "name": "Num_count",
+      "name": "num_count",
       "title": "Количество подстрок",
       "description": "Количество всех подстрок строки",
       "data_type": "INT",
