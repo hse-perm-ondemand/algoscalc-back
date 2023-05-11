@@ -1,0 +1,32 @@
+{
+  "title": "Количество подстрок в строке",
+  "description": "Вывод количества подстрок в одной строке",
+  "parameters": [
+    {
+      "name": "text",
+      "title": "Исходный текст",
+      "description": "Введите, пожалуйства, исходный текст",
+      "data_type": "STRING",
+      "data_shape": "SCALAR",
+      "default_value": "text text"
+    },
+    {
+      "name": "findtext",
+      "title": "Строка для поиска",
+      "description": "Введите, пожалуйства, строку, которую нужно найти",
+      "data_type": "STRING",
+      "data_shape": "SCALAR",
+      "default_value": "text"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Num_count = ",
+      "title": "Количество подстрок",
+      "description": "Количество всех подстрок строки",
+      "data_type": "INT",
+      "data_shape": "SCALAR",
+      "default_value": 2
+    }
+  ]
+}
