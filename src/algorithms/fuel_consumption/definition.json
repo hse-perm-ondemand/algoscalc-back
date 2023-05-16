@@ -1,0 +1,56 @@
+{
+  "title": "Расход топлива для поездки на заданное расстояние",
+  "description": "Калькулятор расхода топлива поможет рассчитать количество и стоимость топлива для поездки на заданное расстояние",
+  "parameters": [
+    {
+      "name": "distance",
+      "title": "Сколько хотите проехать",
+      "description": "Введите неотрицательное вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 100.0
+    },
+    {
+      "name": "mean_consumption",
+      "title": "Средний расход топлива (л/100км)",
+      "description": "Введите неотрицательное вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 0.075
+    },
+    {
+      "name": "price",
+      "title": "Стоимость 1 л. топлива (руб)",
+      "description": "Введите неотрицательное вещественное число",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 45.0
+    },
+    {
+      "name": "need_round",
+      "title": "Округлять результат",
+      "description": "При проставлении отметки объем и стоимость будут округлены до целого",
+      "data_type": "BOOL",
+      "data_shape": "SCALAR",
+      "default_value": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "volume",
+      "title": "Потребуется топлива (л)",
+      "description": "Объем топлива в литрах",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 8.0
+    },
+    {
+      "name": "cost",
+      "title": "Стоимость топлива (руб)",
+      "description": "Стоимость топлива в рублях",
+      "data_type": "FLOAT",
+      "data_shape": "SCALAR",
+      "default_value": 338.0
+    }
+  ]
+}
