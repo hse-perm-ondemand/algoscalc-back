@@ -26,6 +26,7 @@ def __check_numbers_raises_ex(numbers: list[int]) -> None:
         if val < 0:
             raise ValueError('Список чисел содержит отрицательное значение')
 
+
 def main(numbers: list[int]) -> dict[str, Any]:
     __check_numbers_raises_ex(numbers)
     perfect_numbers = list(filter(__is_perfect, numbers))
