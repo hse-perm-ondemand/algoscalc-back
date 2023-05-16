@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core_tests.algorithm_tests &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core_tests.algorithm_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core_tests.algorithm_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="kn">from</span> <span class="nn">src.core.data_element</span> <span class="kn">import</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">DataShape</span><span class="p">,</span> <span class="n">DataElement</span>
+<span class="kn">from</span> <span class="nn">src.core_tests</span> <span class="kn">import</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span>\
+    <span class="n">PARAM_NAME</span><span class="p">,</span> <span class="n">PARAM_LIST_NAME</span><span class="p">,</span> <span class="n">PARAM_TITLE</span><span class="p">,</span> <span class="n">PARAM_DESCRIPTION</span><span class="p">,</span>\
+    <span class="n">PARAM_INT_DEFAULT</span><span class="p">,</span> <span class="n">PARAM_LIST_DEFAULT</span><span class="p">,</span> <span class="n">OUTPUT_NAME</span><span class="p">,</span> <span class="n">OUTPUT_MATRIX_NAME</span><span class="p">,</span>\
+    <span class="n">OUTPUT_TITLE</span><span class="p">,</span> <span class="n">OUTPUT_DESCRIPTION</span>
+<span class="kn">from</span> <span class="nn">src.core.algorithm</span> <span class="kn">import</span> <span class="n">Algorithm</span><span class="p">,</span> \
+    <span class="n">NON_STRING_PARAM_TEMPL</span><span class="p">,</span> <span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="p">,</span> <span class="n">NON_INT_TIMEOUT_MSG</span><span class="p">,</span> \
+    <span class="n">NEG_INT_TIMEOUT_MSG</span><span class="p">,</span> <span class="n">PARAM_NOT_DATAELEMENT_MSG</span><span class="p">,</span> <span class="n">PARAM_EXISTS_TMPL</span><span class="p">,</span> \
+    <span class="n">OUTPUT_NOT_DATAELEMENT_MSG</span><span class="p">,</span> <span class="n">OUTPUT_EXISTS_TMPL</span><span class="p">,</span> <span class="n">METHOD_NOT_CALL_MSG</span><span class="p">,</span> \
+    <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="p">,</span> <span class="n">UNEXPECTED_OUTPUT_TEMPL</span><span class="p">,</span> <span class="n">TIME_OVER_TEMPL</span><span class="p">,</span> \
+    <span class="n">EXECUTION_FAILED_TEMPL</span><span class="p">,</span> <span class="n">UNSET_PARAMS_MSG</span><span class="p">,</span> <span class="n">UNSET_OUTPUTS_MSG</span><span class="p">,</span> \
+    <span class="n">NOT_DICT_PARAMS_MSG</span><span class="p">,</span> <span class="n">REDUNDANT_PARAMETER_TEMPL</span><span class="p">,</span> <span class="n">MISSED_PARAMETER_TEMPL</span><span class="p">,</span> \
+    <span class="n">NOT_DICT_OUTPUTS_MSG</span><span class="p">,</span> <span class="n">REDUNDANT_OUTPUT_TEMPL</span><span class="p">,</span> <span class="n">MISSED_OUTPUT_TEMPL</span><span class="p">,</span>\
+    <span class="n">UNEXPECTED_PARAM_MSG</span>
+
+
+<div class="viewcode-block" id="AlgorithmTests"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmTests</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">STR_TEMPL</span> <span class="o">=</span> <span class="s1">&#39;Algorithm: </span><span class="si">{0}</span><span class="s1">, title: </span><span class="si">{1}</span><span class="s1">&#39;</span>
+    <span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">PARAM_NAME</span><span class="p">,</span> <span class="n">PARAM_TITLE</span><span class="p">,</span> <span class="n">PARAM_DESCRIPTION</span><span class="p">,</span>
+                        <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">)</span>
+    <span class="n">param_list</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">PARAM_LIST_NAME</span><span class="p">,</span> <span class="n">PARAM_TITLE</span><span class="p">,</span> <span class="n">PARAM_DESCRIPTION</span><span class="p">,</span>
+                             <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">LIST</span><span class="p">,</span>
+                             <span class="n">PARAM_LIST_DEFAULT</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">OUTPUT_NAME</span><span class="p">,</span> <span class="n">OUTPUT_TITLE</span><span class="p">,</span> <span class="n">OUTPUT_DESCRIPTION</span><span class="p">,</span>
+                         <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">output_matrix</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">OUTPUT_MATRIX_NAME</span><span class="p">,</span> <span class="n">OUTPUT_TITLE</span><span class="p">,</span>
+                                <span class="n">OUTPUT_DESCRIPTION</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+                                <span class="n">DataShape</span><span class="o">.</span><span class="n">MATRIX</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]])</span>
+
+<div class="viewcode-block" id="AlgorithmTests.setUp"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.setUp">[документация]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">PARAM_NAME</span><span class="p">,</span> <span class="n">PARAM_TITLE</span><span class="p">,</span> <span class="n">PARAM_DESCRIPTION</span><span class="p">,</span>
+                                 <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span>
+                                 <span class="n">PARAM_INT_DEFAULT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_list</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">PARAM_LIST_NAME</span><span class="p">,</span> <span class="n">PARAM_TITLE</span><span class="p">,</span>
+                                      <span class="n">PARAM_DESCRIPTION</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span>
+                                      <span class="n">DataShape</span><span class="o">.</span><span class="n">LIST</span><span class="p">,</span> <span class="n">PARAM_LIST_DEFAULT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">OUTPUT_NAME</span><span class="p">,</span> <span class="n">OUTPUT_TITLE</span><span class="p">,</span> <span class="n">OUTPUT_DESCRIPTION</span><span class="p">,</span>
+                                  <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">OUTPUT_MATRIX_NAME</span><span class="p">,</span> <span class="n">OUTPUT_TITLE</span><span class="p">,</span>
+                                         <span class="n">OUTPUT_DESCRIPTION</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+                                         <span class="n">DataShape</span><span class="o">.</span><span class="n">MATRIX</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_non_string_name"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_non_string_name">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="mi">100500</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NAME</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_none_string_name"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_none_string_name">[документация]</a>    <span class="k">def</span> <span class="nf">test_none_string_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NAME</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_empty_string_name"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_empty_string_name">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_string_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NAME</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_non_string_title"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_non_string_title">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_none_string_title"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_none_string_title">[документация]</a>    <span class="k">def</span> <span class="nf">test_none_string_title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_empty_string_title"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_empty_string_title">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_string_title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_non_string_description"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_non_string_description">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_none_string_description"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_none_string_description">[документация]</a>    <span class="k">def</span> <span class="nf">test_none_string_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_empty_string_description"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_empty_string_description">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_string_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_non_int_execute_timeout"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_non_int_execute_timeout">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_int_execute_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_INT_TIMEOUT_MSG</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_negative_execute_timeout"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_negative_execute_timeout">[документация]</a>    <span class="k">def</span> <span class="nf">test_negative_execute_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NEG_INT_TIMEOUT_MSG</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_init"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_init">[документация]</a>    <span class="k">def</span> <span class="nf">test_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">NAME</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">STR_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_parameter"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_parameter">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">,))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_parameters"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_parameters">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_non_data_element_parameter"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_non_data_element_parameter">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_non_data_element_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">PARAM_NOT_DATAELEMENT_MSG</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">,</span> <span class="s1">&#39;param&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_duplicate_parameter"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_duplicate_parameter">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_duplicate_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">PARAM_EXISTS_TMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PARAM_NAME</span><span class="p">),</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_outputs"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_outputs">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_non_data_element_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_non_data_element_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_non_data_element_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">OUTPUT_NOT_DATAELEMENT_MSG</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_duplicate_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_duplicate_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_duplicate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span>
+                               <span class="n">OUTPUT_EXISTS_TMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OUTPUT_NAME</span><span class="p">),</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_non_callable"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_non_callable">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_non_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="n">METHOD_NOT_CALL_MSG</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_timeout"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_timeout">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="n">param_name</span> <span class="o">=</span> <span class="s1">&#39;parameter&#39;</span>
+        <span class="n">param_default</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="s1">&#39;param_title&#39;</span><span class="p">,</span> <span class="s1">&#39;param_descr&#39;</span><span class="p">,</span>
+                            <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">parameter</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">parameter</span><span class="p">}</span>
+        <span class="n">timeout_msg</span> <span class="o">=</span> <span class="n">TIME_OVER_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span>
+                                             <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="n">param_default</span><span class="p">})</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeout_msg</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err_msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_zero_execute_timeout"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_zero_execute_timeout">[документация]</a>    <span class="k">def</span> <span class="nf">test_zero_execute_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;param_val&#39;</span><span class="p">,</span> <span class="s1">&#39;param_title&#39;</span><span class="p">,</span> <span class="s1">&#39;param_descr&#39;</span><span class="p">,</span>
+                            <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">param_val</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_val</span><span class="p">}</span>
+
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="n">get_test_errors</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_without_parameters"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_without_parameters">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_without_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="k">lambda</span> <span class="n">param</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span>
+                         <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">UNSET_PARAMS_MSG</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_without_outputs"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_without_outputs">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_without_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="k">lambda</span> <span class="n">param</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span>
+                         <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">UNSET_OUTPUTS_MSG</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_wrong_param"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_wrong_param">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_wrong_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">EXECUTION_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">UNEXPECTED_PARAM_MSG</span><span class="p">,</span>
+                                          <span class="p">{</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">}))</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">wrong_name</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="n">wrong_name</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_missing_param"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_missing_param">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_missing_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">,</span>
+                  <span class="n">PARAM_LIST_NAME</span><span class="p">:</span> <span class="n">PARAM_LIST_DEFAULT</span><span class="p">}</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">EXECUTION_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">UNEXPECTED_PARAM_MSG</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_missing_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_missing_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_missing_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">MISSED_OUTPUT_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OUTPUT_MATRIX_NAME</span><span class="p">))</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_wrong_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_wrong_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_wrong_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">wrong_name</span> <span class="o">=</span> <span class="s1">&#39;wrong_name&#39;</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">REDUNDANT_OUTPUT_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wrong_name</span><span class="p">))</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">wrong_name</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method_wrong_output_value"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method_wrong_output_value">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method_wrong_output_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">wrong_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">ADDING_METHOD_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">UNEXPECTED_OUTPUT_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OUTPUT_NAME</span><span class="p">,</span> <span class="n">wrong_value</span><span class="p">,</span>
+                                           <span class="n">PARAM_INT_DEFAULT</span><span class="p">))</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">wrong_value</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_add_execute_method"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_add_execute_method">[документация]</a>    <span class="k">def</span> <span class="nf">test_add_execute_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">get_test_errors</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_non_dict_params"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_non_dict_params">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_non_dict_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">NOT_DICT_PARAMS_MSG</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_redundant_param"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_redundant_param">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_redundant_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="n">redundant_param</span> <span class="o">=</span> <span class="s1">&#39;redundant_param&#39;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">,</span>
+                              <span class="n">redundant_param</span><span class="p">:</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">),</span>
+                         <span class="n">REDUNDANT_PARAMETER_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">redundant_param</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_missed_param"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_missed_param">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_missed_param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_list_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">})</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="n">PARAM_INT_DEFAULT</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">),</span>
+                         <span class="n">MISSED_PARAMETER_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PARAM_LIST_NAME</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_non_dict_output"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_non_dict_output">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_non_dict_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">param_name</span><span class="p">:</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="n">PARAM_INT_DEFAULT</span> <span class="k">else</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">),</span>
+                         <span class="n">NOT_DICT_OUTPUTS_MSG</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_timeout"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_timeout">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">TITLE</span><span class="p">,</span> <span class="n">DESCRIPTION</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">OUTPUT_NAME</span><span class="p">:</span> <span class="n">param_name</span><span class="p">}</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">PARAM_NAME</span><span class="p">:</span> <span class="n">timeout</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="n">timeout_msg</span> <span class="o">=</span> <span class="n">TIME_OVER_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TimeoutError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">timeout_msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute_runtime_error"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute_runtime_error">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute_runtime_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;param_val&#39;</span><span class="p">,</span> <span class="s1">&#39;param_title&#39;</span><span class="p">,</span> <span class="s1">&#39;param_descr&#39;</span><span class="p">,</span>
+                            <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;output_title&#39;</span><span class="p">,</span> <span class="s1">&#39;output_descr&#39;</span><span class="p">,</span>
+                             <span class="n">DataType</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="k">lambda</span> <span class="n">param_val</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">param_val</span><span class="p">})</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;param_val&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">EXECUTION_FAILED_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;division by zero&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmTests.test_execute"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_tests.AlgorithmTests.test_execute">[документация]</a>    <span class="k">def</span> <span class="nf">test_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;returns the sum of two numbers&#39;</span><span class="p">,</span>
+                        <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="n">param_a</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a number&#39;</span><span class="p">,</span> <span class="s1">&#39;just an integer&#39;</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+                              <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">param_b</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b number&#39;</span><span class="p">,</span> <span class="s1">&#39;just an integer&#39;</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+                              <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">param_a</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">param_b</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;the sum of two numbers&#39;</span><span class="p">,</span>
+                             <span class="n">DataType</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">alg</span><span class="o">.</span><span class="n">add_execute_method</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}),</span> <span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">})</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, OMMAT.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

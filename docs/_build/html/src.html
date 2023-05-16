@@ -45,11 +45,24 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">algoscalc-back</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">src package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html">src.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.ALGORITHMS_ENDPOINT"><code class="docutils literal notranslate"><span class="pre">ALGORITHMS_ENDPOINT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.ALGORITHM_CONFIG"><code class="docutils literal notranslate"><span class="pre">ALGORITHM_CONFIG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.APP_CONFIG_FILE_PATH"><code class="docutils literal notranslate"><span class="pre">APP_CONFIG_FILE_PATH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.EXECUTE_TIMEOUT"><code class="docutils literal notranslate"><span class="pre">EXECUTE_TIMEOUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.IS_TEST_APP"><code class="docutils literal notranslate"><span class="pre">IS_TEST_APP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.LOG_CONFIG_FILE_PATH"><code class="docutils literal notranslate"><span class="pre">LOG_CONFIG_FILE_PATH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.PATH_CONFIG"><code class="docutils literal notranslate"><span class="pre">PATH_CONFIG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.TIME_OVER_MSG"><code class="docutils literal notranslate"><span class="pre">TIME_OVER_MSG</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.main">src.main module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithm"><code class="docutils literal notranslate"><span class="pre">get_algorithm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithm_result"><code class="docutils literal notranslate"><span class="pre">get_algorithm_result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithms"><code class="docutils literal notranslate"><span class="pre">get_algorithms()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-src.api_models">src.api_models module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#src.api_models.AlgorithmDefinition"><code class="docutils literal notranslate"><span class="pre">AlgorithmDefinition</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#src.api_models.AlgorithmTitle"><code class="docutils literal notranslate"><span class="pre">AlgorithmTitle</span></code></a></li>
@@ -63,26 +76,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#src.api_models.Parameters"><code class="docutils literal notranslate"><span class="pre">Parameters</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-src.constants">src.constants module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.ALGORITHMS_ENDPOINT"><code class="docutils literal notranslate"><span class="pre">ALGORITHMS_ENDPOINT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.ALGORITHM_CONFIG"><code class="docutils literal notranslate"><span class="pre">ALGORITHM_CONFIG</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.APP_CONFIG_FILE_PATH"><code class="docutils literal notranslate"><span class="pre">APP_CONFIG_FILE_PATH</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.EXECUTE_TIMEOUT"><code class="docutils literal notranslate"><span class="pre">EXECUTE_TIMEOUT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.IS_TEST_APP"><code class="docutils literal notranslate"><span class="pre">IS_TEST_APP</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.LOG_CONFIG_FILE_PATH"><code class="docutils literal notranslate"><span class="pre">LOG_CONFIG_FILE_PATH</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.PATH_CONFIG"><code class="docutils literal notranslate"><span class="pre">PATH_CONFIG</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.constants.TIME_OVER_MSG"><code class="docutils literal notranslate"><span class="pre">TIME_OVER_MSG</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-src.main">src.main module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithm"><code class="docutils literal notranslate"><span class="pre">get_algorithm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithm_result"><code class="docutils literal notranslate"><span class="pre">get_algorithm_result()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#src.main.get_algorithms"><code class="docutils literal notranslate"><span class="pre">get_algorithms()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-src">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a></li>
 </ul>
 </li>
 </ul>
@@ -114,92 +110,149 @@
              
   <section id="src-package">
 <h1>src package<a class="headerlink" href="#src-package" title="Permalink to this heading"></a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="src.core.html">src.core package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#module-src.core.algorithm">src.core.algorithm module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm"><code class="docutils literal notranslate"><span class="pre">Algorithm</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.add_execute_method"><code class="docutils literal notranslate"><span class="pre">Algorithm.add_execute_method()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.add_output"><code class="docutils literal notranslate"><span class="pre">Algorithm.add_output()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.add_parameter"><code class="docutils literal notranslate"><span class="pre">Algorithm.add_parameter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.description"><code class="docutils literal notranslate"><span class="pre">Algorithm.description</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.execute"><code class="docutils literal notranslate"><span class="pre">Algorithm.execute()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.execute_timeout"><code class="docutils literal notranslate"><span class="pre">Algorithm.execute_timeout</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.get_test_errors"><code class="docutils literal notranslate"><span class="pre">Algorithm.get_test_errors()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.name"><code class="docutils literal notranslate"><span class="pre">Algorithm.name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.outputs"><code class="docutils literal notranslate"><span class="pre">Algorithm.outputs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.parameters"><code class="docutils literal notranslate"><span class="pre">Algorithm.parameters</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm.Algorithm.title"><code class="docutils literal notranslate"><span class="pre">Algorithm.title</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#module-src.core.algorithm_builder">src.core.algorithm_builder module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.DATA_SHAPE"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.DATA_SHAPE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.DATA_TYPE"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.DATA_TYPE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.DEFAULT_VALUE"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.DEFAULT_VALUE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.DESCRIPTION"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.DESCRIPTION</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.EXECUTE_TIMEOUT"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.EXECUTE_TIMEOUT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.NAME"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.NAME</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.OUTPUTS"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.OUTPUTS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.PARAMETERS"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.PARAMETERS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.TITLE"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.TITLE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_builder.AlgorithmBuilder.build_algorithm"><code class="docutils literal notranslate"><span class="pre">AlgorithmBuilder.build_algorithm()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#module-src.core.algorithm_collection">src.core.algorithm_collection module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.algorithm_collection.AlgorithmCollection"><code class="docutils literal notranslate"><span class="pre">AlgorithmCollection</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_algorithm"><code class="docutils literal notranslate"><span class="pre">AlgorithmCollection.get_algorithm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_algorithm_result"><code class="docutils literal notranslate"><span class="pre">AlgorithmCollection.get_algorithm_result()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_collection.AlgorithmCollection.get_name_title_dict"><code class="docutils literal notranslate"><span class="pre">AlgorithmCollection.get_name_title_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.algorithm_collection.AlgorithmCollection.has_algorithm"><code class="docutils literal notranslate"><span class="pre">AlgorithmCollection.has_algorithm()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#module-src.core.data_element">src.core.data_element module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement"><code class="docutils literal notranslate"><span class="pre">DataElement</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.data_shape"><code class="docutils literal notranslate"><span class="pre">DataElement.data_shape</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.data_type"><code class="docutils literal notranslate"><span class="pre">DataElement.data_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.default_value"><code class="docutils literal notranslate"><span class="pre">DataElement.default_value</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.description"><code class="docutils literal notranslate"><span class="pre">DataElement.description</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.get_check_value_errors"><code class="docutils literal notranslate"><span class="pre">DataElement.get_check_value_errors()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.name"><code class="docutils literal notranslate"><span class="pre">DataElement.name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataElement.title"><code class="docutils literal notranslate"><span class="pre">DataElement.title</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.data_element.DataShape"><code class="docutils literal notranslate"><span class="pre">DataShape</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataShape.LIST"><code class="docutils literal notranslate"><span class="pre">DataShape.LIST</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataShape.MATRIX"><code class="docutils literal notranslate"><span class="pre">DataShape.MATRIX</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataShape.SCALAR"><code class="docutils literal notranslate"><span class="pre">DataShape.SCALAR</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataShape.get_shape_errors"><code class="docutils literal notranslate"><span class="pre">DataShape.get_shape_errors()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="src.core.html#src.core.data_element.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.BOOL"><code class="docutils literal notranslate"><span class="pre">DataType.BOOL</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.FLOAT"><code class="docutils literal notranslate"><span class="pre">DataType.FLOAT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.INT"><code class="docutils literal notranslate"><span class="pre">DataType.INT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.STRING"><code class="docutils literal notranslate"><span class="pre">DataType.STRING</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.type"><code class="docutils literal notranslate"><span class="pre">DataType.type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.core.html#src.core.data_element.DataType.types"><code class="docutils literal notranslate"><span class="pre">DataType.types()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="src.core.html#module-src.core">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Permalink to this heading"></a></h2>
+<p>Реализация API для онлайн-калькулятора.</p>
+<p>API предоставляет доступ к алгоритмам. Получить список имеющихся алгоритмов
+можно посредством выполнения GET запроса к конечной точке /api/algorithms.
+Ответ содержит экземпляр класса Algorithms.</p>
+<p>Доступ к конкретному алгоритму осуществляется по URI
+/api/algorithms/{algorithm_name}, с указанием уникального имени алгоритма.
+Получить описание выбранного алгоритма можно посредством выполнения GET
+запроса к конечной точке /api/algorithms/{algorithm_name}. Ответ содержит
+экземпляр класса AnswerAlgorithmDefinition.</p>
+<p>Получить результат выполнения алгоритма можно посредством выполнения POST
+запроса к конечной точке /api/algorithms/{algorithm_name}, с передачей
+фактических значений для набора входных параметров - с помощью объекта
+класса Parameters. Ответ содержит экземпляр класса AnswerOutputs.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Запрос</p></th>
+<th class="head"><p>Конечная точка</p></th>
+<th class="head"><p>Действие</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GET</p></td>
+<td><p>/api/algorithms</p></td>
+<td><p>Получить список имеющихся алгоритмов</p></td>
+</tr>
+<tr class="row-odd"><td><p>GET</p></td>
+<td><p>/api/algorithms/fibonacci</p></td>
+<td><p>Получить описание алгоритма fibonacci</p></td>
+</tr>
+<tr class="row-even"><td><p>POST</p></td>
+<td><p>/api/algorithms/fibonacci</p></td>
+<td><p>Выполнить алгоритм fibonacci</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="src.ALGORITHMS_ENDPOINT">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">ALGORITHMS_ENDPOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api/algorithms'</span></em><a class="headerlink" href="#src.ALGORITHMS_ENDPOINT" title="Ссылка на это определение"></a></dt>
+<dd><p>Конечная точка для API</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.ALGORITHM_CONFIG">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">ALGORITHM_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'algorithm_config'</span></em><a class="headerlink" href="#src.ALGORITHM_CONFIG" title="Ссылка на это определение"></a></dt>
+<dd><p>Ключ для раздела конфигурации с настройками для алгоритмов</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.APP_CONFIG_FILE_PATH">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">APP_CONFIG_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'config/app_config.json'</span></em><a class="headerlink" href="#src.APP_CONFIG_FILE_PATH" title="Ссылка на это определение"></a></dt>
+<dd><p>Путь к конфигурации приложения</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.EXECUTE_TIMEOUT">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">EXECUTE_TIMEOUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'execute_timeout'</span></em><a class="headerlink" href="#src.EXECUTE_TIMEOUT" title="Ссылка на это определение"></a></dt>
+<dd><p>Ключ в конфигурации алгоритмов для задания времени выполнения алгоритма</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.IS_TEST_APP">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">IS_TEST_APP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'IS_TEST_APP'</span></em><a class="headerlink" href="#src.IS_TEST_APP" title="Ссылка на это определение"></a></dt>
+<dd><p>Переменная среды, свидетельствующая о проведении тестировании модуля main</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.LOG_CONFIG_FILE_PATH">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">LOG_CONFIG_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'config/log_config.json'</span></em><a class="headerlink" href="#src.LOG_CONFIG_FILE_PATH" title="Ссылка на это определение"></a></dt>
+<dd><p>Путь к конфигурации логирования</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.PATH_CONFIG">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">PATH_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path_config'</span></em><a class="headerlink" href="#src.PATH_CONFIG" title="Ссылка на это определение"></a></dt>
+<dd><p>Ключ для раздела конфигурации, содержащего пути к файлам для алгоритмов</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.TIME_OVER_MSG">
+<span class="sig-prename descclassname"><span class="pre">src.</span></span><span class="sig-name descname"><span class="pre">TIME_OVER_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Время</span> <span class="pre">для</span> <span class="pre">выполнения</span> <span class="pre">алгоритма</span> <span class="pre">истекло'</span></em><a class="headerlink" href="#src.TIME_OVER_MSG" title="Ссылка на это определение"></a></dt>
+<dd><p>Сообщение об ошибке таймаута</p>
+</dd></dl>
+
 </section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-src.main">
+<span id="src-main-module"></span><h2>src.main module<a class="headerlink" href="#module-src.main" title="Permalink to this heading"></a></h2>
+<p>Реализация API для онлайн-калькулятора с использованием фреймворка FastAPI.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.main.get_algorithm">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.AnswerAlgorithmDefinition" title="src.api_models.AnswerAlgorithmDefinition"><span class="pre">AnswerAlgorithmDefinition</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithm"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithm" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает описание выбранного алгоритма.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>algorithm_name</strong> (<em>str</em>) – имя алгоритма;</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Описание алгоритма.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.api_models.AnswerAlgorithmDefinition" title="src.api_models.AnswerAlgorithmDefinition">AnswerAlgorithmDefinition</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.main.get_algorithm_result">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithm_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.api_models.Parameters" title="src.api_models.Parameters"><span class="pre">Parameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.AnswerOutputs" title="src.api_models.AnswerOutputs"><span class="pre">AnswerOutputs</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithm_result"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithm_result" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает результат выполнения выбранного алгоритма.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>algorithm_name</strong> (<em>str</em>) – имя алгоритма;</p></li>
+<li><p><strong>parameters</strong> (<a class="reference internal" href="#src.api_models.Parameters" title="src.api_models.Parameters"><em>Parameters</em></a>) – значения входных данных для выполнения алгоритма.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>результат выполнения выбранного алгоритма</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.api_models.AnswerOutputs" title="src.api_models.AnswerOutputs">AnswerOutputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.main.get_algorithms">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.Algorithms" title="src.api_models.Algorithms"><span class="pre">Algorithms</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithms"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithms" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает список имеющихся алгоритмов.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>список имеющихся алгоритмов.</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.api_models.Algorithms" title="src.api_models.Algorithms">Algorithms</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-src.api_models">
 <span id="src-api-models-module"></span><h2>src.api_models module<a class="headerlink" href="#module-src.api_models" title="Permalink to this heading"></a></h2>
@@ -515,150 +568,6 @@ nullable значений.</p>
 </dd></dl>
 
 </section>
-<section id="module-src.constants">
-<span id="src-constants-module"></span><h2>src.constants module<a class="headerlink" href="#module-src.constants" title="Permalink to this heading"></a></h2>
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.ALGORITHMS_ENDPOINT">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">ALGORITHMS_ENDPOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api/algorithms'</span></em><a class="headerlink" href="#src.constants.ALGORITHMS_ENDPOINT" title="Ссылка на это определение"></a></dt>
-<dd><p>Конечная точка для API</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.ALGORITHM_CONFIG">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">ALGORITHM_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'algorithm_config'</span></em><a class="headerlink" href="#src.constants.ALGORITHM_CONFIG" title="Ссылка на это определение"></a></dt>
-<dd><p>Ключ для раздела конфигурации с настройками для алгоритмов</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.APP_CONFIG_FILE_PATH">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">APP_CONFIG_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'config/app_config.json'</span></em><a class="headerlink" href="#src.constants.APP_CONFIG_FILE_PATH" title="Ссылка на это определение"></a></dt>
-<dd><p>Путь к конфигурации приложения</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.EXECUTE_TIMEOUT">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">EXECUTE_TIMEOUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'execute_timeout'</span></em><a class="headerlink" href="#src.constants.EXECUTE_TIMEOUT" title="Ссылка на это определение"></a></dt>
-<dd><p>Ключ в конфигурации алгоритмов для задания времени выполнения алгоритма</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.IS_TEST_APP">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">IS_TEST_APP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'IS_TEST_APP'</span></em><a class="headerlink" href="#src.constants.IS_TEST_APP" title="Ссылка на это определение"></a></dt>
-<dd><p>Переменная среды, свидетельствующая о проведении тестировании модуля main</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.LOG_CONFIG_FILE_PATH">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">LOG_CONFIG_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'config/log_config.json'</span></em><a class="headerlink" href="#src.constants.LOG_CONFIG_FILE_PATH" title="Ссылка на это определение"></a></dt>
-<dd><p>Путь к конфигурации логирования</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.PATH_CONFIG">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">PATH_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path_config'</span></em><a class="headerlink" href="#src.constants.PATH_CONFIG" title="Ссылка на это определение"></a></dt>
-<dd><p>Ключ для раздела конфигурации, содержащего пути к файлам для алгоритмов</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="src.constants.TIME_OVER_MSG">
-<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">TIME_OVER_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Время</span> <span class="pre">для</span> <span class="pre">выполнения</span> <span class="pre">алгоритма</span> <span class="pre">истекло'</span></em><a class="headerlink" href="#src.constants.TIME_OVER_MSG" title="Ссылка на это определение"></a></dt>
-<dd><p>Сообщение об ошибке таймаута</p>
-</dd></dl>
-
-</section>
-<section id="module-src.main">
-<span id="src-main-module"></span><h2>src.main module<a class="headerlink" href="#module-src.main" title="Permalink to this heading"></a></h2>
-<p>Реализация API для онлайн-калькулятора с использованием фреймворка FastAPI.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="src.main.get_algorithm">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.AnswerAlgorithmDefinition" title="src.api_models.AnswerAlgorithmDefinition"><span class="pre">AnswerAlgorithmDefinition</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithm"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithm" title="Ссылка на это определение"></a></dt>
-<dd><p>Возвращает описание выбранного алгоритма.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Параметры<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>algorithm_name</strong> (<em>str</em>) – имя алгоритма;</p>
-</dd>
-<dt class="field-even">Результат<span class="colon">:</span></dt>
-<dd class="field-even"><p>Описание алгоритма.</p>
-</dd>
-<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#src.api_models.AnswerAlgorithmDefinition" title="src.api_models.AnswerAlgorithmDefinition">AnswerAlgorithmDefinition</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.main.get_algorithm_result">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithm_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.api_models.Parameters" title="src.api_models.Parameters"><span class="pre">Parameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.AnswerOutputs" title="src.api_models.AnswerOutputs"><span class="pre">AnswerOutputs</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithm_result"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithm_result" title="Ссылка на это определение"></a></dt>
-<dd><p>Возвращает результат выполнения выбранного алгоритма.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Параметры<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>algorithm_name</strong> (<em>str</em>) – имя алгоритма;</p></li>
-<li><p><strong>parameters</strong> (<a class="reference internal" href="#src.api_models.Parameters" title="src.api_models.Parameters"><em>Parameters</em></a>) – значения входных данных для выполнения алгоритма.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Результат<span class="colon">:</span></dt>
-<dd class="field-even"><p>результат выполнения выбранного алгоритма</p>
-</dd>
-<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#src.api_models.AnswerOutputs" title="src.api_models.AnswerOutputs">AnswerOutputs</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.main.get_algorithms">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.main.</span></span><span class="sig-name descname"><span class="pre">get_algorithms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.api_models.Algorithms" title="src.api_models.Algorithms"><span class="pre">Algorithms</span></a></span></span><a class="reference internal" href="_modules/src/main.html#get_algorithms"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#src.main.get_algorithms" title="Ссылка на это определение"></a></dt>
-<dd><p>Возвращает список имеющихся алгоритмов.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Результат<span class="colon">:</span></dt>
-<dd class="field-odd"><p>список имеющихся алгоритмов.</p>
-</dd>
-<dt class="field-even">Тип результата<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#src.api_models.Algorithms" title="src.api_models.Algorithms">Algorithms</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-src">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Permalink to this heading"></a></h2>
-<p>Реализация API для онлайн-калькулятора.</p>
-<p>API предоставляет доступ к алгоритмам. Получить список имеющихся алгоритмов
-можно посредством выполнения GET запроса к конечной точке /api/algorithms.
-Ответ содержит экземпляр класса Algorithms.</p>
-<p>Доступ к конкретному алгоритму осуществляется по URI
-/api/algorithms/{algorithm_name}, с указанием уникального имени алгоритма.
-Получить описание выбранного алгоритма можно посредством выполнения GET
-запроса к конечной точке /api/algorithms/{algorithm_name}. Ответ содержит
-экземпляр класса AnswerAlgorithmDefinition.</p>
-<p>Получить результат выполнения алгоритма можно посредством выполнения POST
-запроса к конечной точке /api/algorithms/{algorithm_name}, с передачей
-фактических значений для набора входных параметров - с помощью объекта
-класса Parameters. Ответ содержит экземпляр класса AnswerOutputs.</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Запрос</p></th>
-<th class="head"><p>Конечная точка</p></th>
-<th class="head"><p>Действие</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>GET</p></td>
-<td><p>/api/algorithms</p></td>
-<td><p>Получить список имеющихся алгоритмов</p></td>
-</tr>
-<tr class="row-odd"><td><p>GET</p></td>
-<td><p>/api/algorithms/fibonacci</p></td>
-<td><p>Получить описание алгоритма fibonacci</p></td>
-</tr>
-<tr class="row-even"><td><p>POST</p></td>
-<td><p>/api/algorithms/fibonacci</p></td>
-<td><p>Выполнить алгоритм fibonacci</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 </section>
 
 
@@ -672,7 +581,7 @@ nullable значений.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, MikhailovAlexander.</p>
+    <p>&#169; Copyright 2023, OMMAT.</p>
   </div>
 
   Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием

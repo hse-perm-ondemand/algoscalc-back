@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core_tests.algorithm_collection_tests &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core_tests.algorithm_collection_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core_tests.algorithm_collection_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+
+<span class="kn">from</span> <span class="nn">src.core_tests</span> <span class="kn">import</span> <span class="n">COLLECTION_FOLDER_PATH</span><span class="p">,</span> <span class="n">PATH_CONFIG</span><span class="p">,</span>\
+    <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span> <span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>\
+    <span class="n">FIB_DEF</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">,</span> <span class="n">FIB_TITLE</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span>
+<span class="kn">from</span> <span class="nn">src.core.algorithm_collection</span> <span class="kn">import</span> <span class="n">AlgorithmCollection</span><span class="p">,</span> \
+    <span class="n">NO_ALGORITHMS_MSG</span><span class="p">,</span> <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span>
+<span class="kn">from</span> <span class="nn">src.core.algorithm</span> <span class="kn">import</span> <span class="n">Algorithm</span>
+
+
+<div class="viewcode-block" id="AlgorithmCollectionTests"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmCollectionTests</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">path_config</span> <span class="o">=</span> <span class="n">PATH_CONFIG</span>
+    <span class="n">path_config</span><span class="p">[</span><span class="s1">&#39;algorithms_catalog_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">COLLECTION_FOLDER_PATH</span>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.setUpClass"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.setUpClass">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;../..&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.tearDownClass"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.tearDownClass">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">removedirs</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.tearDown"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.tearDown">[документация]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">COLLECTION_FOLDER_PATH</span><span class="p">):</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">COLLECTION_FOLDER_PATH</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_empty_catalog"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_empty_catalog">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span> <span class="n">NO_ALGORITHMS_MSG</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_single_algorithm"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_single_algorithm">[документация]</a>    <span class="k">def</span> <span class="nf">test_single_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;test_single&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_files</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                         <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">get_name_title_dict</span><span class="p">(),</span>
+                         <span class="p">{</span><span class="s1">&#39;test_single&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">})</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">alg</span><span class="p">,</span> <span class="n">Algorithm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm_result</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}),</span>
+                         <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mi">6765</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_double_algorithms"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_double_algorithms">[документация]</a>    <span class="k">def</span> <span class="nf">test_double_algorithms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test1&#39;</span><span class="p">,</span> <span class="s1">&#39;test2&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_files</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                         <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">get_name_title_dict</span><span class="p">(),</span>
+                         <span class="p">{</span><span class="s1">&#39;test1&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">,</span>
+                          <span class="s1">&#39;test2&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_triple_algorithms"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_triple_algorithms">[документация]</a>    <span class="k">def</span> <span class="nf">test_triple_algorithms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test1&#39;</span><span class="p">,</span> <span class="s1">&#39;test2&#39;</span><span class="p">,</span> <span class="s1">&#39;test3&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_files</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                         <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">get_name_title_dict</span><span class="p">(),</span>
+                         <span class="p">{</span><span class="s1">&#39;test1&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">,</span>
+                          <span class="s1">&#39;test2&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">,</span>
+                          <span class="s1">&#39;test3&#39;</span><span class="p">:</span> <span class="n">FIB_TITLE</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_algorithm_not_exists"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_algorithm_not_exists">[документация]</a>    <span class="k">def</span> <span class="nf">test_algorithm_not_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;test_single&#39;</span>
+        <span class="n">wrong_name</span> <span class="o">=</span> <span class="s1">&#39;wrong_name&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_files</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                         <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">wrong_name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span>
+                               <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wrong_name</span><span class="p">),</span>
+                               <span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm</span><span class="p">,</span> <span class="n">wrong_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span>
+                               <span class="n">ALGORITHM_NOT_EXISTS_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wrong_name</span><span class="p">),</span>
+                               <span class="n">algorithms</span><span class="o">.</span><span class="n">get_algorithm_result</span><span class="p">,</span> <span class="n">wrong_name</span><span class="p">,</span>
+                               <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.test_has_algorithm"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.test_has_algorithm">[документация]</a>    <span class="k">def</span> <span class="nf">test_has_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span>
+        <span class="n">wrong_name</span> <span class="o">=</span> <span class="s1">&#39;wrong_name&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_files</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">algorithms</span> <span class="o">=</span> <span class="n">AlgorithmCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_config</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                                         <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">wrong_name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">has_algorithm</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmCollectionTests.create_files"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_collection_tests.AlgorithmCollectionTests.create_files">[документация]</a>    <span class="k">def</span> <span class="nf">create_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">COLLECTION_FOLDER_PATH</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">def_file</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">FIB_DEF</span><span class="p">,</span> <span class="n">def_file</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">func_file</span><span class="p">:</span>
+            <span class="n">func_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">test_file</span><span class="p">:</span>
+            <span class="n">test_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">FIB_TESTS</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, OMMAT.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

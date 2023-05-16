@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core_tests.algorithm_builder_tests &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core_tests.algorithm_builder_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core_tests.algorithm_builder_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+<span class="kn">from</span> <span class="nn">jsonschema.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="kn">from</span> <span class="nn">src.core_tests</span> <span class="kn">import</span> <span class="n">FOLDER_PATH</span><span class="p">,</span> <span class="n">FIB_DEF</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">,</span>\
+    <span class="n">WRONG_FIB_TESTS</span><span class="p">,</span> <span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>\
+    <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span>
+<span class="kn">from</span> <span class="nn">src.core.algorithm_builder</span> <span class="kn">import</span> <span class="n">AlgorithmBuilder</span><span class="p">,</span> <span class="n">UNIT_TEST_FAILED_MSG</span><span class="p">,</span>\
+    <span class="n">NON_STRING_PARAM_TEMPL</span><span class="p">,</span> <span class="n">EMPTY_STRING_PARAM_TEMPL</span>
+
+
+<div class="viewcode-block" id="AlgorithmBuilderTest"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest">[документация]</a><span class="k">class</span> <span class="nc">AlgorithmBuilderTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span>
+                               <span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span>
+                               <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span> <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.setUpClass"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.setUpClass">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;../..&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.tearDownClass"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.tearDownClass">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">removedirs</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.tearDown"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.tearDown">[документация]</a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">):</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">FOLDER_PATH</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rmtree</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.write_file"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.write_file">[документация]</a>    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">FOLDER_PATH</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.write_json"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.write_json">[документация]</a>    <span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">json_text</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">FOLDER_PATH</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">json_text</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_non_string_definition"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_non_string_definition">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="mi">100500</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;definition_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_empty_definition"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_empty_definition">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;definition_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_non_string_function"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_non_string_function">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;function_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_empty_function"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_empty_function">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">TEST_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;function_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_non_string_test"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_non_string_test">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;test_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_empty_test"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_empty_test">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                             <span class="n">SCHEMA_FILE_PATH</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;test_file_name&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_non_string_schema"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_non_string_schema">[документация]</a>    <span class="k">def</span> <span class="nf">test_non_string_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="p">[],</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">NON_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;schema_file_path&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_empty_schema"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_empty_schema">[документация]</a>    <span class="k">def</span> <span class="nf">test_empty_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">AlgorithmBuilder</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span>
+                             <span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ALGORITHM_CONFIG</span><span class="p">,</span>
+                             <span class="n">LOG_CONFIG_STUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">EMPTY_STRING_PARAM_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;schema_file_path&#39;</span><span class="p">),</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">exception</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build">[документация]</a>    <span class="k">def</span> <span class="nf">test_build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_DEF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">)</span>
+        <span class="n">alg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">(</span><span class="n">FOLDER_PATH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="n">get_test_errors</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build_wrong_def"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build_wrong_def">[документация]</a>    <span class="k">def</span> <span class="nf">test_build_wrong_def</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fib_def</span> <span class="o">=</span> <span class="n">FIB_DEF</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fib_def</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">fib_def</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">,</span>
+                          <span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build_failed_test"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build_failed_test">[документация]</a>    <span class="k">def</span> <span class="nf">test_build_failed_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_DEF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">WRONG_FIB_TESTS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaisesRegex</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">UNIT_TEST_FAILED_MSG</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">,</span> <span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build_missing_def"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build_missing_def">[документация]</a>    <span class="k">def</span> <span class="nf">test_build_missing_def</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">,</span>
+                          <span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build_missing_func"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build_missing_func">[документация]</a>    <span class="k">def</span> <span class="nf">test_build_missing_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_DEF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">TEST_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_TESTS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">,</span>
+                          <span class="n">FOLDER_PATH</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AlgorithmBuilderTest.test_build_missing_tests"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.algorithm_builder_tests.AlgorithmBuilderTest.test_build_missing_tests">[документация]</a>    <span class="k">def</span> <span class="nf">test_build_missing_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">DEFINITION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_DEF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">FUNCTION_FILE_NAME</span><span class="p">,</span> <span class="n">FIB_FUNC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">build_algorithm</span><span class="p">,</span>
+                          <span class="n">FOLDER_PATH</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, OMMAT.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

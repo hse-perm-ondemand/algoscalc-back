@@ -5,3 +5,5 @@ algoscalc-back
    :maxdepth: 4
 
    src
+   src.core
+   src.core_tests

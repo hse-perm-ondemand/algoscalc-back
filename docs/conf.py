@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 project = 'algoscalc-back'
-copyright = '2023, MikhailovAlexander'
+copyright = '2023, OMMAT'
 author = 'MikhailovAlexander'
 release = '1.0'
 
@@ -20,7 +20,7 @@ release = '1.0'
 extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc']
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**/test_runner.py']
 
 language = 'ru'
 

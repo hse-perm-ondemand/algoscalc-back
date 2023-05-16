@@ -105,11 +105,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r src/requirements.txt
           pip install -r docs/requirements.txt
-      - name: Running the Sphinx to gh-pages Action
-        uses: uibcdf/action-sphinx-docs-to-gh-pages@v1.1.0
+      - name: Build docs
+        run: |
+          sphinx-apidoc -o docs .
+          cd docs
+          make html
+      - name: Deploy docs to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: Test
-          dir_docs: docs
-          sphinxapiopts: '--separate -o . ../'
-          sphinxapiexclude: '../*setup* ../*.ipynb  **/test_runner.py'
-          sphinxopts: ''
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build
+          cname: ${{ secrets.DOCS_PAGES_DOMAIN }}

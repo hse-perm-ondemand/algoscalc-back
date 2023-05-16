@@ -1,6 +1,14 @@
 src.core package
 ================
 
+Module contents
+---------------
+
+.. automodule:: src.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -32,14 +40,6 @@ src.core.data\_element module
 -----------------------------
 
 .. automodule:: src.core.data_element
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: src.core
    :members:
    :undoc-members:
    :show-inheritance:

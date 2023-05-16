@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.core_tests.data_shape_tests &mdash; документация algoscalc-back 1.0</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            algoscalc-back
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">algoscalc-back</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">algoscalc-back</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">src.core_tests.data_shape_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код src.core_tests.data_shape_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+
+
+<span class="kn">from</span> <span class="nn">src.core.data_element</span> <span class="kn">import</span> <span class="n">DataShape</span><span class="p">,</span> <span class="n">NONE_VALUE_MSG</span><span class="p">,</span>\
+    <span class="n">NOT_MATRIX_VALUE_MSG</span><span class="p">,</span> <span class="n">NOT_LIST_VALUE_MSG</span><span class="p">,</span> <span class="n">NOT_SCALAR_VALUE_MSG</span><span class="p">,</span> \
+    <span class="n">NOT_LIST_ROW_TEMPL</span>
+
+
+<div class="viewcode-block" id="DataShapeTests"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests">[документация]</a><span class="k">class</span> <span class="nc">DataShapeTests</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="DataShapeTests.test_scalar"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_scalar">[документация]</a>    <span class="k">def</span> <span class="nf">test_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;SCALAR&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;SCALAR&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataShapeTests.test_list"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_list">[документация]</a>    <span class="k">def</span> <span class="nf">test_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">LIST</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;LIST&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;LIST&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataShapeTests.test_matrix"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_matrix">[документация]</a>    <span class="k">def</span> <span class="nf">test_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">MATRIX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;MATRIX&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;MATRIX&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataShapeTests.test_scalar_errors"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_scalar_errors">[документация]</a>    <span class="k">def</span> <span class="nf">test_scalar_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">SCALAR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="mf">1.</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">NONE_VALUE_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([]),</span> <span class="n">NOT_SCALAR_VALUE_MSG</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataShapeTests.test_list_errors"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_list_errors">[документация]</a>    <span class="k">def</span> <span class="nf">test_list_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">LIST</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([</span><span class="s1">&#39;1&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">NONE_VALUE_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">NOT_LIST_VALUE_MSG</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataShapeTests.test_matrix_errors"><a class="viewcode-back" href="../../../src.core_tests.html#src.core_tests.data_shape_tests.DataShapeTests.test_matrix_errors">[документация]</a>    <span class="k">def</span> <span class="nf">test_matrix_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataShape</span><span class="o">.</span><span class="n">MATRIX</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([[]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([[</span><span class="s1">&#39;1&#39;</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">NONE_VALUE_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">NOT_MATRIX_VALUE_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">get_shape_errors</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="s1">&#39;row&#39;</span><span class="p">]),</span>
+                         <span class="n">NOT_LIST_ROW_TEMPL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, OMMAT.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
