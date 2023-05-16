@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 from src.api_models import Algorithms, AnswerAlgorithmDefinition, Data, \
     Parameters, AnswerOutputs
-from src.constants import IS_TEST_APP, ALGORITHMS_ENDPOINT
+from src import IS_TEST_APP, ALGORITHMS_ENDPOINT
 
 
 class AppTest(unittest.TestCase):

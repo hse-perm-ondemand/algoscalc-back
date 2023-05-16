@@ -3,7 +3,7 @@ import time
 
 
 from src.core.data_element import DataType, DataShape, DataElement
-from src.core_tests.constants import LOG_CONFIG_STUB, NAME, TITLE, DESCRIPTION,\
+from src.core_tests import LOG_CONFIG_STUB, NAME, TITLE, DESCRIPTION,\
     PARAM_NAME, PARAM_LIST_NAME, PARAM_TITLE, PARAM_DESCRIPTION,\
     PARAM_INT_DEFAULT, PARAM_LIST_DEFAULT, OUTPUT_NAME, OUTPUT_MATRIX_NAME,\
     OUTPUT_TITLE, OUTPUT_DESCRIPTION

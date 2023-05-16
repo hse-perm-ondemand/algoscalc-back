@@ -4,7 +4,7 @@ import json
 from shutil import rmtree
 from jsonschema.exceptions import ValidationError
 
-from src.core_tests.constants import FOLDER_PATH, FIB_DEF, FIB_FUNC, FIB_TESTS,\
+from src.core_tests import FOLDER_PATH, FIB_DEF, FIB_FUNC, FIB_TESTS,\
     WRONG_FIB_TESTS, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
     SCHEMA_FILE_PATH, ALGORITHM_CONFIG, LOG_CONFIG_STUB
 from src.core.algorithm_builder import AlgorithmBuilder, UNIT_TEST_FAILED_MSG,\

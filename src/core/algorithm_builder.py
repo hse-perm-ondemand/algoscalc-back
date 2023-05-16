@@ -10,7 +10,7 @@ from typing import Callable, Any, Optional
 
 from src.core.data_element import DataElement, DataType, DataShape
 from src.core.algorithm import Algorithm
-from src.core.constants import UNIT_TEST_FAILED_MSG, NON_STRING_PARAM_TEMPL, \
+from src.core import UNIT_TEST_FAILED_MSG, NON_STRING_PARAM_TEMPL, \
     EMPTY_STRING_PARAM_TEMPL
 
 

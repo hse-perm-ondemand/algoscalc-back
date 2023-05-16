@@ -7,7 +7,7 @@ from src.core.data_element import DataType, DataShape, DataElement, \
     NOT_LIST_VALUE_MSG, NOT_SCALAR_VALUE_MSG, NOT_LIST_ROW_TEMPL,\
     MISMATCH_VALUE_TYPE_TEMPL, MISMATCH_LIST_VALUE_TYPE_TEMPL, \
     MISMATCH_MATRIX_VALUE_TYPE_TEMPL
-from src.core_tests.constants import NAME, TITLE, DESCRIPTION
+from src.core_tests import NAME, TITLE, DESCRIPTION
 
 
 class DataElementTests(unittest.TestCase):

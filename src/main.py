@@ -11,7 +11,7 @@ from src.core.algorithm_collection import AlgorithmCollection, \
 from src.api_models import AlgorithmTitle, Algorithms, DataDefinition, \
     AlgorithmDefinition, Data, Parameters, Outputs, AnswerOutputs, \
     AnswerAlgorithmDefinition
-from src.constants import APP_CONFIG_FILE_PATH, LOG_CONFIG_FILE_PATH, \
+from src import APP_CONFIG_FILE_PATH, LOG_CONFIG_FILE_PATH, \
     PATH_CONFIG, ALGORITHM_CONFIG, IS_TEST_APP, EXECUTE_TIMEOUT, \
     ALGORITHMS_ENDPOINT, TIME_OVER_MSG
 

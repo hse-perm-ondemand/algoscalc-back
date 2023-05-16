@@ -3,7 +3,7 @@ import os
 import json
 from shutil import rmtree
 
-from src.core_tests.constants import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
+from src.core_tests import COLLECTION_FOLDER_PATH, PATH_CONFIG,\
     ALGORITHM_CONFIG, DEFINITION_FILE_NAME, FUNCTION_FILE_NAME, TEST_FILE_NAME,\
     FIB_DEF, FIB_FUNC, FIB_TESTS, FIB_TITLE, LOG_CONFIG_STUB
 from src.core.algorithm_collection import AlgorithmCollection, \

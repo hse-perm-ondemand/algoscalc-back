@@ -3,7 +3,7 @@ from typing import Any, Union
 
 from src.core.algorithm import Algorithm
 from src.core.algorithm_builder import AlgorithmBuilder
-from src.core.constants import NO_ALGORITHMS_MSG, ALGORITHM_NOT_EXISTS_TEMPL
+from src.core import NO_ALGORITHMS_MSG, ALGORITHM_NOT_EXISTS_TEMPL
 
 
 class AlgorithmCollection:
