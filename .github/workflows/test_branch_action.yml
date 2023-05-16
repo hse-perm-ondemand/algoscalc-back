@@ -114,5 +114,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_build
+          publish_dir: ./docs/_build
           cname: ${{ secrets.DOCS_PAGES_DOMAIN }}
