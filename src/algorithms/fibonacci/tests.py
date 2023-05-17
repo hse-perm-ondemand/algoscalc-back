@@ -1,7 +1,7 @@
 import unittest
 
 
-from src.algorithms.fibonacci.function import fibonacci
+from src.algorithms.fibonacci.function import main
 
 
 class TestCase(unittest.TestCase):
@@ -9,7 +9,7 @@ class TestCase(unittest.TestCase):
 
     def test_fibonacci(self):
         for index, number in enumerate(self.numbers):
-            self.assertEqual(fibonacci(index + 1), number)
+            self.assertEqual(main(index + 1), {'result': number})
 
 
 if __name__ == '__main__':
