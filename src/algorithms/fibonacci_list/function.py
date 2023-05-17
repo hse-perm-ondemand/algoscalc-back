@@ -13,4 +13,4 @@ def main(n: int):
 
 if __name__ == '__main__':
     num = 10
-    print(f'n = {num}, список чисел Фибоначчи: {fibonacci(num)}')
+    print(main(num))
