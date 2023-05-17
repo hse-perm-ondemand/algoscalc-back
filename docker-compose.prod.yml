@@ -1,8 +1,7 @@
 version: '3.7'
 
 services:
-
-  backendprod:
+  backend_prod:
     container_name: BackendProd
     restart: always
     build:
@@ -10,3 +9,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '5556:8080'
+    volumes:
+      - backend_prod_logs:/code/logs
+
+volumes:
+  backend_prod_logs:
