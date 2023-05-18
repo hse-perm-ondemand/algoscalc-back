@@ -58,8 +58,8 @@ class AlgorithmBuilderTest(unittest.TestCase):
             AlgorithmBuilder('', FUNCTION_FILE_NAME, TEST_FILE_NAME,
                              SCHEMA_FILE_PATH, ALGORITHM_CONFIG,
                              LOG_CONFIG_STUB)
-        self.assertEqual(EMPTY_STRING_PARAM_TEMPL.format('definition_file_name'),
-                         str(error.exception))
+        err_text = EMPTY_STRING_PARAM_TEMPL.format('definition_file_name')
+        self.assertEqual(err_text, str(error.exception))
 
     def test_non_string_function(self):
         with self.assertRaises(ValueError) as error:

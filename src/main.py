@@ -22,7 +22,7 @@ with open(LOG_CONFIG_FILE_PATH, 'r') as log_conf_file:
 file_path = None
 try:
     file_path = log_config["handlers"]["file_handler"]["filename"]
-except KeyError as ex:
+except KeyError:
     pass
 if file_path:
     folder = os.path.split(file_path)[0]
