@@ -30,7 +30,7 @@ jobs:
     - name: Test with unittest module
       run: python -m unittest discover -v -s ./src
   sonarcloud:
-    name: SonarCloud
+    name: SonarCloud code analyze
     runs-on: ubuntu-latest
     needs: test
     if: needs.test.result == 'success'
@@ -52,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   lint:
-    name: Flake8 with annotations
+    name: Code style check
     runs-on: ubuntu-latest
     needs: test
     if: needs.test.result == 'success' && github.event_name == 'pull_request'
@@ -110,7 +110,7 @@ jobs:
     permissions:
       contents: write
       pages: write
-    name: Sphinx docs to gh-pages
+    name: Docs deploy
     runs-on: ubuntu-latest
     needs: prod_deploy
     if: needs.prod_deploy.result == 'success'
