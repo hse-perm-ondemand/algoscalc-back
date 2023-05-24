@@ -5,6 +5,7 @@ import os
 import json
 import logging.config
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.algorithm_collection import AlgorithmCollection, \
     ALGORITHM_NOT_EXISTS_TEMPL
@@ -42,6 +43,24 @@ if bool(os.environ.get(IS_TEST_APP)):
 algorithms = AlgorithmCollection(path_config, algorithm_config, log_config)
 
 app = FastAPI()
+
+origins = [
+    "http://test.ommat.ru",
+    "http://prod.ommat.ru",
+    "https://test.ommat.ru",
+    "https://prod.ommat.ru",
+    "http://localhost",
+    "http://localhost:4444",
+    "http://localhost:5555",
+    "http://localhost:44486",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
 
 
 @app.get(ALGORITHMS_ENDPOINT)
