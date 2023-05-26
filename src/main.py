@@ -43,23 +43,13 @@ if bool(os.environ.get(IS_TEST_APP)):
 algorithms = AlgorithmCollection(path_config, algorithm_config, log_config)
 
 app = FastAPI()
-
-origins = [
-    "http://test.ommat.ru",
-    "http://prod.ommat.ru",
-    "https://test.ommat.ru",
-    "https://prod.ommat.ru",
-    "http://localhost",
-    "http://localhost:4444",
-    "http://localhost:5555",
-    "http://localhost:44486",
-]
+web_config = config['web_config']
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*']
+    allow_origins=web_config['cors']['origins'],
+    allow_credentials=web_config['cors']['credentials'],
+    allow_methods=web_config['cors']['methods'],
+    allow_headers=web_config['cors']['headers']
 )
 
 
