@@ -5,6 +5,7 @@ import os
 import json
 import logging.config
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.algorithm_collection import AlgorithmCollection, \
     ALGORITHM_NOT_EXISTS_TEMPL
@@ -42,6 +43,14 @@ if bool(os.environ.get(IS_TEST_APP)):
 algorithms = AlgorithmCollection(path_config, algorithm_config, log_config)
 
 app = FastAPI()
+web_config = config['web_config']
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=web_config['cors']['origins'],
+    allow_credentials=web_config['cors']['credentials'],
+    allow_methods=web_config['cors']['methods'],
+    allow_headers=web_config['cors']['headers']
+)
 
 
 @app.get(ALGORITHMS_ENDPOINT)
