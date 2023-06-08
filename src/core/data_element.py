@@ -208,7 +208,10 @@ class DataElement(object):
 
     def __check_scalar_value(self, value: Any) -> Optional[str]:
         """Проверяет тип данных для скалярного значения."""
-        if type(value) != self.__data_type.type:
+        if self.__data_type.type == float:
+            if type(value) not in [int, float]:
+                return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
+        elif type(value) != self.__data_type.type:
             return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
 
     def __check_list_value(self, value: Any) -> Optional[str]:

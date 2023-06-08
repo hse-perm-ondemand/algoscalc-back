@@ -221,8 +221,6 @@ class Algorithm(object):
         method_outputs = None
         try:
             method_outputs = self.__execute_method(**params)
-            if self.__execute_timeout > 0:
-                signal.alarm(0)
         except TimeoutError:
             msg = TIME_OVER_TEMPL.format(self.__execute_timeout, params)
             self.__log_and_raise_error(msg, TimeoutError)
@@ -232,6 +230,9 @@ class Algorithm(object):
         except Exception as ex:
             self.__log_and_raise_error(
                 EXECUTION_FAILED_TEMPL.format(ex, params), RuntimeError)
+        finally:
+            if self.__execute_timeout > 0:
+                signal.alarm(0)
         self.__check_outputs_raises_ex(method_outputs)
         return method_outputs
 

@@ -103,7 +103,7 @@ class DataElementTests(unittest.TestCase):
                          MISMATCH_VALUE_TYPE_TEMPL.format('int'))
         with self.assertRaises(ValueError) as error:
             DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
-                        DataShape.SCALAR, 1)
+                        DataShape.SCALAR, '1.1')
         self.assertEqual(str(error.exception),
                          MISMATCH_VALUE_TYPE_TEMPL.format('float'))
         with self.assertRaises(ValueError) as error:
@@ -320,8 +320,11 @@ class DataElementTests(unittest.TestCase):
                          MISMATCH_VALUE_TYPE_TEMPL.format('int'))
         de = DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
                          DataShape.SCALAR, 1.)
-        self.assertEqual(de.get_check_value_errors(1),
+        self.assertEqual(de.get_check_value_errors('str'),
                          MISMATCH_VALUE_TYPE_TEMPL.format('float'))
+        de = DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
+                         DataShape.SCALAR, 1)
+        self.assertIsNone(de.get_check_value_errors(1))
         de = DataElement(NAME, TITLE, DESCRIPTION, DataType.STRING,
                          DataShape.SCALAR, 'str')
         self.assertEqual(de.get_check_value_errors(1),
