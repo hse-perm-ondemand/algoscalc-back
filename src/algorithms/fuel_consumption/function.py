@@ -16,7 +16,7 @@ def __check_params_raises_ex(distance: float, mean_consumption: float,
                   [MEAN_NAME, mean_consumption],
                   [PRICE_NAME, price]]
     for name, value in str_params:
-        if type(value) != float:
+        if type(value) not in [int, float]:
             raise TypeError(NON_FLOAT_PARAM_TEMPL.format(name))
         if value < 0:
             raise ValueError(NEG_VALUE_PARAM_TEMPL.format(name))
