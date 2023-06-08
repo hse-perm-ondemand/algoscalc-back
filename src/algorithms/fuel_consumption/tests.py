@@ -42,11 +42,11 @@ class TestCase(unittest.TestCase):
 
     def test_round(self):
         self.assertEqual({VOLUME: 8., COST: 338.},
-                         main(100.0, 0.075, 45.0, True))
+                         main(100.0, 7.5, 45.0, True))
 
     def test_not_round(self):
         self.assertEqual({VOLUME: 7.5, COST: 337.5},
-                         main(100.0, 0.075, 45.0, False))
+                         main(100.0, 7.5, 45.0, False))
 
 
 if __name__ == '__main__':
