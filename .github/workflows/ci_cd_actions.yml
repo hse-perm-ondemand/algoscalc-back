@@ -98,10 +98,8 @@ jobs:
     steps:
     - id: check
       run: |
-        if git branch -r --contains tags/${{ github.ref_name }}  | grep -qw 'origin/Prod'; then\
-        echo "is_tag_on_prod=true" >> $GITHUB_OUTPUT;\
-        else echo "is_tag_on_prod=false" >> $GITHUB_OUTPUT;\
-        fi
+        if git branch -r --contains tags/${{ github.ref_name }} | grep -qw 'origin/Prod'; then res=true; else res=false; fi
+        echo "is_tag_on_prod="$res >> $GITHUB_OUTPUT
   prod_deploy:
     name: Prod deploy
     runs-on: ubuntu-latest
