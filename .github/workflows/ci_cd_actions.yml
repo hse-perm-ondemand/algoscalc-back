@@ -1,6 +1,8 @@
 name: "CI CD actions"
 on:
   push:
+    tags:
+      - 'v*'
     branches:
       - Test
       - Prod
@@ -90,7 +92,11 @@ jobs:
     name: Prod deploy
     runs-on: ubuntu-latest
     needs: test
-    if: needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/Prod'
+    if: |
+      needs.test.result == 'success' && 
+      github.event_name == 'push' && 
+      github.ref_type == 'tag' &&
+      git branch -r --contains tags/${{ github.ref_name }} | grep -qw 'origin/Prod'
     steps:
     - name: executing remote ssh commands
       uses: appleboy/ssh-action@v0.1.9
