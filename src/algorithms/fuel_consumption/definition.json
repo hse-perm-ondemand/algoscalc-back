@@ -16,7 +16,7 @@
       "description": "Введите неотрицательное вещественное число",
       "data_type": "FLOAT",
       "data_shape": "SCALAR",
-      "default_value": 0.075
+      "default_value": 7.5
     },
     {
       "name": "price",

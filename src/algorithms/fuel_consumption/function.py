@@ -25,12 +25,12 @@ def __check_params_raises_ex(distance: float, mean_consumption: float,
 def main(distance: float, mean_consumption: float, price: float,
          need_round: bool) -> dict[str, Any]:
     __check_params_raises_ex(distance, mean_consumption, price)
-    volume = distance * mean_consumption
+    volume = distance * mean_consumption / 100
     cost = volume * price
     if need_round:
         return {VOLUME: float(round(volume)), COST: float(round(cost))}
-    return {VOLUME: volume, COST: cost}
+    return {VOLUME: round(volume, 2), COST: round(cost, 2)}
 
 
 if __name__ == '__main__':
-    print(main(100.0, 0.075, 45.0, True))
+    print(main(100.0, 7.5, 45.0, True))
