@@ -99,7 +99,7 @@ jobs:
       git branch -r --contains tags/${{ github.ref_name }} | grep -qw 'origin/Prod'
     steps:
     - name: Echo tag
-      run: echo ${{ github.ref_name }}
+      run: echo ${{ github.ref_type }}
     - name: executing remote ssh commands
       uses: appleboy/ssh-action@v0.1.9
       with:
