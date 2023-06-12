@@ -125,9 +125,9 @@ class DataElementTests(unittest.TestCase):
                          MISMATCH_LIST_VALUE_TYPE_TEMPL.format(1, 'int'))
         with self.assertRaises(ValueError) as error:
             DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
-                        DataShape.LIST, [1, 1.])
+                        DataShape.LIST, [1, 1., 'str'])
         self.assertEqual(str(error.exception),
-                         MISMATCH_LIST_VALUE_TYPE_TEMPL.format(0, 'float'))
+                         MISMATCH_LIST_VALUE_TYPE_TEMPL.format(2, 'float'))
         with self.assertRaises(ValueError) as error:
             DataElement(NAME, TITLE, DESCRIPTION, DataType.STRING,
                         DataShape.LIST, ['a', 'b', 1])
@@ -340,7 +340,10 @@ class DataElementTests(unittest.TestCase):
         self.assertEqual(de.get_check_value_errors([1, '1']),
                          MISMATCH_LIST_VALUE_TYPE_TEMPL.format(1, 'int'))
         de = DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
-                         DataShape.LIST, [1.])
+                         DataShape.LIST, [1])
+        self.assertIsNone(de.get_check_value_errors([1, 1.]))
+        de = DataElement(NAME, TITLE, DESCRIPTION, DataType.FLOAT,
+                         DataShape.LIST, ['1.'])
         self.assertEqual(de.get_check_value_errors([1, 1.]),
                          MISMATCH_LIST_VALUE_TYPE_TEMPL.format(0, 'float'))
         de = DataElement(NAME, TITLE, DESCRIPTION, DataType.STRING,
