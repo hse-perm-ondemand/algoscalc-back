@@ -208,21 +208,32 @@ class DataElement(object):
 
     def __check_scalar_value(self, value: Any) -> Optional[str]:
         """Проверяет тип данных для скалярного значения."""
-        if type(value) != self.__data_type.type:
+        if self.__data_type.type == float:
+            if type(value) not in [int, float]:
+                return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
+        elif type(value) != self.__data_type.type:
             return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
 
     def __check_list_value(self, value: Any) -> Optional[str]:
         """Проверяет тип данных для элементов списка."""
         for idx, item in enumerate(value):
-            if item is not None and type(item) != self.__data_type.type:
-                return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(idx,
-                                                             self.__data_type)
+            if item is not None and self.__data_type.type == float:
+                if type(item) not in [int, float]:
+                    return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(
+                        idx, self.__data_type)
+            elif item is not None and type(item) != self.__data_type.type:
+                return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(
+                    idx, self.__data_type)
 
     def __check_matrix_value(self, value: Any) -> Optional[str]:
         """Проверяет тип данных для элементов матрицы."""
         for row_idx, row in enumerate(value):
             for item_idx, item in enumerate(row):
-                if item is not None and type(item) != self.__data_type.type:
+                if item is not None and self.__data_type.type == float:
+                    if type(item) not in [int, float]:
+                        return MISMATCH_MATRIX_VALUE_TYPE_TEMPL.format(
+                            item_idx, row_idx, self.__data_type)
+                elif item is not None and type(item) != self.__data_type.type:
                     return MISMATCH_MATRIX_VALUE_TYPE_TEMPL.format(
                         item_idx, row_idx, self.__data_type)
 
