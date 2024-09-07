@@ -7,10 +7,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - '5556:8080'
     volumes:
       - backend_prod_logs:/code/logs
+    networks:
+      nginx_net1:
+        ipv4_address: 172.77.0.5
 
 volumes:
   backend_prod_logs:
+
+networks:
+  nginx_net1:
+    external:
+      name: nginx-net
