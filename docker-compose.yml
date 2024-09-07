@@ -11,7 +11,6 @@ services:
       - backend_test_logs:/code/logs
     networks:
       nginx_net1:
-        ipv4_address: 172.77.0.3
 
 volumes:
   backend_test_logs:
