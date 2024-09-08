@@ -341,3 +341,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Virtual environment
+.venv/
+
+# VS Code
+.vscode/

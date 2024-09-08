@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  backend_test:
+    container_name: algoscalc-back.local
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+      - algoscalc-back-logs.local:/code/logs
+
+volumes:
+  algoscalc-back-logs.local:

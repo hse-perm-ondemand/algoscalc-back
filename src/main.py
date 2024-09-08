@@ -77,11 +77,8 @@ async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
     :rtype: AnswerAlgorithmDefinition
     """
     logger.info(f'Request received. algorithm_name: {algorithm_name}')
-    answer = AnswerAlgorithmDefinition()
     if not algorithms.has_algorithm(algorithm_name):
-        logger.warning(ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name))
-        answer.errors = ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name)
-        return answer
+        return AnswerAlgorithmDefinition(errors=ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name), result=None)
     try:
         alg = algorithms.get_algorithm(algorithm_name)
         params = []
@@ -103,11 +100,10 @@ async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
         alg_def = AlgorithmDefinition(name=alg.name, title=alg.title,
                                       description=alg.description,
                                       parameters=params, outputs=outputs)
-        answer.result = alg_def
+        return AnswerAlgorithmDefinition(result=alg_def, errors=None)
     except Exception as error:
         logger.warning(str(error))
-        answer.errors = str(error)
-    return answer
+        return AnswerAlgorithmDefinition(errors=str(error), result=None)
 
 
 @app.post(ALGORITHMS_ENDPOINT + '/{algorithm_name}')
@@ -124,22 +120,18 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
     """
     logger.info(f'Request received. algorithm_name: {algorithm_name}, '
                 f'parameters: {parameters}')
-    answer = AnswerOutputs()
     if not algorithms.has_algorithm(algorithm_name):
-        logger.warning(ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name))
-        answer.errors = ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name)
-        return answer
+        return AnswerOutputs(errors=ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name), result=None)
     params = parameters.get_params_to_execute()
     try:
         results = algorithms.get_algorithm_result(algorithm_name, params)
         outputs = []
         for name, value in results.items():
             outputs.append(Data(name=name, value=value))
-        answer.result = Outputs(outputs=outputs)
+        return AnswerOutputs(result=Outputs(outputs=outputs), errors=None)
     except TimeoutError:
         logger.warning(TIME_OVER_MSG)
-        answer.errors = TIME_OVER_MSG
+        return AnswerOutputs(result=None, errors=TIME_OVER_MSG)
     except Exception as error:
         logger.warning(str(error))
-        answer.errors = str(error)
-    return answer
+        return AnswerOutputs(result=None, errors=str(error))
