@@ -1,6 +1,5 @@
 import os
 import unittest
-import jsonschema
 from fastapi.testclient import TestClient
 
 from src.api_models import Algorithms, AnswerAlgorithmDefinition, Data, \
@@ -26,26 +25,24 @@ class AppTest(unittest.TestCase):
     def test_get_algorithms(self):
         response = AppTest.client.get(ALGORITHMS_ENDPOINT)
         self.assertEqual(response.status_code, 200)
-        self.assertIsNone(jsonschema.validate(response.json(),
-                                              Algorithms().schema()))
+        self.assertTrue(Algorithms.model_validate(response.json()))
 
     def test_get_algorithm(self):
         response = AppTest.client.get(ALGORITHMS_ENDPOINT)
-        algs = Algorithms().parse_obj(response.json())
+        algs = Algorithms(**(response.json()))
         algorithm_name = algs.algorithms[0].name
         response = self.client.get(ALGORITHMS_ENDPOINT + '/' + algorithm_name)
         self.assertEqual(response.status_code, 200)
-        schema = AnswerAlgorithmDefinition().schema()
-        self.assertIsNone(jsonschema.validate(response.json(), schema))
+        self.assertTrue(AnswerAlgorithmDefinition.model_validate(response.json()))
 
     def test_get_algorithm_result(self):
         response = AppTest.client.get(ALGORITHMS_ENDPOINT)
-        algs = Algorithms().parse_obj(response.json())
+        algs = Algorithms(**(response.json()))
         algorithm_name = algs.algorithms[0].name
 
         response = AppTest.client.get(ALGORITHMS_ENDPOINT + '/' +
                                       algorithm_name)
-        answer = AnswerAlgorithmDefinition().parse_obj(response.json())
+        answer = AnswerAlgorithmDefinition(**(response.json()))
         alg_def = answer.result
         params = [Data(name=data_def.name, value=data_def.default_value)
                   for data_def in alg_def.parameters]
@@ -54,10 +51,10 @@ class AppTest(unittest.TestCase):
         parameters = Parameters(parameters=params)
         response = AppTest.client.post(ALGORITHMS_ENDPOINT + '/' +
                                        algorithm_name,
-                                       content=parameters.json())
+                                       content=parameters.model_dump_json())
 
         self.assertEqual(response.status_code, 200)
-        answer = AnswerOutputs().parse_obj(response.json())
+        answer = AnswerOutputs(**(response.json()))
         fact_outputs = answer.result
         for fact_output in fact_outputs.outputs:
             self.assertEqual(fact_output.value, output_dict[fact_output.name])
