@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "algoscalc-back"
+version = "0.1.0"
+description = "A training project for the development of algorithms in the context of a web application"
+authors = ["Alexander Mikhailov <45492097+MikhailovAlexander@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.114.0"
+jsonschema = "^4.23.0"
+pydantic = "^2.9.1"
+strenum = "^0.4.15"
+uvicorn = "^0.30.6"
+
+
+[tool.poetry.group.dev.dependencies]
+tox = "^4.18.1"
+flake8 = "^7.1.1"
+coverage = "^7.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.tox]
+envlist = ["py312"]
+skipsdist = true
+
+[tool.tox.testenv]
+deps = [
+    "flake8",
+    "coverage"
+]
+commands = [
+    "flake8 src",
+    "coverage run -m unittest discover -s src",
+    "coverage report",
+    "coverage xml -i"
+]
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+
+[tool.flake8]
+max-line-length = 88
+exclude = [
+    ".tox",
+    ".git",
+    "__pycache__",
+    "build",
+    "dist"
+]
