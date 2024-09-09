@@ -6,6 +6,7 @@ import json
 import logging.config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 from src.core.algorithm_collection import AlgorithmCollection, \
     ALGORITHM_NOT_EXISTS_TEMPL
@@ -135,3 +136,11 @@ async def get_algorithm_result(algorithm_name: str, parameters: Parameters) \
     except Exception as error:
         logger.warning(str(error))
         return AnswerOutputs(result=None, errors=str(error))
+
+def start():
+    """Запуск приложения."""
+    uvicorn.run(app, host="0.0.0.0", port=8080)
+
+
+if __name__ == "__main__":
+    start()

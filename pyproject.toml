@@ -15,42 +15,35 @@ pydantic = "^2.9.1"
 strenum = "^0.4.15"
 uvicorn = "^0.30.6"
 
+[tool.poetry.scripts]
+start = "src.main:start"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.18.1"
 flake8 = "^7.1.1"
 coverage = "^7.6.1"
+httpx = "^0.27.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.tox]
-envlist = ["py312"]
+legacy_tox_ini = """
+[tox]
+envlist = py312
 skipsdist = true
 
-[tool.tox.testenv]
-deps = [
-    "flake8",
-    "coverage"
-]
-commands = [
-    "flake8 src",
-    "coverage run -m unittest discover -s src",
-    "coverage report",
-    "coverage xml -i"
-]
+[testenv]
+deps = 
+    poetry
+    coverage
+commands = 
+    poetry install -v
+    coverage run -m unittest discover -s src
+    coverage xml -i
 
-[tool.coverage.run]
+[coverage:run]
 relative_files = true
 branch = true
-
-[tool.flake8]
-max-line-length = 88
-exclude = [
-    ".tox",
-    ".git",
-    "__pycache__",
-    "build",
-    "dist"
-]
+"""
