@@ -7,10 +7,11 @@ from src.core.data_element import DataType, DataShape, DataElement, \
     NOT_LIST_VALUE_MSG, NOT_SCALAR_VALUE_MSG, NOT_LIST_ROW_TEMPL,\
     MISMATCH_VALUE_TYPE_TEMPL, MISMATCH_LIST_VALUE_TYPE_TEMPL, \
     MISMATCH_MATRIX_VALUE_TYPE_TEMPL
-from src.core_tests import NAME, TITLE, DESCRIPTION
+from tests.core_tests import NAME, TITLE, DESCRIPTION
 
 
 class DataElementTests(unittest.TestCase):
+    """Тесты для класса DataElement."""
     STR_TEMPL = 'DataElement: {0}, "{1}", value: {2}'
 
     def test_non_string_name(self):

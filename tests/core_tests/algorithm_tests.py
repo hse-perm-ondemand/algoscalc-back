@@ -3,7 +3,7 @@ import time
 
 
 from src.core.data_element import DataType, DataShape, DataElement
-from src.core_tests import LOG_CONFIG_STUB, NAME, TITLE, DESCRIPTION,\
+from tests.core_tests import LOG_CONFIG_STUB, NAME, TITLE, DESCRIPTION,\
     PARAM_NAME, PARAM_LIST_NAME, PARAM_TITLE, PARAM_DESCRIPTION,\
     PARAM_INT_DEFAULT, PARAM_LIST_DEFAULT, OUTPUT_NAME, OUTPUT_MATRIX_NAME,\
     OUTPUT_TITLE, OUTPUT_DESCRIPTION
@@ -19,6 +19,7 @@ from src.core.algorithm import Algorithm, \
 
 
 class AlgorithmTests(unittest.TestCase):
+    """Тесты для класса Algorithm."""
     STR_TEMPL = 'Algorithm: {0}, title: {1}'
     alg = Algorithm(NAME, TITLE, DESCRIPTION, LOG_CONFIG_STUB)
     param = DataElement(PARAM_NAME, PARAM_TITLE, PARAM_DESCRIPTION,
