@@ -1,12 +1,22 @@
+from enum import auto
 from typing import Any, Optional
 
 from strenum import UppercaseStrEnum
-from enum import auto
-from src.core import NON_STRING_PARAM_TEMPL, EMPTY_STRING_PARAM_TEMPL, \
-    NOT_DATA_TYPE_MSG, NOT_DATA_SHAPE_MSG, NONE_VALUE_MSG, \
-    NOT_SCALAR_VALUE_MSG, NOT_MATRIX_VALUE_MSG, NOT_LIST_VALUE_MSG, \
-    NOT_LIST_ROW_TEMPL, MISMATCH_VALUE_TYPE_TEMPL, \
-    MISMATCH_LIST_VALUE_TYPE_TEMPL, MISMATCH_MATRIX_VALUE_TYPE_TEMPL
+
+from src.core import (
+    EMPTY_STRING_PARAM_TEMPL,
+    MISMATCH_LIST_VALUE_TYPE_TEMPL,
+    MISMATCH_MATRIX_VALUE_TYPE_TEMPL,
+    MISMATCH_VALUE_TYPE_TEMPL,
+    NON_STRING_PARAM_TEMPL,
+    NONE_VALUE_MSG,
+    NOT_DATA_SHAPE_MSG,
+    NOT_DATA_TYPE_MSG,
+    NOT_LIST_ROW_TEMPL,
+    NOT_LIST_VALUE_MSG,
+    NOT_MATRIX_VALUE_MSG,
+    NOT_SCALAR_VALUE_MSG,
+)
 
 
 class DataType(UppercaseStrEnum):
@@ -16,6 +26,7 @@ class DataType(UppercaseStrEnum):
     int, float, str, bool.
 
     """
+
     INT = auto()
     FLOAT = auto()
     STRING = auto()
@@ -46,8 +57,12 @@ class DataType(UppercaseStrEnum):
     @staticmethod
     def __types_dict():
         """Возвращает словарь соответствия типам данных."""
-        return {DataType.INT: int, DataType.FLOAT: float, DataType.STRING: str,
-                DataType.BOOL: bool}
+        return {
+            DataType.INT: int,
+            DataType.FLOAT: float,
+            DataType.STRING: str,
+            DataType.BOOL: bool,
+        }
 
 
 class DataShape(UppercaseStrEnum):
@@ -57,6 +72,7 @@ class DataShape(UppercaseStrEnum):
     списку скалярных значений и двумерную матрицу соответственно.
 
     """
+
     SCALAR = auto()
     LIST = auto()
     MATRIX = auto()
@@ -71,18 +87,19 @@ class DataShape(UppercaseStrEnum):
         """
         if value_to_check is None:
             return NONE_VALUE_MSG
-        if self.value == self.SCALAR and type(value_to_check) \
-                not in DataType.types():
+        if self.value == self.SCALAR and not isinstance(
+            value_to_check, tuple(DataType.types())
+        ):
             return NOT_SCALAR_VALUE_MSG
-        if self.value == self.LIST and type(value_to_check) != list:
+        if self.value == self.LIST and not isinstance(value_to_check, list):
             return NOT_LIST_VALUE_MSG
         if self.value == self.MATRIX:
-            if type(value_to_check) != list:
+            if not isinstance(value_to_check, list):
                 return NOT_MATRIX_VALUE_MSG
             if len(value_to_check) == 0:
                 return NOT_MATRIX_VALUE_MSG
             for row_idx, row in enumerate(value_to_check):
-                if type(row) != list:
+                if not isinstance(row, list):
                     return NOT_LIST_ROW_TEMPL.format(row_idx)
         return None
 
@@ -91,12 +108,17 @@ class DataShape(UppercaseStrEnum):
 
 
 class DataElement(object):
-    """Класс представляет элемент входных или выходных данных для алгоритма.
+    """Класс представляет элемент входных или выходных данных для алгоритма."""
 
-    """
-    def __init__(self, name: str, title: str, description: str,
-                 data_type: DataType, data_shape: DataShape,
-                 default_value: Any):
+    def __init__(
+        self,
+        name: str,
+        title: str,
+        description: str,
+        data_type: DataType,
+        data_shape: DataShape,
+        default_value: Any,
+    ):
         """Конструктор класса
 
         :param name: уникальное имя элемента входных/выходных данных;
@@ -113,8 +135,9 @@ class DataElement(object):
         :type default_value: Any
         :raises ValueError: при несоответствии типов данных для параметров.
         """
-        param_errors = DataElement.__check_params(name, title, description,
-                                                  data_type, data_shape)
+        param_errors = DataElement.__check_params(
+            name, title, description, data_type, data_shape
+        )
         if param_errors is not None:
             raise ValueError(param_errors)
         self.__name: str = name
@@ -129,8 +152,10 @@ class DataElement(object):
 
     def __str__(self) -> str:
         """Возвращает строковое представление экземпляра класса."""
-        return f'DataElement: {self.__name}, "{self.__title}", ' \
-               f'value: {self.__default_value}'
+        return (
+            f'DataElement: {self.__name}, "{self.__title}", '
+            f"value: {self.__default_value}"
+        )
 
     @property
     def name(self) -> str:
@@ -211,7 +236,7 @@ class DataElement(object):
         if self.__data_type.type == float:
             if type(value) not in [int, float]:
                 return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
-        elif type(value) != self.__data_type.type:
+        elif not isinstance(value, self.__data_type.type):
             return MISMATCH_VALUE_TYPE_TEMPL.format(self.__data_type)
 
     def __check_list_value(self, value: Any) -> Optional[str]:
@@ -219,11 +244,9 @@ class DataElement(object):
         for idx, item in enumerate(value):
             if item is not None and self.__data_type.type == float:
                 if type(item) not in [int, float]:
-                    return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(
-                        idx, self.__data_type)
-            elif item is not None and type(item) != self.__data_type.type:
-                return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(
-                    idx, self.__data_type)
+                    return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(idx, self.__data_type)
+            elif item is not None and not isinstance(item, self.__data_type.type):
+                return MISMATCH_LIST_VALUE_TYPE_TEMPL.format(idx, self.__data_type)
 
     def __check_matrix_value(self, value: Any) -> Optional[str]:
         """Проверяет тип данных для элементов матрицы."""
@@ -232,21 +255,26 @@ class DataElement(object):
                 if item is not None and self.__data_type.type == float:
                     if type(item) not in [int, float]:
                         return MISMATCH_MATRIX_VALUE_TYPE_TEMPL.format(
-                            item_idx, row_idx, self.__data_type)
-                elif item is not None and type(item) != self.__data_type.type:
+                            item_idx, row_idx, self.__data_type
+                        )
+                elif item is not None and not isinstance(item, self.__data_type.type):
                     return MISMATCH_MATRIX_VALUE_TYPE_TEMPL.format(
-                        item_idx, row_idx, self.__data_type)
+                        item_idx, row_idx, self.__data_type
+                    )
 
     @staticmethod
-    def __check_params(name: str, title: str, description: str,
-                       data_type: DataType,
-                       data_shape: DataShape) -> Optional[str]:
+    def __check_params(
+        name: str,
+        title: str,
+        description: str,
+        data_type: DataType,
+        data_shape: DataShape,
+    ) -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
         об ошибке"""
-        str_params = [['name', name], ['title', title],
-                      ['description', description]]
+        str_params = [["name", name], ["title", title], ["description", description]]
         for name, value in str_params:
-            if type(value) != str:
+            if not isinstance(value, str):
                 return NON_STRING_PARAM_TEMPL.format(name)
             if not value:
                 return EMPTY_STRING_PARAM_TEMPL.format(name)

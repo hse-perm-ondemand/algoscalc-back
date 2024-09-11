@@ -1,18 +1,34 @@
-import signal
 import logging.config
+import signal
 from logging import Logger
-from typing import Callable, Optional, Any
+from typing import Any, Callable, Optional
 
-
+from src.core import (
+    ADDING_METHOD_FAILED_TEMPL,
+    DEFAULT_TIMEOUT,
+    EMPTY_STRING_PARAM_TEMPL,
+    EXECUTION_FAILED_TEMPL,
+    METHOD_NOT_CALL_MSG,
+    MISSED_OUTPUT_TEMPL,
+    MISSED_PARAMETER_TEMPL,
+    NEG_INT_TIMEOUT_MSG,
+    NON_INT_TIMEOUT_MSG,
+    NON_STRING_PARAM_TEMPL,
+    NOT_DICT_OUTPUTS_MSG,
+    NOT_DICT_PARAMS_MSG,
+    OUTPUT_EXISTS_TMPL,
+    OUTPUT_NOT_DATAELEMENT_MSG,
+    PARAM_EXISTS_TMPL,
+    PARAM_NOT_DATAELEMENT_MSG,
+    REDUNDANT_OUTPUT_TEMPL,
+    REDUNDANT_PARAMETER_TEMPL,
+    TIME_OVER_TEMPL,
+    UNEXPECTED_OUTPUT_TEMPL,
+    UNEXPECTED_PARAM_MSG,
+    UNSET_OUTPUTS_MSG,
+    UNSET_PARAMS_MSG,
+)
 from src.core.data_element import DataElement
-from src.core import PARAM_NOT_DATAELEMENT_MSG, PARAM_EXISTS_TMPL, \
-    OUTPUT_NOT_DATAELEMENT_MSG, OUTPUT_EXISTS_TMPL, METHOD_NOT_CALL_MSG,\
-    ADDING_METHOD_FAILED_TEMPL, UNEXPECTED_OUTPUT_TEMPL, TIME_OVER_TEMPL,\
-    UNEXPECTED_PARAM_MSG, EXECUTION_FAILED_TEMPL, UNSET_PARAMS_MSG,\
-    UNSET_OUTPUTS_MSG, NOT_DICT_PARAMS_MSG, REDUNDANT_PARAMETER_TEMPL, \
-    MISSED_PARAMETER_TEMPL, NOT_DICT_OUTPUTS_MSG, REDUNDANT_OUTPUT_TEMPL, \
-    MISSED_OUTPUT_TEMPL, NON_STRING_PARAM_TEMPL, EMPTY_STRING_PARAM_TEMPL, \
-    NON_INT_TIMEOUT_MSG, NEG_INT_TIMEOUT_MSG, DEFAULT_TIMEOUT
 
 
 class Algorithm(object):
@@ -20,9 +36,15 @@ class Algorithm(object):
     выходных данных, предоставляет возможность выполнения алгоритма согласно
     заданным параметрам.
     """
-    def __init__(self, name: str, title: str, description: str,
-                 log_config: dict[str, Any],
-                 execute_timeout: int = DEFAULT_TIMEOUT):
+
+    def __init__(
+        self,
+        name: str,
+        title: str,
+        description: str,
+        log_config: dict[str, Any],
+        execute_timeout: int = DEFAULT_TIMEOUT,
+    ):
         """Конструктор класса
 
         :param name: уникальное имя алгоритма;
@@ -38,15 +60,18 @@ class Algorithm(object):
         :raises ValueError: при несоответствии типов данных для параметров,
             при отрицательных значениях параметра execute_timeout.
         """
-        self.__name: str = ''
-        param_errors = Algorithm.__check_params(name, title, description,
-                                                execute_timeout)
-        self.__log_config: dict[str: Any] = log_config
+        self.__name: str = ""
+        param_errors = Algorithm.__check_params(
+            name, title, description, execute_timeout
+        )
+        self.__log_config: dict[str:Any] = log_config
         logging.config.dictConfig(log_config)
         self.__logger: Logger = logging.getLogger(__name__)
-        self.__logger.debug(f'name: {name}, title: {title}, '
-                            f'description: {description}, '
-                            f'execute_timeout: {execute_timeout}')
+        self.__logger.debug(
+            f"name: {name}, title: {title}, "
+            f"description: {description}, "
+            f"execute_timeout: {execute_timeout}"
+        )
 
         if param_errors is not None:
             self.__log_and_raise_error(param_errors, ValueError)
@@ -60,7 +85,7 @@ class Algorithm(object):
 
     def __str__(self) -> str:
         """Возвращает строковое представление экземпляра класса."""
-        return f'Algorithm: {self.__name}, title: {self.__title}'
+        return f"Algorithm: {self.__name}, title: {self.__title}"
 
     @property
     def name(self) -> str:
@@ -130,8 +155,9 @@ class Algorithm(object):
         if not isinstance(parameter, DataElement):
             self.__log_and_raise_error(PARAM_NOT_DATAELEMENT_MSG, TypeError)
         if parameter.name in self.__parameters.keys():
-            self.__log_and_raise_error(PARAM_EXISTS_TMPL.format(parameter.name),
-                                       ValueError)
+            self.__log_and_raise_error(
+                PARAM_EXISTS_TMPL.format(parameter.name), ValueError
+            )
         self.__parameters[parameter.name] = parameter
 
     def add_output(self, output: DataElement) -> None:
@@ -148,8 +174,9 @@ class Algorithm(object):
         if not isinstance(output, DataElement):
             self.__log_and_raise_error(OUTPUT_NOT_DATAELEMENT_MSG, TypeError)
         if output.name in self.__outputs.keys():
-            self.__log_and_raise_error(OUTPUT_EXISTS_TMPL.format(output.name),
-                                       ValueError)
+            self.__log_and_raise_error(
+                OUTPUT_EXISTS_TMPL.format(output.name), ValueError
+            )
         self.__outputs[output.name] = output
 
     def add_execute_method(self, method: Callable) -> None:
@@ -169,7 +196,8 @@ class Algorithm(object):
         if errors is not None:
             self.__execute_method = None
             self.__log_and_raise_error(
-                ADDING_METHOD_FAILED_TEMPL.format(errors), RuntimeError)
+                ADDING_METHOD_FAILED_TEMPL.format(errors), RuntimeError
+            )
 
     def get_test_errors(self) -> Optional[str]:
         """Выполняет тестовое выполнение алгоритма, с параметрами заданными
@@ -184,8 +212,10 @@ class Algorithm(object):
             for key, value in self.__outputs.items():
                 if outputs[key] != value.default_value:
                     raise ValueError(
-                        UNEXPECTED_OUTPUT_TEMPL.format(key, outputs[key],
-                                                       value.default_value))
+                        UNEXPECTED_OUTPUT_TEMPL.format(
+                            key, outputs[key], value.default_value
+                        )
+                    )
             return None
         except Exception as ex:
             self.__logger.error(ex)
@@ -215,6 +245,7 @@ class Algorithm(object):
 
         def timeout_handler(signum, frame):
             raise TimeoutError()
+
         if self.__execute_timeout > 0:
             signal.signal(signal.SIGALRM, timeout_handler)
             signal.alarm(self.__execute_timeout)
@@ -229,7 +260,8 @@ class Algorithm(object):
             self.__log_and_raise_error(msg, RuntimeError)
         except Exception as ex:
             self.__log_and_raise_error(
-                EXECUTION_FAILED_TEMPL.format(ex, params), RuntimeError)
+                EXECUTION_FAILED_TEMPL.format(ex, params), RuntimeError
+            )
         finally:
             if self.__execute_timeout > 0:
                 signal.alarm(0)
@@ -238,8 +270,7 @@ class Algorithm(object):
 
     def __get_default_parameters(self) -> dict[str, Any]:
         """Возвращает значения по умолчанию для входных данных алгоритма."""
-        return {key: value.default_value
-                for key, value in self.__parameters.items()}
+        return {key: value.default_value for key, value in self.__parameters.items()}
 
     def __check_method_raises_ex(self) -> None:
         """Проверяет возможность выполнения метода. При наличии ошибок
@@ -252,54 +283,50 @@ class Algorithm(object):
             self.__log_and_raise_error(UNSET_OUTPUTS_MSG, AttributeError)
 
     def __check_parameters_raises_ex(self, fact_params: dict[str, Any]) -> None:
-        """"Проверяет входные данные для выполнения алгоритма. При наличии
+        """ "Проверяет входные данные для выполнения алгоритма. При наличии
         ошибок вызывает исключения TypeError, KeyError."""
-        if type(fact_params) != dict:
+        if not isinstance(fact_params, dict):
             self.__log_and_raise_error(NOT_DICT_PARAMS_MSG, TypeError)
         for key in fact_params.keys():
             if key not in self.__parameters.keys():
                 self.__log_and_raise_error(
-                    REDUNDANT_PARAMETER_TEMPL.format(key), KeyError)
+                    REDUNDANT_PARAMETER_TEMPL.format(key), KeyError
+                )
         for key in self.__parameters.keys():
             if key not in fact_params.keys():
-                self.__log_and_raise_error(
-                    MISSED_PARAMETER_TEMPL.format(key), KeyError)
-            errors = self.__parameters[key].get_check_value_errors(
-                fact_params[key])
+                self.__log_and_raise_error(MISSED_PARAMETER_TEMPL.format(key), KeyError)
+            errors = self.__parameters[key].get_check_value_errors(fact_params[key])
             if errors is not None:
                 self.__log_and_raise_error(errors, TypeError)
 
     def __check_outputs_raises_ex(self, method_outputs: dict[str, Any]) -> None:
-        """"Проверяет выходные данные для выполнения алгоритма. При наличии
+        """ "Проверяет выходные данные для выполнения алгоритма. При наличии
         ошибок вызывает исключения TypeError, KeyError."""
-        if type(method_outputs) != dict:
+        if not isinstance(method_outputs, dict):
             self.__log_and_raise_error(NOT_DICT_OUTPUTS_MSG, TypeError)
         for key in method_outputs.keys():
             if key not in self.__outputs.keys():
-                self.__log_and_raise_error(REDUNDANT_OUTPUT_TEMPL.format(key),
-                                           KeyError)
+                self.__log_and_raise_error(REDUNDANT_OUTPUT_TEMPL.format(key), KeyError)
         for key in self.__outputs.keys():
             if key not in method_outputs.keys():
-                self.__log_and_raise_error(MISSED_OUTPUT_TEMPL.format(key),
-                                           KeyError)
-            errors = self.__outputs[key].get_check_value_errors(
-                method_outputs[key])
+                self.__log_and_raise_error(MISSED_OUTPUT_TEMPL.format(key), KeyError)
+            errors = self.__outputs[key].get_check_value_errors(method_outputs[key])
             if errors is not None:
                 self.__log_and_raise_error(errors, TypeError)
 
     @staticmethod
-    def __check_params(name: str, title: str, description: str,
-                       execute_timeout: int) -> Optional[str]:
+    def __check_params(
+        name: str, title: str, description: str, execute_timeout: int
+    ) -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
         об ошибке"""
-        str_params = [['name', name], ['title', title],
-                      ['description', description]]
+        str_params = [["name", name], ["title", title], ["description", description]]
         for name, value in str_params:
-            if type(value) != str:
+            if not isinstance(value, str):
                 return NON_STRING_PARAM_TEMPL.format(name)
             if not value:
                 return EMPTY_STRING_PARAM_TEMPL.format(name)
-        if type(execute_timeout) != int:
+        if not isinstance(execute_timeout, int):
             return NON_INT_TIMEOUT_MSG
         if execute_timeout < 0:
             return NEG_INT_TIMEOUT_MSG
@@ -307,5 +334,5 @@ class Algorithm(object):
 
     def __log_and_raise_error(self, msg: str, error_type: Callable) -> None:
         """Логирует сообщение об ошибке и вызывает требуемое исключение."""
-        self.__logger.error(f'{self.__name}. {msg}')
+        self.__logger.error(f"{self.__name}. {msg}")
         raise error_type(msg)

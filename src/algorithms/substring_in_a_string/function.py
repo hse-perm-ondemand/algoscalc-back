@@ -1,5 +1,5 @@
 def findcountstring(text: str, findtext: str) -> int:
-    if type(text) != str or type(findtext) != str:
+    if not isinstance(text, str) or not isinstance(findtext, str):
         raise ValueError("Значения не строковые")
 
     count = 0
@@ -27,6 +27,6 @@ def main(text, findtext):
     return {"num_count": findcountstring(text, findtext)}
 
 
-if __name__ == '__main__':
-    cnt = findcountstring('text is very long', 'text is very long')
+if __name__ == "__main__":
+    cnt = findcountstring("text is very long", "text is very long")
     print(f"Num_count = {cnt}")
