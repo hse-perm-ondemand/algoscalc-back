@@ -79,7 +79,6 @@ async def get_algorithms() -> Algorithms:
     :return: список имеющихся алгоритмов.
     :rtype: Algorithms
     """
-    logger.info("Request received")
     res = Algorithms(algorithms=[])
     for name, title in algorithms.get_name_title_dict().items():
         res.algorithms.append(AlgorithmTitle(name=name, title=title))
@@ -95,7 +94,6 @@ async def get_algorithm(algorithm_name: str) -> AnswerAlgorithmDefinition:
     :return: Описание алгоритма.
     :rtype: AnswerAlgorithmDefinition
     """
-    logger.info(f"Request received. algorithm_name: {algorithm_name}")
     if not algorithms.has_algorithm(algorithm_name):
         return AnswerAlgorithmDefinition(
             errors=ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name), result=None
@@ -152,10 +150,6 @@ async def get_algorithm_result(
     :return: результат выполнения выбранного алгоритма
     :rtype: AnswerOutputs
     """
-    logger.info(
-        f"Request received. algorithm_name: {algorithm_name}, "
-        f"parameters: {parameters}"
-    )
     if not algorithms.has_algorithm(algorithm_name):
         return AnswerOutputs(
             errors=ALGORITHM_NOT_EXISTS_TEMPL.format(algorithm_name), result=None
