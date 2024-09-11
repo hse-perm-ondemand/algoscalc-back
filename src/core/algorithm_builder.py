@@ -1,37 +1,45 @@
+import importlib.util
+import json
 import logging.config
 import os
-import json
-import importlib.util
-import jsonschema
 import unittest
-from logging import Logger
 from io import StringIO
-from typing import Callable, Any, Optional
+from logging import Logger
+from typing import Any, Callable, Optional
 
-from src.core.data_element import DataElement, DataType, DataShape
+import jsonschema
+
+from src.core import (
+    EMPTY_STRING_PARAM_TEMPL,
+    NON_STRING_PARAM_TEMPL,
+    UNIT_TEST_FAILED_MSG,
+)
 from src.core.algorithm import Algorithm
-from src.core import UNIT_TEST_FAILED_MSG, NON_STRING_PARAM_TEMPL, \
-    EMPTY_STRING_PARAM_TEMPL
+from src.core.data_element import DataElement, DataShape, DataType
 
 
 class AlgorithmBuilder:
-    """Класс создает экземпляры класса Algorithm из файлов с исходным кодом.
+    """Класс создает экземпляры класса Algorithm из файлов с исходным кодом."""
 
-    """
+    NAME = "name"
+    TITLE = "title"
+    DESCRIPTION = "description"
+    PARAMETERS = "parameters"
+    OUTPUTS = "outputs"
+    DATA_TYPE = "data_type"
+    DATA_SHAPE = "data_shape"
+    DEFAULT_VALUE = "default_value"
+    EXECUTE_TIMEOUT = "execute_timeout"
 
-    NAME = 'name'
-    TITLE = 'title'
-    DESCRIPTION = 'description'
-    PARAMETERS = 'parameters'
-    OUTPUTS = 'outputs'
-    DATA_TYPE = 'data_type'
-    DATA_SHAPE = 'data_shape'
-    DEFAULT_VALUE = 'default_value'
-    EXECUTE_TIMEOUT = 'execute_timeout'
-
-    def __init__(self, definition_file_name: str, function_file_name: str,
-                 test_file_name: str, schema_file_path: str,
-                 algorithm_config: dict[str, Any], log_config: dict[str, Any]):
+    def __init__(
+        self,
+        definition_file_name: str,
+        function_file_name: str,
+        test_file_name: str,
+        schema_file_path: str,
+        algorithm_config: dict[str, Any],
+        log_config: dict[str, Any],
+    ):
         """Конструктор класса
 
         :param definition_file_name: название файла с описанием алгоритма;
@@ -50,18 +58,19 @@ class AlgorithmBuilder:
         :type log_config: dict[str, Any]
         :raises ValueError: при несоответствии типов данных для параметров.
         """
-        self.__log_config: dict[str: Any] = log_config
+        self.__log_config: dict[str:Any] = log_config
         logging.config.dictConfig(log_config)
         self.__logger: Logger = logging.getLogger(__name__)
-        self.__logger.info(f'definition_file_name: {definition_file_name}, '
-                           f'function_file_name: {function_file_name}, '
-                           f'test_file_name: {test_file_name}, '
-                           f'schema_file_path: {schema_file_path}')
+        self.__logger.info(
+            f"definition_file_name: {definition_file_name}, "
+            f"function_file_name: {function_file_name}, "
+            f"test_file_name: {test_file_name}, "
+            f"schema_file_path: {schema_file_path}"
+        )
 
-        param_errors = AlgorithmBuilder.__check_params(definition_file_name,
-                                                       function_file_name,
-                                                       test_file_name,
-                                                       schema_file_path)
+        param_errors = AlgorithmBuilder.__check_params(
+            definition_file_name, function_file_name, test_file_name, schema_file_path
+        )
         if param_errors is not None:
             self.__logger.error(param_errors)
             raise ValueError(param_errors)
@@ -85,14 +94,19 @@ class AlgorithmBuilder:
         :raises FileNotFoundError: при отсутствии файлов с исходным кодом;
         """
         self.__logger.info(path)
-        with open(path + '/' + self.__definition_file_name, 'r',
-                  encoding='utf-8') as def_file:
+        with open(
+            path + "/" + self.__definition_file_name, "r", encoding="utf-8"
+        ) as def_file:
             definition = json.load(def_file)
         self.__validate_definition_raises_ex(definition)
         name = os.path.split(path)[-1]
-        alg = Algorithm(name, definition[self.TITLE],
-                        definition[self.DESCRIPTION], self.__log_config,
-                        self.__algorithm_config[self.EXECUTE_TIMEOUT])
+        alg = Algorithm(
+            name,
+            definition[self.TITLE],
+            definition[self.DESCRIPTION],
+            self.__log_config,
+            self.__algorithm_config[self.EXECUTE_TIMEOUT],
+        )
         for param_def in definition[self.PARAMETERS]:
             alg.add_parameter(self.__get_data_element(param_def))
         for output_def in definition[self.OUTPUTS]:
@@ -103,29 +117,28 @@ class AlgorithmBuilder:
         alg.add_execute_method(self.__get_function(path))
         return alg
 
-    def __validate_definition_raises_ex(self, definition: dict[str, Any]) \
-            -> None:
+    def __validate_definition_raises_ex(self, definition: dict[str, Any]) -> None:
         """Проверяет соответствие описания алгоритма JSON Schema. При наличии
         ошибок вызывает исключение ValidationError"""
-        with open(self.__schema_file_path, 'r') as schema_file:
+        with open(self.__schema_file_path, "r") as schema_file:
             schema = json.load(schema_file)
         jsonschema.validate(definition, schema)
 
-    def __get_data_element(self,
-                           data_element_def: dict[str, Any]) -> DataElement:
+    def __get_data_element(self, data_element_def: dict[str, Any]) -> DataElement:
         """Создает экземпляр DataElement из описания элемента данных."""
-        return DataElement(data_element_def[self.NAME],
-                           data_element_def[self.TITLE],
-                           data_element_def[self.DESCRIPTION],
-                           DataType[data_element_def[self.DATA_TYPE]],
-                           DataShape[data_element_def[self.DATA_SHAPE]],
-                           data_element_def[self.DEFAULT_VALUE])
+        return DataElement(
+            data_element_def[self.NAME],
+            data_element_def[self.TITLE],
+            data_element_def[self.DESCRIPTION],
+            DataType[data_element_def[self.DATA_TYPE]],
+            DataShape[data_element_def[self.DATA_SHAPE]],
+            data_element_def[self.DEFAULT_VALUE],
+        )
 
     def __get_function(self, path: str) -> Callable:
         """Импортирует метод алгоритма из файла с исходным кодом."""
         file_name = self.__function_file_name
-        spec = importlib.util.spec_from_file_location(file_name,
-                                                      path + '/' + file_name)
+        spec = importlib.util.spec_from_file_location(file_name, path + "/" + file_name)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         return module.main
@@ -133,8 +146,7 @@ class AlgorithmBuilder:
     def __test_function(self, path: str) -> bool:
         """Выполняет авто тесты для алгоритма"""
         file_name = self.__test_file_name
-        spec = importlib.util.spec_from_file_location(file_name,
-                                                      path + '/' + file_name)
+        spec = importlib.util.spec_from_file_location(file_name, path + "/" + file_name)
         test_case = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(test_case)
         suite = unittest.TestSuite()
@@ -145,17 +157,22 @@ class AlgorithmBuilder:
         return test_result.wasSuccessful()
 
     @staticmethod
-    def __check_params(definition_file_name: str, function_file_name: str,
-                       test_file_name: str, schema_file_path: str) \
-            -> Optional[str]:
+    def __check_params(
+        definition_file_name: str,
+        function_file_name: str,
+        test_file_name: str,
+        schema_file_path: str,
+    ) -> Optional[str]:
         """Проверяет параметры для конструктора класса. Возвращает сообщение
         об ошибке"""
-        str_params = [['definition_file_name', definition_file_name],
-                      ['function_file_name', function_file_name],
-                      ['test_file_name', test_file_name],
-                      ['schema_file_path', schema_file_path]]
+        str_params = [
+            ["definition_file_name", definition_file_name],
+            ["function_file_name", function_file_name],
+            ["test_file_name", test_file_name],
+            ["schema_file_path", schema_file_path],
+        ]
         for name, value in str_params:
-            if type(value) != str:
+            if not isinstance(value, str):
                 return NON_STRING_PARAM_TEMPL.format(name)
             if not value:
                 return EMPTY_STRING_PARAM_TEMPL.format(name)

@@ -1,12 +1,12 @@
-from unittest import TestSuite, TestLoader, TextTestRunner
+from unittest import TestLoader, TestSuite, TextTestRunner
 
-from tests.core_tests.algorithm_collection_tests import AlgorithmCollectionTests
+from tests.app_tests.app_tests import AppTest
 from tests.core_tests.algorithm_builder_tests import AlgorithmBuilderTest
+from tests.core_tests.algorithm_collection_tests import AlgorithmCollectionTests
 from tests.core_tests.algorithm_tests import AlgorithmTests
 from tests.core_tests.data_element_tests import DataElementTests
-from tests.core_tests.data_type_tests import DataTypeTests
 from tests.core_tests.data_shape_tests import DataShapeTests
-from tests.app_tests.app_tests import AppTest
+from tests.core_tests.data_type_tests import DataTypeTests
 
 
 def get_suite():
@@ -21,10 +21,12 @@ def get_suite():
     suite.addTest(TestLoader().loadTestsFromTestCase(AppTest))
     return suite
 
+
 def run():
     """Запускает набор тестов."""
     runner = TextTestRunner(verbosity=2)
     runner.run(get_suite())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run()
