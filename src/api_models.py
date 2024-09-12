@@ -2,8 +2,15 @@
 
 """
 
-from typing import Union, Optional, Any
+from typing import Any
+
 from pydantic import BaseModel
+
+value_type = int | float | str | bool
+value_list_type = list[value_type]
+optional_value_list_type = list[value_type] | None
+value_matrix_type = list[value_type | optional_value_list_type]
+optional_value_matrix_type = value_matrix_type | None
 
 
 class AlgorithmTitle(BaseModel):
@@ -14,6 +21,7 @@ class AlgorithmTitle(BaseModel):
     :param title: название алгоритма.
     :type title: str
     """
+
     name: str
     title: str
 
@@ -25,7 +33,8 @@ class Algorithms(BaseModel):
     :type algorithms: list[AlgorithmTitle]
 
     """
-    algorithms: Optional[list[AlgorithmTitle]]
+
+    algorithms: list[AlgorithmTitle] | None
 
 
 class DataDefinition(BaseModel):
@@ -46,16 +55,13 @@ class DataDefinition(BaseModel):
         матрица с элементами указанных типов.
 
     """
+
     name: str
     title: str
     description: str
     data_type: str
     data_shape: str
-    default_value: Union[int, float, str, bool,
-                         Optional[list[Union[int, float, str, bool,
-                                             Optional[list[
-                                                 Union[int, float,
-                                                       str, bool]]]]]]]
+    default_value: value_type | optional_value_matrix_type
 
     class Config:
         smart_union = True
@@ -75,6 +81,7 @@ class AlgorithmDefinition(BaseModel):
     :param outputs: список описаний выходных данных алгоритма.
     :type outputs: list[DataDefinition]
     """
+
     name: str
     title: str
     description: str
@@ -91,11 +98,9 @@ class Data(BaseModel):
     :type value: int, float, str, bool либо список или двумерная
         матрица с элементами указанных типов.
     """
+
     name: str
-    value: Union[int, float, str, bool,
-                 Optional[list[Union[int, float, str, bool,
-                                     Optional[list[
-                                         Union[int, float, str, bool]]]]]]]
+    value: value_type | optional_value_matrix_type
 
     class Config:
         smart_union = True
@@ -108,6 +113,7 @@ class Parameters(BaseModel):
     :param parameters: список фактических значений входных данных алгоритма;
     :type parameters: list[Data]
     """
+
     parameters: list[Data]
 
     def get_params_to_execute(self) -> dict[str, Any]:
@@ -128,6 +134,7 @@ class Outputs(BaseModel):
     :param outputs: список фактических значений выходных данных алгоритма;
     :type outputs: list[Data]
     """
+
     outputs: list[Data]
 
 
@@ -140,26 +147,27 @@ class Answer(BaseModel):
     :param errors: текст ошибки выполнения запроса;
     :type errors: str or None
     """
-    result: Optional[Any]
-    errors: Optional[str]
+
+    result: Any | None
+    errors: str | None
 
     class Config:
         @staticmethod
         def schema_extra(schema, model):
             """Корректирует JSON Schema класса для корректной валидации
             nullable значений."""
-            for prop, value in schema.get('properties', {}).items():
-                field = [x for x in model.__fields__.values()
-                         if x.alias == prop][0]
+            for prop, value in schema.get("properties", {}).items():
+                field = [x for x in model.__fields__.values() if x.alias == prop][0]
                 if field.allow_none:
-                    if 'type' in value:
-                        value['anyOf'] = [{'type': value.pop('type')}]
-                    elif '$ref' in value:
+                    if "type" in value:
+                        value["anyOf"] = [{"type": value.pop("type")}]
+                    elif "$ref" in value:
                         if issubclass(field.type_, BaseModel):
-                            value['title'] = field.type_.__config__.title \
-                                             or field.type_.__name__
-                        value['anyOf'] = [{'$ref': value.pop('$ref')}]
-                    value['anyOf'].append({'type': 'null'})
+                            value["title"] = (
+                                field.type_.__config__.title or field.type_.__name__
+                            )
+                        value["anyOf"] = [{"$ref": value.pop("$ref")}]
+                    value["anyOf"].append({"type": "null"})
 
 
 class AnswerAlgorithmDefinition(Answer):
@@ -169,7 +177,8 @@ class AnswerAlgorithmDefinition(Answer):
     :param result: описание алгоритма;
     :type result: AlgorithmDefinition or None
     """
-    result: Optional[AlgorithmDefinition]
+
+    result: AlgorithmDefinition | None
 
 
 class AnswerOutputs(Answer):
@@ -179,4 +188,5 @@ class AnswerOutputs(Answer):
     :param result: список фактических значений выходных данных алгоритма;
     :type result: Outputs or None
     """
-    result: Optional[Outputs]
+
+    result: Outputs | None

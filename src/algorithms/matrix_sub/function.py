@@ -12,25 +12,22 @@ def __sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
 def __check_matrix(matrix: list[list[float]], name: str, row_len: int) -> None:
     for row in matrix:
         if row_len != len(row):
-            raise ValueError(f'Введено неверное количество столбцов для {name}')
+            raise ValueError(f"Введено неверное количество столбцов для {name}")
         for item in row:
             if item is None:
-                raise ValueError(f'Не введено значение в матрице {name}')
+                raise ValueError(f"Не введено значение в матрице {name}")
 
 
-def main(n: list[list[float]], m: list[list[float]]) -> \
-        dict[str, list[list[float]]]:
+def main(n: list[list[float]], m: list[list[float]]) -> dict[str, list[list[float]]]:
     if len(n) != len(m):
-        raise ValueError('Длины матриц не совпадают!')
+        raise ValueError("Длины матриц не совпадают!")
     dl_row = len(n[0])
-    __check_matrix(n, 'n', dl_row)
-    __check_matrix(m, 'm', dl_row)
-    return {'result': __sub(n, m)}
+    __check_matrix(n, "n", dl_row)
+    __check_matrix(m, "m", dl_row)
+    return {"result": __sub(n, m)}
 
 
-if __name__ == '__main__':
-    n = [[1., 2., 3.],
-         [2., 3., 4.]]
-    m = [[0., 2., 2.],
-         [2., 1., 4.]]
+if __name__ == "__main__":
+    n = [[1.0, 2.0, 3.0], [2.0, 3.0, 4.0]]
+    m = [[0.0, 2.0, 2.0], [2.0, 1.0, 4.0]]
     print(__sub(n, m))
