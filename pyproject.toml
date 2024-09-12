@@ -27,6 +27,8 @@ coverage = "^7.6.1"
 httpx = "^0.27.2"
 flake8 = "^7.1.1"
 flake8-pyproject = "^1.2.3"
+black = "^24.8.0"
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -42,3 +44,11 @@ exclude = [
 extend-ignore = [
     "E203"
 ]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+target-version = ["py312"]
+line-length = 88
+include = '\.pyi?$'

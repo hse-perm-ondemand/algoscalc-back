@@ -5,9 +5,9 @@ def fibonacci(n: int) -> int:
 
 
 def main(n: int):
-    return {'result': fibonacci(n)}
+    return {"result": fibonacci(n)}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     num = 10
-    print(f'n = {num}, n-е число Фибоначчи = {fibonacci(num)}')
+    print(f"n = {num}, n-е число Фибоначчи = {fibonacci(num)}")
