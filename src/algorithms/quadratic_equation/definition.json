@@ -1,4 +1,5 @@
 {
+  "name": "quadratic_equation",
   "title": "Корни квадратного уравнения",
   "description": "Нахождение корней квадратного уравнения",
   "parameters": [

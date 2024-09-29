@@ -1,4 +1,5 @@
 {
+  "name": "substring_in_a_string",
   "title": "Количество подстрок в строке",
   "description": "Вывод количества подстрок в одной строке",
   "parameters": [

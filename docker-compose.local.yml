@@ -10,7 +10,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - algoscalc-back-logs.local:/code/logs
-
-volumes:
-  algoscalc-back-logs.local:
+      - ./src:/app/src
+    env_file:
+      - .env.local
+    command: .venv/bin/python -m uvicorn "src.main:create_app" --host=0.0.0.0 --port=8080 --reload
