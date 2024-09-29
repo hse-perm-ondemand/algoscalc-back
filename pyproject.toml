@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "algoscalc-back"
-version = "0.1.0"
+version = "1.1.0"
 description = "A training project for the development of algorithms in the context of a web application"
 authors = ["Alexander Mikhailov <45492097+MikhailovAlexander@users.noreply.github.com>"]
 license = "MIT"
@@ -13,14 +13,15 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.114.0"
-jsonschema = "^4.23.0"
 pydantic = "^2.9.1"
 strenum = "^0.4.15"
 uvicorn = "^0.30.6"
+pydantic-settings = "^2.5.2"
+pytest = "^8.3.3"
 
 [tool.poetry.scripts]
 start = "src.main:start"
-test = "tests.test_runner:run"
+test = "pytest:main"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.6.1"
@@ -52,3 +53,10 @@ profile = "black"
 target-version = ["py312"]
 line-length = 88
 include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-v"
+testpaths = [
+    "tests"
+]

@@ -1,4 +1,5 @@
 {
+  "name": "matrix_sub",
   "title": "Вычитание матриц",
   "description": "Вычитание матриц",
   "parameters": [
