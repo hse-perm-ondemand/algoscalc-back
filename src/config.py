@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: list[str | AnyHttpUrl] = [
         "https://test.ommat.ru",
         "https://prod.ommat.ru",
+        "http://test.ommat.ru",
+        "http://prod.ommat.ru",
     ]
     USE_LOGGER: bool = True
     LOG_LEVEL: str = "WARNING"
