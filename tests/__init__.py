@@ -168,7 +168,39 @@ SUM_DEF = {
 SUM_FUNC = """
 def main(a: int, b: int):
     return {'result': a + b}"""
-SUM_TESTS = """import unittest
+
+
+BOOL_NAME = "bool"
+BOOL_DEF = {
+    "name": BOOL_NAME,
+    "title": BOOL_NAME,
+    "description": BOOL_NAME,
+    "parameters": [
+        {
+            "name": "x",
+            "title": "x",
+            "description": "x",
+            "data_type": "BOOL",
+            "data_shape": "SCALAR",
+            "default_value": True,
+        },
+    ],
+    "outputs": [
+        {
+            "name": "y",
+            "title": "y",
+            "description": "y",
+            "data_type": "BOOL",
+            "data_shape": "SCALAR",
+            "default_value": True,
+        }
+    ],
+}
+BOOL_FUNC = """
+def main(x: bool):
+    return {'y': x}"""
+
+MOCK_TESTS = """import unittest
 class TestCase(unittest.TestCase):
     def test_func(self):
         self.assertEqual(1, 1)"""

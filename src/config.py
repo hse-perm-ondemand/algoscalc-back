@@ -10,12 +10,7 @@ class Settings(BaseSettings):
 
     EXECUTE_TIMEOUT: int = 0
     ALGORITHMS_CATALOG_PATH: str = DEFAULT_ALGORITHMS_CATALOG_PATH
-    BACKEND_CORS_ORIGINS: list[str | AnyHttpUrl] = [
-        "https://test.ommat.ru",
-        "https://prod.ommat.ru",
-        "http://test.ommat.ru",
-        "http://prod.ommat.ru",
-    ]
+    BACKEND_CORS_ORIGINS: list[str | AnyHttpUrl] = ["*"]
     USE_LOGGER: bool = True
     LOG_LEVEL: str = "WARNING"
     VERSION: str = "local-build"
