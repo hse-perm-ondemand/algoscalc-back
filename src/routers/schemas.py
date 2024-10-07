@@ -26,9 +26,7 @@ class Data(BaseModel):
     """
 
     name: str
-    value: value_type | optional_value_matrix_type = Field(
-        ..., union_mode="left_to_right"
-    )
+    value: value_type | optional_value_matrix_type = Field(..., union_mode="smart")
 
 
 class Parameters(BaseModel):

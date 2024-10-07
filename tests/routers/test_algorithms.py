@@ -5,7 +5,7 @@ import pytest
 from src.internal.constants import ALGORITHMS_ENDPOINT
 from src.internal.schemas.definition_schema import DefinitionSchema
 from src.routers.schemas import AnswerAlgorithmDefinition, AnswerOutputs
-from tests import FIB_DEF, SUM_DEF, SUM_NAME
+from tests import BOOL_DEF, BOOL_NAME, FIB_DEF, SUM_DEF, SUM_NAME
 
 
 class TestAlgorithms:
@@ -13,9 +13,10 @@ class TestAlgorithms:
         response = client.get(ALGORITHMS_ENDPOINT)
         assert response.status_code == 200
         assert isinstance(response.json(), list)
-        assert len(response.json()) == 2
+        assert len(response.json()) == 3
         assert DefinitionSchema.model_validate(FIB_DEF).model_dump() in response.json()
         assert DefinitionSchema.model_validate(SUM_DEF).model_dump() in response.json()
+        assert DefinitionSchema.model_validate(BOOL_DEF).model_dump() in response.json()
 
     def test_get_algorithm(self, client):
         response = client.get(ALGORITHMS_ENDPOINT + "/" + SUM_NAME)
@@ -40,6 +41,14 @@ class TestAlgorithms:
         assert response.json()["result"] == {
             "outputs": [{"name": "result", "value": 3}]
         }
+        assert response.json()["errors"] is None
+
+    def test_get_algorithm_result_bool(self, client):
+        parameters = json.dumps({"parameters": [{"name": "x", "value": True}]})
+        response = client.post(ALGORITHMS_ENDPOINT + "/" + BOOL_NAME, data=parameters)
+        assert response.status_code == 200
+        assert AnswerOutputs.model_validate(response.json())
+        assert response.json()["result"] == {"outputs": [{"name": "y", "value": True}]}
         assert response.json()["errors"] is None
 
     def test_get_not_existed_algorithm_result(self, client):

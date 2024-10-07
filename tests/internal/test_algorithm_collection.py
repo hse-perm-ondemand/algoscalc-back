@@ -13,7 +13,7 @@ from tests import (
     SUM_DEF,
     SUM_FUNC,
     SUM_NAME,
-    SUM_TESTS,
+    MOCK_TESTS,
     WRONG_FIB_TESTS,
 )
 
@@ -44,7 +44,7 @@ class TestAlgorithmCollection:
 
     def test_two_algorithms(self, fib_algo_dir, algo_dir, tmp_path):
         """Проверяет создание экземпляра класса с несколькими алгоритмами"""
-        algo_dir(SUM_NAME, SUM_DEF, SUM_FUNC, SUM_TESTS)
+        algo_dir(SUM_NAME, SUM_DEF, SUM_FUNC, MOCK_TESTS)
         algo_collection = AlgorithmCollection(str(tmp_path))
 
         assert algo_collection.has_algorithm(FIB_NAME)
