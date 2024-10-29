@@ -1,5 +1,7 @@
 from math import sqrt
 
+from src.internal.errors import AlgorithmTypeError, AlgorithmValueError
+
 
 def quadratic_equation(a: float, b: float, c: float) -> str:
     if not (
@@ -7,9 +9,9 @@ def quadratic_equation(a: float, b: float, c: float) -> str:
         and isinstance(b, (int, float))
         and isinstance(c, (int, float))
     ):
-        raise TypeError("Коэффициенты должны быть числами")
+        raise AlgorithmTypeError("Коэффициенты должны быть числами")
     elif a == 0:
-        raise ValueError(
+        raise AlgorithmValueError(
             "Коэффициент при х^2 в квадратном уравнении не может быть равен 0!"
         )
     else:

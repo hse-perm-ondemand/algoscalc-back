@@ -1,12 +1,13 @@
 import unittest
 
 from src.algorithms.quadratic_equation.function import quadratic_equation
+from src.internal.errors import AlgorithmTypeError, AlgorithmValueError
 
 
 class TestCase(unittest.TestCase):
     def test_type_of_coefficient(self):
         self.assertRaisesRegex(
-            TypeError,
+            AlgorithmTypeError,
             "Коэффициенты должны быть числами",
             quadratic_equation,
             "one",
@@ -15,7 +16,7 @@ class TestCase(unittest.TestCase):
         )
 
     def test_zero_a_coefficient(self):
-        with self.assertRaises(ValueError) as error:
+        with self.assertRaises(AlgorithmValueError) as error:
             quadratic_equation(0, 1, 1)
         self.assertEqual(
             "Коэффициент при х^2 в квадратном уравнении не может быть равен 0!",

@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config import LOGGING_CONFIG, Settings
 from src.internal.algorithm_collection import AlgorithmCollection
 from src.routers.algorithms import router as algorithms_router
+from src.routers.error_handlers import init_error_handlers
 
 
 def create_app(settings: Settings = None) -> FastAPI:
@@ -29,6 +30,7 @@ def create_app(settings: Settings = None) -> FastAPI:
         version=settings.VERSION,
     )
     app.include_router(router=algorithms_router)
+    init_error_handlers(app, logger)
     app.state.algorithms = AlgorithmCollection(
         algorithms_catalog_path=settings.ALGORITHMS_CATALOG_PATH,
         execute_timeout=settings.EXECUTE_TIMEOUT,

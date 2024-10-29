@@ -1,5 +1,7 @@
 from typing import Any
 
+from src.internal.errors import AlgorithmValueError, AlgorithmTypeError
+
 HAS_PERFECT = "has_perfect"
 PERFECT_NUMBERS = "perfect_numbers"
 
@@ -16,14 +18,14 @@ def __is_perfect(number: int) -> bool:
 
 def __check_numbers_raises_ex(numbers: list[int]) -> None:
     if not isinstance(numbers, list):
-        raise TypeError("Параметр не является списком")
+        raise AlgorithmTypeError("Параметр не является списком")
     if len(numbers) == 0:
-        raise ValueError("Список чисел пуст")
+        raise AlgorithmValueError("Список чисел пуст")
     for val in numbers:
         if not isinstance(val, int):
-            raise ValueError("Список чисел содержит нечисловое значение")
+            raise AlgorithmValueError("Список чисел содержит нечисловое значение")
         if val < 0:
-            raise ValueError("Список чисел содержит отрицательное значение")
+            raise AlgorithmValueError("Список чисел содержит отрицательное значение")
 
 
 def main(numbers: list[int]) -> dict[str, Any]:

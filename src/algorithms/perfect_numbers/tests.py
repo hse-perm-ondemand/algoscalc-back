@@ -1,26 +1,37 @@
 import unittest
 
 from src.algorithms.perfect_numbers.function import HAS_PERFECT, PERFECT_NUMBERS, main
+from src.internal.errors.exceptions import AlgorithmTypeError, AlgorithmValueError
 
 
 class TestCase(unittest.TestCase):
     def test_not_list(self):
-        self.assertRaisesRegex(TypeError, "Параметр не является списком", main, "str")
+        self.assertRaisesRegex(
+            AlgorithmTypeError, "Параметр не является списком", main, "str"
+        )
 
     def test_none(self):
-        self.assertRaisesRegex(TypeError, "Параметр не является списком", main, None)
+        self.assertRaisesRegex(
+            AlgorithmTypeError, "Параметр не является списком", main, None
+        )
 
     def test_empty(self):
-        self.assertRaisesRegex(ValueError, "Список чисел пуст", main, [])
+        self.assertRaisesRegex(AlgorithmValueError, "Список чисел пуст", main, [])
 
     def test_not_int(self):
         self.assertRaisesRegex(
-            ValueError, "Список чисел содержит нечисловое значение", main, [1, "str"]
+            AlgorithmValueError,
+            "Список чисел содержит нечисловое значение",
+            main,
+            [1, "str"],
         )
 
     def test_neg(self):
         self.assertRaisesRegex(
-            ValueError, "Список чисел содержит отрицательное значение", main, [1, 2, -1]
+            AlgorithmValueError,
+            "Список чисел содержит отрицательное значение",
+            main,
+            [1, 2, -1],
         )
 
     def test_single_true(self):

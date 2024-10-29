@@ -1,6 +1,9 @@
-def findcountstring(text: str, findtext: str) -> int:
+from src.internal.errors import AlgorithmValueError
+
+
+def find_count_string(text: str, findtext: str) -> int:
     if not isinstance(text, str) or not isinstance(findtext, str):
-        raise ValueError("Значения не строковые")
+        raise AlgorithmValueError("Значения не строковые")
 
     count = 0
 
@@ -24,9 +27,9 @@ def findcountstring(text: str, findtext: str) -> int:
 
 
 def main(text, findtext):
-    return {"num_count": findcountstring(text, findtext)}
+    return {"num_count": find_count_string(text, findtext)}
 
 
 if __name__ == "__main__":
-    cnt = findcountstring("text is very long", "text is very long")
+    cnt = find_count_string("text is very long", "text is very long")
     print(f"Num_count = {cnt}")

@@ -1,5 +1,7 @@
 from typing import Any
 
+from src.internal.errors import AlgorithmTypeError, AlgorithmValueError
+
 VOLUME = "volume"
 COST = "cost"
 NON_FLOAT_PARAM_TEMPL = "Значение параметра {0} не является вещественным числом"
@@ -19,9 +21,9 @@ def __check_params_raises_ex(
     ]
     for name, value in str_params:
         if type(value) not in [int, float]:
-            raise TypeError(NON_FLOAT_PARAM_TEMPL.format(name))
+            raise AlgorithmTypeError(NON_FLOAT_PARAM_TEMPL.format(name))
         if value < 0:
-            raise ValueError(NEG_VALUE_PARAM_TEMPL.format(name))
+            raise AlgorithmValueError(NEG_VALUE_PARAM_TEMPL.format(name))
 
 
 def main(

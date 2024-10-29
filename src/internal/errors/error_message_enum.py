@@ -29,4 +29,5 @@ class ErrorMessageEnum(StrEnum):
     NEG_INT_TIMEOUT = "Значение параметра execute_timeout меньше нуля"
     UNIT_TEST_FAILED = "Модульные тесты для алгоритма завершились с ошибкой"
     NO_ALGORITHMS = "Алгоритмов не найдено"
-    TIME_OVER_MSG = "Время для выполнения алгоритма истекло"
+    TIME_OVER = "Время для выполнения алгоритма истекло"
+    UNEXPECTED_ERROR = "Что-то пошло не так..."

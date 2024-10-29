@@ -1,3 +1,4 @@
+import logging
 import signal
 from typing import Any, Callable
 
@@ -5,8 +6,13 @@ from src.internal.constants import DEFAULT_TIMEOUT
 from src.internal.data_dimension.data_dimension_checker import DataDimensionChecker
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
+from src.internal.errors import AlgorithmTimeoutError
+from src.internal.errors import AlgorithmError, AlgorithmUnexpectedError
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
 from src.internal.schemas.data_definition_schema import DataDefinitionSchema
+from src.internal.schemas.data_element_schema import DataElementSchema
+
+logger = logging.getLogger(__name__)
 
 
 class AlgorithmExecutor(object):
@@ -70,62 +76,53 @@ class AlgorithmExecutor(object):
         return [output.name for output in self.definition.outputs]
 
     def get_parameter_by_name(self, name):
-        """Возвращает описание элемента вхожных данных по его имени."""
+        """Возвращает описание элемента входных данных по его имени."""
         if name not in self.parameter_names:
             raise ValueError(ErrMsgTmpl.REDUNDANT_PARAMETER.format(name))
         return [param for param in self.definition.parameters if param.name == name][0]
 
     def get_output_by_name(self, name):
-        """Возвращает описание элемента выхожных данных по его имени."""
+        """Возвращает описание элемента выходных данных по его имени."""
         if name not in self.output_names:
             raise ValueError(ErrMsgTmpl.REDUNDANT_OUTPUT.format(name))
         return [output for output in self.definition.outputs if output.name == name][0]
 
-    def execute(self, params: dict[str, Any]) -> dict[str, Any]:
+    def execute(self, params: list[DataElementSchema]) -> list[DataElementSchema]:
         """Выполняет алгоритм с заданными входными данными.
 
         :param params: значения входных данных для выполнения алгоритма.
-            Словарь, где ключи - имена входных данных, значения - фактические
-            значения входных данных.
-        :type params: dict[str, Any]
-        :return: результат выполнения алгоритма. Словарь, где ключи - имена
-            выходных данных, значения - рассчитанные значения выходных данных.
-        :rtype: dict[str, Any]
-        :raises TypeError: если не установлен метод для выполнения, если
-            параметры переданы не словарем, если метод вернул результаты
-            не в виде словаря;
-        :raises TimeoutError: если закончилось время, отведенное для
-            выполнения алгоритма;
-        :raises RuntimeError: при возникновении ошибки при выполнении.
+        :type params: list[DataElementSchema]
+        :return: результаты выполнения алгоритма.
+        :rtype: list[DataElementSchema]
         """
-        self.validate_input_values(params)
+        params_dict = {param.name: param.value for param in params}
+        self.validate_input_values(params_dict)
 
-        def timeout_handler(signum, frame):
-            raise TimeoutError(
-                ErrMsgTmpl.TIME_OVER.format(self.__execute_timeout, params)
-            )
+        output_dict = self.__execute(params_dict)
 
+        self.__validate_output_values(output_dict)
+        return [
+            DataElementSchema(name=name, value=value)
+            for name, value in output_dict.items()
+        ]
+
+    def __execute(self, params: dict[str, Any]) -> dict[str, Any]:
+        """Выполняет алгоритм с заданными входными данными. Устанавливает
+        предельное время выполнения алгоритма."""
         if self.__execute_timeout > 0:
-            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.signal(signal.SIGALRM, self.__get_timeout_handler())
             signal.alarm(self.__execute_timeout)
 
-        method_outputs = None
         try:
-            method_outputs = self.__execute_method(**params)
-        except TimeoutError:
+            return self.__execute_method(**params)
+        except AlgorithmError:
             raise
-        except TypeError:
-            raise RuntimeError(
-                ErrMsgTmpl.EXECUTION_FAILED.format(ErrMsg.UNEXPECTED_PARAM, params)
-            )
         except Exception as ex:
-            raise RuntimeError(ErrMsgTmpl.EXECUTION_FAILED.format(ex, params))
+            logger.error(str(ex))
+            raise AlgorithmUnexpectedError()
         finally:
             if self.__execute_timeout > 0:
                 signal.alarm(0)
-
-        self.__validate_output_values(method_outputs)
-        return method_outputs
 
     def validate_input_values(self, fact_params: dict[str, Any]) -> None:
         """ "Проверяет входные данные для выполнения алгоритма. При наличии
@@ -172,7 +169,7 @@ class AlgorithmExecutor(object):
             params = {
                 param.name: param.default_value for param in self.definition.parameters
             }
-            outputs = self.execute(params)
+            outputs = self.__execute(params)
             for key, value in [
                 (output.name, output.default_value)
                 for output in self.definition.outputs
@@ -199,6 +196,12 @@ class AlgorithmExecutor(object):
         errors = self.__get_test_errors()
         if errors is not None:
             raise RuntimeError(ErrMsgTmpl.ADDING_METHOD_FAILED.format(errors))
+
+    def __get_timeout_handler(self):
+        def timeout_handler(signum, frame):
+            raise AlgorithmTimeoutError(self.__execute_timeout)
+
+        return timeout_handler
 
 
 if __name__ == "__main__":
@@ -229,4 +232,4 @@ if __name__ == "__main__":
     )
     algorithm_executor = AlgorithmExecutor(algorithm_definition, lambda p: {"o": p * 2})
     print(algorithm_executor)
-    print(algorithm_executor.execute({"p": 10}))
+    print(algorithm_executor.execute([DataElementSchema(name="p", value=10)]))

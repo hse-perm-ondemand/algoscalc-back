@@ -1,11 +1,14 @@
 import unittest
 
 from src.algorithms.substring_in_a_string.function import main
+from src.internal.errors.exceptions import AlgorithmValueError
 
 
 class TestCase(unittest.TestCase):
     def test_check_value(self):
-        self.assertRaisesRegex(ValueError, "Значения не строковые", main, "one", 0)
+        self.assertRaisesRegex(
+            AlgorithmValueError, "Значения не строковые", main, "one", 0
+        )
 
     def test_long_text(self):
         self.assertEqual(

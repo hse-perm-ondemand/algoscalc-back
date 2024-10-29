@@ -14,6 +14,7 @@ from src.internal.constants import (
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
+from src.internal.schemas.data_element_schema import DataElementSchema
 
 
 class AlgorithmBuilder:
@@ -108,4 +109,4 @@ if __name__ == "__main__":
     builder = AlgorithmBuilder(execute_timeout=0)
     algo_executor = builder.build_algorithm("src/algorithms/fibonacci")
     print(algo_executor.definition)
-    print(algo_executor.execute({"n": 10}))
+    print(algo_executor.execute([DataElementSchema(name="n", value=10)]))

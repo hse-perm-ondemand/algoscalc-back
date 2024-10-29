@@ -98,7 +98,7 @@ class TestAlgorithmExecutor:
 
         algo_executor = AlgorithmExecutor(algo_definition, method, timeout)
         assert algo_executor.execute_timeout == timeout
-        assert algo_executor.execute({"x": 1}) == {"y": 1}
+        assert algo_executor.__execute({"x": 1}) == {"y": 1}
 
     def test_add_execute_method_wrong_param(self, create_algo_definition):
         """Проверяет ошибку при указании метода с параметром не указанным
@@ -213,7 +213,7 @@ class TestAlgorithmExecutor:
             return {"sum": a + b}
 
         algo_executor = AlgorithmExecutor(algo_definition, method)
-        assert algo_executor.execute({"a": 10, "b": 20}) == {"sum": 30}
+        assert algo_executor.__execute({"a": 10, "b": 20}) == {"sum": 30}
 
     def test_execute_non_dict_params(self, create_algo_definition):
         """Проверяет ошибку выполнения алгоритма при передаче параметров
@@ -222,7 +222,7 @@ class TestAlgorithmExecutor:
         algo_executor = AlgorithmExecutor(algo_definition, default_method)
 
         with pytest.raises(TypeError) as error:
-            algo_executor.execute(1)
+            algo_executor.__execute(1)
         assert str(error.value) == ErrMsg.NOT_DICT_PARAMS
 
     def test_execute_redundant_param(self, create_algo_definition):
@@ -233,7 +233,7 @@ class TestAlgorithmExecutor:
         redundant_param = "redundant_param"
 
         with pytest.raises(ValueError) as error:
-            algo_executor.execute({"x": 1, redundant_param: 1})
+            algo_executor.__execute({"x": 1, redundant_param: 1})
         assert str(error.value) == ErrMsgTmpl.REDUNDANT_PARAMETER.format(
             redundant_param
         )
@@ -257,7 +257,7 @@ class TestAlgorithmExecutor:
         algo_executor = AlgorithmExecutor(algo_definition, method)
 
         with pytest.raises(ValueError) as error:
-            algo_executor.execute({"a": 1})
+            algo_executor.__execute({"a": 1})
         assert str(error.value) == ErrMsgTmpl.MISSED_PARAMETER.format("b")
 
     def test_execute_non_dict_output(self, create_algo_definition):
@@ -271,7 +271,7 @@ class TestAlgorithmExecutor:
         algo_executor = AlgorithmExecutor(algo_definition, method)
 
         with pytest.raises(TypeError) as error:
-            algo_executor.execute({"x": 10})
+            algo_executor.__execute({"x": 10})
         assert str(error.value) == ErrMsg.NOT_DICT_OUTPUTS
 
     def test_execute_timeout(self, create_algo_definition):
@@ -287,7 +287,7 @@ class TestAlgorithmExecutor:
         params = {"x": timeout + 1}
 
         with pytest.raises(TimeoutError) as error:
-            algo_executor.execute(params)
+            algo_executor.__execute(params)
         assert str(error.value) == ErrMsgTmpl.TIME_OVER.format(timeout, params)
 
     def test_execute_runtime_error(
@@ -305,7 +305,7 @@ class TestAlgorithmExecutor:
 
         params = {"x": 0}
         with pytest.raises(RuntimeError) as error:
-            algo_executor.execute(params)
+            algo_executor.__execute(params)
         assert str(error.value) == ErrMsgTmpl.EXECUTION_FAILED.format(
             "division by zero", params
         )
