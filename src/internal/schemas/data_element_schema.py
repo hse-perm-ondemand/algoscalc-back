@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from src.internal.schemas.data_definition_schema import (
     ValueType,
     OptionalValueMatrixType,
+    OptionalValueListType,
 )
 
 
@@ -17,7 +18,9 @@ class DataElementSchema(BaseModel):
     """
 
     name: str
-    value: ValueType | OptionalValueMatrixType = Field(..., union_mode="smart")
+    value: ValueType | OptionalValueListType | OptionalValueMatrixType = Field(
+        ..., union_mode="smart"
+    )
 
     def __str__(self) -> str:
         """Возвращает строковое представление экземпляра класса"""
