@@ -48,17 +48,10 @@ def create_app(settings: Settings = None) -> FastAPI:
     return app
 
 
-app = create_app()
-
-
 def start():
     """Запускает приложение."""
+    app = create_app()
     uvicorn.run(app, host="0.0.0.0", port=8080)
-
-
-def start_dev():
-    """Запускает приложение в dev-режиме."""
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8080, reload=True)
 
 
 if __name__ == "__main__":

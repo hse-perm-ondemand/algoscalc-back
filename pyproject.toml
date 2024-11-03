@@ -21,7 +21,7 @@ pytest = "^8.3.3"
 
 [tool.poetry.scripts]
 start = "src.main:start"
-dev = "src.main:start_dev"
+dev = "src.dev:start"
 test = "pytest:main"
 
 [tool.poetry.group.dev.dependencies]

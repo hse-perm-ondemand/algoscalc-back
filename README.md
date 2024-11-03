@@ -106,7 +106,7 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "src.main:app",
+                "src.dev:app",
                 "--reload",
                 "--host",
                 "0.0.0.0",
