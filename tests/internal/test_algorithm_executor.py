@@ -6,6 +6,13 @@ from src.internal.algorithm_executor import AlgorithmExecutor
 from src.internal.constants import DEFAULT_TIMEOUT
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
+from src.internal.errors.exceptions import (
+    AlgorithmTimeoutError,
+    AlgorithmTypeError,
+    AlgorithmUnexpectedError,
+    AlgorithmValueError,
+)
+from src.internal.schemas.data_element_schema import DataElementSchema
 from tests import NOT_INT_CASES, SCALAR_CASES, Case
 
 
@@ -98,7 +105,9 @@ class TestAlgorithmExecutor:
 
         algo_executor = AlgorithmExecutor(algo_definition, method, timeout)
         assert algo_executor.execute_timeout == timeout
-        assert algo_executor.execute({"x": 1}) == {"y": 1}
+        assert algo_executor.execute([DataElementSchema(name="x", value=1)]) == [
+            DataElementSchema(name="y", value=1)
+        ]
 
     def test_add_execute_method_wrong_param(self, create_algo_definition):
         """Проверяет ошибку при указании метода с параметром не указанным
@@ -108,9 +117,7 @@ class TestAlgorithmExecutor:
         def method(wrong_name):
             return {"y": wrong_name}
 
-        err_msg = ErrMsgTmpl.ADDING_METHOD_FAILED.format(
-            ErrMsgTmpl.EXECUTION_FAILED.format(ErrMsg.UNEXPECTED_PARAM, {"x": 1})
-        )
+        err_msg = ErrMsgTmpl.ADDING_METHOD_FAILED.format(ErrMsg.UNEXPECTED_PARAM)
         with pytest.raises(RuntimeError) as error:
             AlgorithmExecutor(algo_definition, method)
         assert str(error.value) == err_msg
@@ -133,9 +140,7 @@ class TestAlgorithmExecutor:
             return {"y": x1}
 
         err_msg = ErrMsgTmpl.ADDING_METHOD_FAILED.format(
-            ErrMsgTmpl.EXECUTION_FAILED.format(
-                ErrMsg.UNEXPECTED_PARAM, {"x1": 1, "x2": 1}
-            )
+            ErrMsg.UNEXPECTED_PARAM, {"x1": 1, "x2": 1}
         )
         with pytest.raises(RuntimeError) as error:
             AlgorithmExecutor(algo_definition, method)
@@ -213,17 +218,23 @@ class TestAlgorithmExecutor:
             return {"sum": a + b}
 
         algo_executor = AlgorithmExecutor(algo_definition, method)
-        assert algo_executor.execute({"a": 10, "b": 20}) == {"sum": 30}
+        params = [
+            DataElementSchema(name="a", value=10),
+            DataElementSchema(name="b", value=20),
+        ]
+        assert algo_executor.execute(params) == [
+            DataElementSchema(name="sum", value=30)
+        ]
 
     def test_execute_non_dict_params(self, create_algo_definition):
         """Проверяет ошибку выполнения алгоритма при передаче параметров
-        не в формате словаря"""
+        в некорректном формате"""
         algo_definition = create_algo_definition()
         algo_executor = AlgorithmExecutor(algo_definition, default_method)
 
-        with pytest.raises(TypeError) as error:
+        with pytest.raises(AlgorithmTypeError) as error:
             algo_executor.execute(1)
-        assert str(error.value) == ErrMsg.NOT_DICT_PARAMS
+        assert str(error.value) == ErrMsg.INCORRECT_PARAMS
 
     def test_execute_redundant_param(self, create_algo_definition):
         """Проверяет ошибку выполнения алгоритма при передаче лишнего параметра"""
@@ -231,9 +242,13 @@ class TestAlgorithmExecutor:
         algo_executor = AlgorithmExecutor(algo_definition, default_method)
 
         redundant_param = "redundant_param"
+        params = [
+            DataElementSchema(name="x", value=1),
+            DataElementSchema(name=redundant_param, value=1),
+        ]
 
-        with pytest.raises(ValueError) as error:
-            algo_executor.execute({"x": 1, redundant_param: 1})
+        with pytest.raises(AlgorithmValueError) as error:
+            algo_executor.execute(params)
         assert str(error.value) == ErrMsgTmpl.REDUNDANT_PARAMETER.format(
             redundant_param
         )
@@ -255,9 +270,10 @@ class TestAlgorithmExecutor:
             return {"sum": a + b}
 
         algo_executor = AlgorithmExecutor(algo_definition, method)
+        params = [DataElementSchema(name="a", value=1)]
 
-        with pytest.raises(ValueError) as error:
-            algo_executor.execute({"a": 1})
+        with pytest.raises(AlgorithmValueError) as error:
+            algo_executor.execute(params)
         assert str(error.value) == ErrMsgTmpl.MISSED_PARAMETER.format("b")
 
     def test_execute_non_dict_output(self, create_algo_definition):
@@ -269,9 +285,10 @@ class TestAlgorithmExecutor:
             return {"y": x} if x == 1 else x
 
         algo_executor = AlgorithmExecutor(algo_definition, method)
+        params = [DataElementSchema(name="x", value=10)]
 
-        with pytest.raises(TypeError) as error:
-            algo_executor.execute({"x": 10})
+        with pytest.raises(AlgorithmTypeError) as error:
+            algo_executor.execute(params)
         assert str(error.value) == ErrMsg.NOT_DICT_OUTPUTS
 
     def test_execute_timeout(self, create_algo_definition):
@@ -284,9 +301,9 @@ class TestAlgorithmExecutor:
             return {"y": x}
 
         algo_executor = AlgorithmExecutor(algo_definition, method, timeout)
-        params = {"x": timeout + 1}
+        params = [DataElementSchema(name="x", value=timeout + 1)]
 
-        with pytest.raises(TimeoutError) as error:
+        with pytest.raises(AlgorithmTimeoutError) as error:
             algo_executor.execute(params)
         assert str(error.value) == ErrMsgTmpl.TIME_OVER.format(timeout, params)
 
@@ -302,13 +319,11 @@ class TestAlgorithmExecutor:
             return {"y": 1 / x}
 
         algo_executor = AlgorithmExecutor(algo_definition, method)
+        params = [DataElementSchema(name="x", value=0)]
 
-        params = {"x": 0}
-        with pytest.raises(RuntimeError) as error:
+        with pytest.raises(AlgorithmUnexpectedError) as error:
             algo_executor.execute(params)
-        assert str(error.value) == ErrMsgTmpl.EXECUTION_FAILED.format(
-            "division by zero", params
-        )
+        assert str(error.value) == ErrMsg.UNEXPECTED_ERROR
 
 
 if __name__ == "__main__":

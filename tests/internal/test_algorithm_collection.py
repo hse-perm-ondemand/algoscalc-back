@@ -4,7 +4,9 @@ from src.internal.algorithm_collection import AlgorithmCollection
 from src.internal.constants import DEFAULT_ALGORITHMS_CATALOG_PATH
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
+from src.internal.errors.exceptions import AlgorithmNotFoundError
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
+from src.internal.schemas.data_element_schema import DataElementSchema
 from src.internal.schemas.definition_schema import DefinitionSchema
 from tests import (
     FIB_DEF,
@@ -78,7 +80,7 @@ class TestAlgorithmCollection:
     def test_get_not_existed_algorithm_definition(self, fib_algo_dir, tmp_path):
         """Проверяет ошибку запроса описания несуществующего алгоритма"""
         algo_collection = AlgorithmCollection(str(tmp_path))
-        with pytest.raises(ValueError) as error:
+        with pytest.raises(AlgorithmNotFoundError) as error:
             algo_collection.get_algorithm_definition("not_existed")
 
         assert str(error.value) == ErrMsgTmpl.ALGORITHM_NOT_EXISTS.format("not_existed")
@@ -86,15 +88,19 @@ class TestAlgorithmCollection:
     def test_get_algorithm_result(self, fib_algo_dir, tmp_path):
         """Проверяет выполнение алгоритма"""
         algo_collection = AlgorithmCollection(str(tmp_path))
-        result = algo_collection.get_algorithm_result(FIB_NAME, {"n": 1})
+        params = [DataElementSchema(name="n", value=1)]
 
-        assert result == {"result": 1}
+        result = algo_collection.get_algorithm_result(FIB_NAME, params)
+
+        assert result == [DataElementSchema(name="result", value=1)]
 
     def test_get_not_existed_algorithm_result(self, fib_algo_dir, tmp_path):
         """Проверяет ошибку выполнения несуществующего алгоритма"""
         algo_collection = AlgorithmCollection(str(tmp_path))
-        with pytest.raises(ValueError) as error:
-            algo_collection.get_algorithm_result("not_existed", {"n": 1})
+        params = [DataElementSchema(name="n", value=1)]
+
+        with pytest.raises(AlgorithmNotFoundError) as error:
+            algo_collection.get_algorithm_result("not_existed", params)
 
         assert str(error.value) == ErrMsgTmpl.ALGORITHM_NOT_EXISTS.format("not_existed")
 

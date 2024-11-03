@@ -10,12 +10,13 @@ from src.algorithms.fuel_consumption.function import (
     VOLUME,
     main,
 )
+from src.internal.errors import AlgorithmTypeError, AlgorithmValueError
 
 
 class TestCase(unittest.TestCase):
     def test_distance_not_float(self):
         self.assertRaisesRegex(
-            TypeError,
+            AlgorithmTypeError,
             NON_FLOAT_PARAM_TEMPL.format(DISTANCE_NAME),
             main,
             "str",
@@ -26,7 +27,7 @@ class TestCase(unittest.TestCase):
 
     def test_distance_neg(self):
         self.assertRaisesRegex(
-            ValueError,
+            AlgorithmValueError,
             NEG_VALUE_PARAM_TEMPL.format(DISTANCE_NAME),
             main,
             -1.0,
@@ -37,12 +38,18 @@ class TestCase(unittest.TestCase):
 
     def test_mean_not_float(self):
         self.assertRaisesRegex(
-            TypeError, NON_FLOAT_PARAM_TEMPL.format(MEAN_NAME), main, 0.0, [], 0.0, True
+            AlgorithmTypeError,
+            NON_FLOAT_PARAM_TEMPL.format(MEAN_NAME),
+            main,
+            0.0,
+            [],
+            0.0,
+            True,
         )
 
     def test_mean_neg(self):
         self.assertRaisesRegex(
-            ValueError,
+            AlgorithmValueError,
             NEG_VALUE_PARAM_TEMPL.format(MEAN_NAME),
             main,
             0.0,
@@ -53,7 +60,7 @@ class TestCase(unittest.TestCase):
 
     def test_price_not_float(self):
         self.assertRaisesRegex(
-            TypeError,
+            AlgorithmTypeError,
             NON_FLOAT_PARAM_TEMPL.format(PRICE_NAME),
             main,
             0.0,
@@ -64,7 +71,7 @@ class TestCase(unittest.TestCase):
 
     def test_price_neg(self):
         self.assertRaisesRegex(
-            ValueError,
+            AlgorithmValueError,
             NEG_VALUE_PARAM_TEMPL.format(PRICE_NAME),
             main,
             0.0,

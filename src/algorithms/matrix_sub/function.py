@@ -1,5 +1,7 @@
 import copy
 
+from src.internal.errors import AlgorithmValueError
+
 
 def __sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
     res: list[list[float]] = copy.deepcopy(n)
@@ -12,15 +14,17 @@ def __sub(n: list[list[float]], m: list[list[float]]) -> list[list[float]]:
 def __check_matrix(matrix: list[list[float]], name: str, row_len: int) -> None:
     for row in matrix:
         if row_len != len(row):
-            raise ValueError(f"Введено неверное количество столбцов для {name}")
+            raise AlgorithmValueError(
+                f"Введено неверное количество столбцов для {name}"
+            )
         for item in row:
             if item is None:
-                raise ValueError(f"Не введено значение в матрице {name}")
+                raise AlgorithmValueError(f"Не введено значение в матрице {name}")
 
 
 def main(n: list[list[float]], m: list[list[float]]) -> dict[str, list[list[float]]]:
     if len(n) != len(m):
-        raise ValueError("Длины матриц не совпадают!")
+        raise AlgorithmValueError("Длины матриц не совпадают!")
     dl_row = len(n[0])
     __check_matrix(n, "n", dl_row)
     __check_matrix(m, "m", dl_row)

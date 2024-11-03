@@ -11,7 +11,9 @@ from src.internal.constants import (
 )
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
+from src.internal.errors.exceptions import AlgorithmNotFoundError
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
+from src.internal.schemas.data_element_schema import DataElementSchema
 from src.internal.schemas.definition_schema import DefinitionSchema
 
 
@@ -89,32 +91,23 @@ class AlgorithmCollection:
         :raises ValueError: если алгоритм с указанным именем отсутствует;
         """
         if algorithm_name not in self.__algorithms:
-            raise ValueError(ErrMsgTmpl.ALGORITHM_NOT_EXISTS.format(algorithm_name))
+            raise AlgorithmNotFoundError(algorithm_name)
         return self.__algorithms[algorithm_name].definition
 
     def get_algorithm_result(
-        self, algorithm_name: str, params: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, algorithm_name: str, params: list[DataElementSchema]
+    ) -> list[DataElementSchema]:
         """Возвращает результат выполнения алгоритма с указанным именем.
 
         :param algorithm_name: имя алгоритма;
         :type algorithm_name: str
         :param params: значения входных данных для выполнения алгоритма.
-            Словарь, где ключи - имена входных данных, значения - фактические
-            значения входных данных.
-        :type params: dict[str, Any]
-        :return: результат выполнения алгоритма. Словарь, где ключи - имена
-            выходных данных, значения - рассчитанные значения выходных данных.
-        :rtype: Algorithm
-        :raises ValueError: если алгоритм с указанным именем отсутствует;
-        :raises KeyError: если во входных или выходных данных отсутствует
-            необходимый или имеется лишний элемент;
-        :raises TimeoutError: если закончилось время, отведенное для
-            выполнения алгоритма;
-        :raises RuntimeError: при возникновении ошибки при выполнении.
+        :type params: list[DataElementSchema]
+        :return: результат выполнения алгоритма.
+        :rtype: list[DataElementSchema]
         """
         if algorithm_name not in self.__algorithms:
-            raise ValueError(ErrMsgTmpl.ALGORITHM_NOT_EXISTS.format(algorithm_name))
+            raise AlgorithmNotFoundError(algorithm_name)
         return self.__algorithms[algorithm_name].execute(params)
 
 
