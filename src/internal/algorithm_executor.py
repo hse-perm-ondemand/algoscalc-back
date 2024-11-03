@@ -2,15 +2,21 @@ import logging
 import signal
 from typing import Any, Callable
 
+from pydantic import ValidationError
+
 from src.internal.constants import DEFAULT_TIMEOUT
 from src.internal.data_dimension.data_dimension_checker import DataDimensionChecker
 from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
 from src.internal.errors import AlgorithmTimeoutError
 from src.internal.errors import AlgorithmError, AlgorithmUnexpectedError
+from src.internal.errors.exceptions import AlgorithmTypeError, AlgorithmValueError
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
 from src.internal.schemas.data_definition_schema import DataDefinitionSchema
-from src.internal.schemas.data_element_schema import DataElementSchema
+from src.internal.schemas.data_element_schema import (
+    DataElementSchema,
+    DataElementsSchema,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -78,23 +84,27 @@ class AlgorithmExecutor(object):
     def get_parameter_by_name(self, name):
         """Возвращает описание элемента входных данных по его имени."""
         if name not in self.parameter_names:
-            raise ValueError(ErrMsgTmpl.REDUNDANT_PARAMETER.format(name))
+            raise AlgorithmValueError(ErrMsgTmpl.REDUNDANT_PARAMETER.format(name))
         return [param for param in self.definition.parameters if param.name == name][0]
 
     def get_output_by_name(self, name):
         """Возвращает описание элемента выходных данных по его имени."""
         if name not in self.output_names:
-            raise ValueError(ErrMsgTmpl.REDUNDANT_OUTPUT.format(name))
+            raise AlgorithmValueError(ErrMsgTmpl.REDUNDANT_OUTPUT.format(name))
         return [output for output in self.definition.outputs if output.name == name][0]
 
-    def execute(self, params: list[DataElementSchema]) -> list[DataElementSchema]:
+    def execute(self, params: DataElementsSchema) -> DataElementsSchema:
         """Выполняет алгоритм с заданными входными данными.
 
         :param params: значения входных данных для выполнения алгоритма.
-        :type params: list[DataElementSchema]
+        :type params: DataElementsSchema
         :return: результаты выполнения алгоритма.
-        :rtype: list[DataElementSchema]
+        :rtype: DataElementsSchema
         """
+        try:
+            DataElementsSchema.model_validate(params)
+        except ValidationError:
+            raise AlgorithmTypeError(ErrMsg.INCORRECT_PARAMS)
         params_dict = {param.name: param.value for param in params}
         self.validate_input_values(params_dict)
 
@@ -117,6 +127,10 @@ class AlgorithmExecutor(object):
             return self.__execute_method(**params)
         except AlgorithmError:
             raise
+        except TypeError as ex:
+            if "unexpected keyword argument" in str(ex):
+                raise AlgorithmTypeError(ErrMsg.UNEXPECTED_PARAM)
+            raise
         except Exception as ex:
             logger.error(str(ex))
             raise AlgorithmUnexpectedError()
@@ -128,35 +142,35 @@ class AlgorithmExecutor(object):
         """ "Проверяет входные данные для выполнения алгоритма. При наличии
         ошибок вызывает исключения TypeError, ValueError."""
         if not isinstance(fact_params, dict):
-            raise TypeError(ErrMsg.NOT_DICT_PARAMS)
+            raise AlgorithmTypeError(ErrMsg.INCORRECT_PARAMS)
         for key in fact_params.keys():
             if key not in self.parameter_names:
-                raise ValueError(ErrMsgTmpl.REDUNDANT_PARAMETER.format(key))
+                raise AlgorithmValueError(ErrMsgTmpl.REDUNDANT_PARAMETER.format(key))
         for key in self.parameter_names:
             if key not in fact_params.keys():
-                raise ValueError(ErrMsgTmpl.MISSED_PARAMETER.format(key))
+                raise AlgorithmValueError(ErrMsgTmpl.MISSED_PARAMETER.format(key))
             errors = DataDimensionChecker.check_value(
                 self.get_parameter_by_name(key), fact_params[key]
             )
             if errors is not None:
-                raise TypeError(errors)
+                raise AlgorithmTypeError(errors)
 
     def __validate_output_values(self, method_outputs: dict[str, Any]) -> None:
         """ "Проверяет выходные данные для выполнения алгоритма. При наличии
         ошибок вызывает исключения TypeError, ValueError."""
         if not isinstance(method_outputs, dict):
-            raise TypeError(ErrMsg.NOT_DICT_OUTPUTS)
+            raise AlgorithmTypeError(ErrMsg.NOT_DICT_OUTPUTS)
         for key in method_outputs.keys():
             if key not in self.output_names:
-                raise ValueError(ErrMsgTmpl.REDUNDANT_OUTPUT.format(key))
+                raise AlgorithmValueError(ErrMsgTmpl.REDUNDANT_OUTPUT.format(key))
         for key in self.output_names:
             if key not in method_outputs.keys():
-                raise ValueError(ErrMsgTmpl.MISSED_OUTPUT.format(key))
+                raise AlgorithmValueError(ErrMsgTmpl.MISSED_OUTPUT.format(key))
             errors = DataDimensionChecker.check_value(
                 self.get_output_by_name(key), method_outputs[key]
             )
             if errors is not None:
-                raise TypeError(errors)
+                raise AlgorithmTypeError(errors)
 
     def __get_test_errors(self) -> str | None:
         """Выполняет тестовое выполнение алгоритма, с параметрами заданными
@@ -166,17 +180,23 @@ class AlgorithmExecutor(object):
         :rtype: str or None
         """
         try:
-            params = {
-                param.name: param.default_value for param in self.definition.parameters
-            }
-            outputs = self.__execute(params)
-            for key, value in [
+            params = [
+                DataElementSchema(name=param.name, value=param.default_value)
+                for param in self.definition.parameters
+            ]
+            outputs = self.execute(params)
+            for name, default_value in [
                 (output.name, output.default_value)
                 for output in self.definition.outputs
             ]:
-                if outputs[key] != value:
-                    raise ValueError(
-                        ErrMsgTmpl.UNEXPECTED_OUTPUT.format(outputs[key], key, value)
+                fact_value = [
+                    output.value for output in outputs if output.name == name
+                ][0]
+                if fact_value != default_value:
+                    raise AlgorithmValueError(
+                        ErrMsgTmpl.UNEXPECTED_OUTPUT.format(
+                            fact_value, name, default_value
+                        )
                     )
         except Exception as ex:
             return str(ex).strip("'")

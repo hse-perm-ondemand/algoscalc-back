@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 from src.internal.schemas.data_definition_schema import (
     ValueType,
@@ -25,6 +25,16 @@ class DataElementSchema(BaseModel):
     def __str__(self) -> str:
         """Возвращает строковое представление экземпляра класса"""
         return f"DataElement: {self.name}, value: {self.value}"
+
+
+class DataElementsSchema(RootModel):
+    root: list[DataElementSchema]
+
+    def __iter__(self):
+        return iter(self.root)
+
+    def __getitem__(self, item):
+        return self.root[item]
 
 
 if __name__ == "__main__":

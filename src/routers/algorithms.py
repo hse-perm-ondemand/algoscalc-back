@@ -5,7 +5,10 @@ from fastapi import APIRouter, Depends, Request
 from src.internal.algorithm_collection import AlgorithmCollection
 from src.internal.constants import ALGORITHMS_ENDPOINT
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
-from src.internal.schemas.data_element_schema import DataElementSchema
+from src.internal.schemas.data_element_schema import (
+    DataElementSchema,
+    DataElementsSchema,
+)
 from src.internal.schemas.definition_schema import DefinitionSchema
 
 
@@ -48,16 +51,16 @@ async def get_algorithm(
 @router.post("/{algorithm_name}/results")
 async def get_algorithm_result(
     algorithm_name: str,
-    parameters: list[DataElementSchema],
+    parameters: DataElementsSchema,
     algorithms: AlgorithmCollection = Depends(get_app_algorithms),
-) -> list[DataElementSchema]:
+) -> DataElementsSchema:
     """Возвращает результат выполнения выбранного алгоритма.
 
     :param algorithm_name: имя алгоритма;
     :type algorithm_name: str
     :param parameters: значения входных данных для выполнения алгоритма.
-    :type parameters: list[DataElementSchema]
+    :type parameters: DataElementsSchema
     :return: результаты выполнения выбранного алгоритма
-    :rtype: list[DataElementSchema]
+    :rtype: DataElementsSchema
     """
     return algorithms.get_algorithm_result(algorithm_name, parameters)

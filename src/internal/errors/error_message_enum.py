@@ -2,7 +2,7 @@ from strenum import StrEnum
 
 
 class ErrorMessageEnum(StrEnum):
-    """Перечисление сообщений об ошибках прложения."""
+    """Перечисление сообщений об ошибках приложения."""
 
     EMPTY_STRING = "Значение параметра не может быть пустой строкой"
     NOT_DATA_TYPE = "Параметр data_type не является экземпляром DataTypeEnum"
@@ -23,7 +23,7 @@ class ErrorMessageEnum(StrEnum):
     UNEXPECTED_PARAM = "В метод передан недопустимый параметр"
     UNSET_PARAMS = "Для алгоритма не заданы входные данные"
     UNSET_OUTPUTS = "Для алгоритма не заданы выходные данные"
-    NOT_DICT_PARAMS = "Входные данные переданы не в формате словаря"
+    INCORRECT_PARAMS = "Входные данные переданы в некорректном формате"
     NOT_DICT_OUTPUTS = "Выходные данные алгоритма не формате словаря"
     NON_INT_TIMEOUT = "Параметр execute_timeout не является целым числом"
     NEG_INT_TIMEOUT = "Значение параметра execute_timeout меньше нуля"

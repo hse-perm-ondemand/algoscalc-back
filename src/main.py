@@ -17,6 +17,7 @@ def create_app(settings: Settings = None) -> FastAPI:
     if not settings:
         settings = Settings()
 
+    logger = None
     if settings.USE_LOGGER:
         logging.config.dictConfig(LOGGING_CONFIG)
         logger = logging.getLogger(__name__)

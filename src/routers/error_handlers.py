@@ -41,7 +41,8 @@ def init_error_handlers(app: FastAPI, logger: Logger):
 
     @app.exception_handler(Exception)
     def handle_unexpected_error(request: Request, err: Exception):
-        logger.error(str(err))
+        if logger:
+            logger.error(str(err))
         raise HTTPException(
             status_code=500,
             detail=ErrMsg.UNEXPECTED_ERROR,
