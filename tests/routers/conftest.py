@@ -9,10 +9,10 @@ from tests import (
     BOOL_DEF,
     BOOL_FUNC,
     BOOL_NAME,
+    MOCK_TESTS,
     SUM_DEF,
     SUM_FUNC,
     SUM_NAME,
-    MOCK_TESTS,
 )
 
 

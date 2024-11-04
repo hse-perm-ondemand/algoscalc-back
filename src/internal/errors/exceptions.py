@@ -1,5 +1,5 @@
-from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
 from src.internal.errors import ErrorMessageEnum as ErrMsg
+from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
 
 
 class AlgorithmError(Exception):

@@ -1,5 +1,4 @@
 import os
-from typing import Any
 
 from src.internal.algorithm_builder import AlgorithmBuilder
 from src.internal.algorithm_executor import AlgorithmExecutor
@@ -10,7 +9,6 @@ from src.internal.constants import (
     DEFAULT_TIMEOUT,
 )
 from src.internal.errors import ErrorMessageEnum as ErrMsg
-from src.internal.errors import ErrorMessageTemplateEnum as ErrMsgTmpl
 from src.internal.errors.exceptions import AlgorithmNotFoundError
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
 from src.internal.schemas.data_element_schema import DataElementSchema

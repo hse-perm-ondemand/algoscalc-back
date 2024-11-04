@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field, RootModel
 
 from src.internal.schemas.data_definition_schema import (
-    ValueType,
-    OptionalValueMatrixType,
     OptionalValueListType,
+    OptionalValueMatrixType,
+    ValueType,
 )
 
 

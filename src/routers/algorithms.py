@@ -1,7 +1,7 @@
 import logging
 import math
 
-from fastapi import APIRouter, Depends, Request, Path, Body
+from fastapi import APIRouter, Body, Depends, Path, Request
 
 from src.internal.algorithm_collection import AlgorithmCollection
 from src.internal.constants import ALGORITHMS_ENDPOINT
@@ -20,11 +20,13 @@ router = APIRouter(
 logger = logging.getLogger(__name__)
 
 
-@router.get("/",
+@router.get(
+    "/",
     response_model=AlgorithmsPageSchema,
     summary="Получить алгоритмы",
     description="Возвращает список имеющихся алгоритмов с постраничным выводом.",
-    response_description="Список алгоритмов с информацией о постраничном выводе.")
+    response_description="Список алгоритмов с информацией о постраничном выводе.",
+)
 async def get_algorithms(
     paginate: PaginateInputSchema = Depends(),
     algorithms: AlgorithmCollection = Depends(get_app_algorithms),
@@ -42,25 +44,31 @@ async def get_algorithms(
     )
 
 
-@router.get("/{algorithm_name}",
+@router.get(
+    "/{algorithm_name}",
     response_model=AlgorithmDefinitionSchema,
     summary="Получить описание алгоритма",
     description="Возвращает информацию об алгоритме по его названию.",
-    response_description="Информация об алгоритме.")
+    response_description="Информация об алгоритме.",
+)
 async def get_algorithm(
     algorithm_name: str = Path(..., description="Название алгоритма"),
-    algorithms: AlgorithmCollection = Depends(get_app_algorithms)
+    algorithms: AlgorithmCollection = Depends(get_app_algorithms),
 ) -> AlgorithmDefinitionSchema:
     return algorithms.get_algorithm_definition(algorithm_name)
 
 
-@router.post("/{algorithm_name}/results",
+@router.post(
+    "/{algorithm_name}/results",
     response_model=DataElementsSchema,
     summary="Получить результат выполнения алгоритма",
     description="Возвращает результат выполнения выбранного алгоритма.",
-    response_description="Результаты выполнения алгоритма.")
+    response_description="Результаты выполнения алгоритма.",
+)
 async def get_algorithm_result(
-    parameters: DataElementsSchema = Body(..., description="Значения параметров для выполнения алгоритма"),
+    parameters: DataElementsSchema = Body(
+        ..., description="Значения параметров для выполнения алгоритма"
+    ),
     algorithm_name: str = Path(..., description="Название алгоритма"),
     algorithms: AlgorithmCollection = Depends(get_app_algorithms),
 ) -> DataElementsSchema:
