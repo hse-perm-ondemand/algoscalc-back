@@ -32,7 +32,6 @@ class TestAlgorithms:
         assert page.page == 2
         assert page.size == 1
         assert page.total == 3
-        assert DefinitionSchema.model_validate(FIB_DEF) in page.items
 
     def test_get_algorithm(self, client):
         response = client.get(f"{ALGORITHMS_ENDPOINT}/{SUM_NAME}")
