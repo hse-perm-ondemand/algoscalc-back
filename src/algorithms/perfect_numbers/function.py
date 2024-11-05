@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.internal.errors import AlgorithmValueError, AlgorithmTypeError
+from src.internal.errors import AlgorithmTypeError, AlgorithmValueError
 
 HAS_PERFECT = "has_perfect"
 PERFECT_NUMBERS = "perfect_numbers"

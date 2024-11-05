@@ -12,10 +12,10 @@ from tests import (
     FIB_DEF,
     FIB_FUNC,
     FIB_NAME,
+    MOCK_TESTS,
     SUM_DEF,
     SUM_FUNC,
     SUM_NAME,
-    MOCK_TESTS,
     WRONG_FIB_TESTS,
 )
 

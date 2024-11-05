@@ -1,13 +1,14 @@
 from logging import Logger
+
 from fastapi import FastAPI, HTTPException, Request
 
+from src.internal.errors import ErrorMessageEnum as ErrMsg
 from src.internal.errors.exceptions import (
     AlgorithmError,
     AlgorithmNotFoundError,
     AlgorithmTypeError,
     AlgorithmValueError,
 )
-from src.internal.errors import ErrorMessageEnum as ErrMsg
 
 
 def init_error_handlers(app: FastAPI, logger: Logger):

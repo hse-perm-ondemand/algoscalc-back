@@ -6,6 +6,7 @@ from src.internal.constants import ALGORITHMS_ENDPOINT
 from src.internal.schemas.algorithm_definition_schema import AlgorithmDefinitionSchema
 from src.internal.schemas.data_element_schema import DataElementsSchema
 from src.internal.schemas.definition_schema import DefinitionSchema
+from src.routers.schemas import AlgorithmsPageSchema
 from tests import BOOL_DEF, BOOL_NAME, FIB_DEF, SUM_DEF, SUM_NAME
 
 
@@ -13,11 +14,24 @@ class TestAlgorithms:
     def test_get_algorithms(self, client):
         response = client.get(ALGORITHMS_ENDPOINT)
         assert response.status_code == 200
-        assert isinstance(response.json(), list)
-        assert len(response.json()) == 3
-        assert DefinitionSchema.model_validate(FIB_DEF).model_dump() in response.json()
-        assert DefinitionSchema.model_validate(SUM_DEF).model_dump() in response.json()
-        assert DefinitionSchema.model_validate(BOOL_DEF).model_dump() in response.json()
+        assert AlgorithmsPageSchema.model_validate(response.json())
+        page = AlgorithmsPageSchema.model_validate(response.json())
+        assert len(page.items) == 3
+        assert page.page == 1
+        assert page.total == 3
+        assert DefinitionSchema.model_validate(FIB_DEF) in page.items
+        assert DefinitionSchema.model_validate(SUM_DEF) in page.items
+        assert DefinitionSchema.model_validate(BOOL_DEF) in page.items
+
+    def test_get_algorithms_paginate(self, client):
+        response = client.get(ALGORITHMS_ENDPOINT, params={"page": 2, "size": 1})
+        assert response.status_code == 200
+        assert AlgorithmsPageSchema.model_validate(response.json())
+        page = AlgorithmsPageSchema.model_validate(response.json())
+        assert len(page.items) == 1
+        assert page.page == 2
+        assert page.size == 1
+        assert page.total == 3
 
     def test_get_algorithm(self, client):
         response = client.get(f"{ALGORITHMS_ENDPOINT}/{SUM_NAME}")
