@@ -5,8 +5,7 @@
 
 ## Ресурсы
 - [Тестовый контур](https://test.ommat.ru/api/algorithms) серверной части онлайн-калькулятора.
-- [Документация API](https://swagger.ommat.ru/docs) серверной части онлайн-калькулятора.
-- [Документация исходного кода](https://backend-docs.ommat.ru/index.html) серверной части онлайн-калькулятора.
+- [Документация API (Swagger)](https://swagger.ommat.ru/docs) серверной части онлайн-калькулятора.
 - [Продуктовый контур](https://prod.ommat.ru/api/Test) серверной части онлайн-калькулятора.
 
 ## Запуск приложения в Docker
@@ -16,9 +15,10 @@
 
 Запустить приложение можно командой:
 
-    ```sh
-    docker compose -f docker-compose.local.yml up
-    ```
+```sh
+docker compose -f docker-compose.local.yml up
+```
+
 Документация API запущенного приложения в формате Swagger доступна в браузере по адресу http://0.0.0.0:8080/docs
 
 ## Установка и запуск приложения локально

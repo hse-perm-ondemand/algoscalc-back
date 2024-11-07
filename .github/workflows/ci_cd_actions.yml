@@ -23,7 +23,9 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   TEST_CONTAINER_NAME: BackendTest
+  PROD_CONTAINER_NAME: BackendProd
   TEST_VOLUME_NAME: algoscalc-back-test_backend_test_logs
+  PROD_VOLUME_NAME: algoscalc-back-prod-logs
 
 jobs:
   test:
@@ -92,10 +94,10 @@ jobs:
           only_warn: 1
           max_line_length: 88
           extra_arguments: "--max-complexity=10" 
-  build-test:
+  build:
     runs-on: ubuntu-latest
     needs: test
-    if: needs.test.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/Test'
+    if: needs.test.result == 'success' && github.event_name == 'push' && (github.ref == 'refs/heads/Test' || startsWith(github.ref, 'refs/tags/v'))
     permissions:
       contents: read
       packages: write
@@ -108,17 +110,23 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set tag
+        id: set_tag
+        run: |
+          [[ ${{ github.event_name }} == push ]] && [[ ${{ github.ref }} == refs/tags/v* ]] && \
+            echo "TAG=${{ github.ref_name }}" >> "$GITHUB_OUTPUT" || \
+            echo "TAG=test" >> "$GITHUB_OUTPUT"
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test 
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.TAG }} 
   deploy-test:
     name: Test deploy
     runs-on: ubuntu-latest
-    needs: build-test
-    if: needs.build-test.result == 'success'
+    needs: build
+    if: needs.build.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/Test'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -146,14 +154,32 @@ jobs:
               --name ${{ env.TEST_CONTAINER_NAME }} \
               --network ${{ secrets.SANDBOX_NETWORK }} \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test;
-  prod_deploy:
+  deploy-prod:
     name: Prod deploy
     runs-on: ubuntu-latest
-    needs: test
-    if: needs.test.result == 'success' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    if: needs.build.result == 'success' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
-    - name: executing remote ssh commands
-      uses: fjogeleit/http-request-action@v1.16.1
-      with:
-        url: ${{ secrets.URL_WEBHOOK_PROD }}
-        method: 'POST'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SANDBOX_HOST }}
+          username: ${{ secrets.SANDBOX_USER }}
+          key: ${{ secrets.SANDBOX_KEY }}
+          port: ${{ secrets.SANDBOX_PORT }}
+          script: |
+            docker logout;
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }};
+            docker rm -f ${{ env.PROD_CONTAINER_NAME }} || true;
+            docker run -d \
+              -v ${{ env.PROD_VOLUME_NAME }}:/app/logs/ \
+              -e EXECUTE_TIMEOUT=5 \
+              -e VERSION=${{ github.ref_name }} \
+              --restart=always \
+              --name ${{ env.PROD_CONTAINER_NAME }} \
+              --network ${{ secrets.SANDBOX_NETWORK }} \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }};
