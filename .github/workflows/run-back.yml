@@ -1,0 +1,25 @@
+name: Run Back
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t my-backend-app .
+
+      - name: Choosing port
+        id: run
+        run: |
+          PORT=$(comm -23 <(seq 8000 8100 | sort) <(ss -Htan | awk '{print $4}' | grep -o '[0-9]*$' | sort -n | uniq))
+          PORT=$(echo $PORT | cut -d' ' -f1)
+          docker run -d -p $PORT:80 --name my-backend my-backend-app
+          echo "port=$PORT" >> $GITHUB_OUTPUT
+
+      - name: Port
+        run: echo "PORT ${{ steps.run.outputs.port }}"
